@@ -46,13 +46,26 @@ public class MoveObjectBase : MonoBehaviour {
 		moveDesMode = -1;
 	}
 
-	protected virtual void Update(){
-		if (moveDir == MoveDir.FORWARD) {
-			gameObject.transform.position += new Vector3 (0, moveDesMode * moveSpeed * Time.deltaTime, 0);
-		} else if (moveDir == MoveDir.LEFT) {
-			gameObject.transform.position += new Vector3 (-moveSpeed * Time.deltaTime, 0, 0);
+	protected virtual void ChangeMoveMode(){
+		moveDesMode *= -1;
+		if (moveDir == MoveDir.LEFT) {
+			moveDir = MoveDir.RIGHT;
 		} else if (moveDir == MoveDir.RIGHT) {
+			moveDir = MoveDir.LEFT;
+		}
+	}
+
+	protected virtual void Update(){
+		switch (moveDir) {
+		case MoveDir.FORWARD :
+			gameObject.transform.position += new Vector3 (0, moveDesMode * moveSpeed * Time.deltaTime, 0);
+			break;
+		case MoveDir.LEFT:
+			gameObject.transform.position += new Vector3 (-moveSpeed * Time.deltaTime, 0, 0);
+			break;
+		case MoveDir.RIGHT:
 			gameObject.transform.position += new Vector3 (moveSpeed * Time.deltaTime, 0, 0);
+			break;
 		}
 	}
 
