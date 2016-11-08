@@ -71,12 +71,14 @@ public class MoveObjectBase : MonoBehaviour {
 
 	protected virtual void OnTriggerEnter2D(Collider2D other){
 		if (other.tag == "LeftCorner") {
+			gameObject.transform.position = other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.LEFT;
 			} else {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (other.tag == "RightCorner") {
+			gameObject.transform.position = other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.RIGHT;
 			} else {

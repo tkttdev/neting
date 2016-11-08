@@ -7,7 +7,7 @@ public class EnemyControllerByShimizu : SingletonBehaviour<EnemyControllerByShim
     private string[] wave;
     [SerializeField] private TextAsset textData;
 
-     private int H;
+    private int H;
     private int nowRow;
     [SerializeField] private int interval = 5;
     [SerializeField] private GameObject enemy;
