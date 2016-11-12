@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StageSelectController : MonoBehaviour {
+public class CharacterSelectController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -15,5 +15,6 @@ public class StageSelectController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
 	}
 }

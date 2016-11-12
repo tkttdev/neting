@@ -8,8 +8,9 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 	private enum GameSceneType : int{
 		TITLE_SCENE = 0,
 		STAGE_SELECT_SCENE = 1,
-		GAME_SCENE = 2,
-		CREDIT_SCENE = 3,
+		CHARACTER_SELECT_SCENE = 2,
+		GAME_SCENE = 3,
+		CREDIT_SCENE = 4,
 	}
 
 	protected override void Initialize (){
@@ -25,6 +26,11 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 	public void GoStageSelect(){
 		FreeMemory ();
 		SceneManager.LoadScene ((int)GameSceneType.STAGE_SELECT_SCENE);
+	}
+
+	public void GoCharacterSelect(){
+		FreeMemory ();
+		SceneManager.LoadScene ((int)GameSceneType.CHARACTER_SELECT_SCENE);
 	}
 
 	public void GoGame(){
