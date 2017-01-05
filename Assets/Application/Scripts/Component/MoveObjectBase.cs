@@ -5,7 +5,7 @@ using System.Collections;
 public class MoveObjectBase : MonoBehaviour {
 
 	// player to enemy : 1 enemy to player : -1
-	[SerializeField] protected int moveDesMode = 1;
+	protected int moveDesMode = 1;
 	[Range(2.0f,20.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
 
