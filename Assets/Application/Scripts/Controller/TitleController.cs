@@ -5,7 +5,7 @@ public class TitleController : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetMouseButtonDown (0)) {
-			AppSceneManager.I.GoStageSelect ();
+			AppSceneManager.I.GoScene (GameSceneType.MENU_SCENE);
 		}
 	}
 }
