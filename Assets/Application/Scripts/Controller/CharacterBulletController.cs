@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CharacterBulletController : SingletonBehaviour<CharacterBulletController> {
 
     [SerializeField]  private int fullTime = 2;
-    private int count = 0;
+    private float intervalCount = 0;
     private int entryX = 0;
     [SerializeField] private Text countText;
     [SerializeField] private Text stockText;
@@ -20,9 +20,6 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
 
     protected override void Initialize() {
         base.Initialize();
-        count = 0;
-        countText.text = "IN " + count.ToString() + "sec";
-        StartCoroutine(Counter());
 
         #if UNITY_EDITOR
         if (GameObject.Find("Systems") == null) {
@@ -39,6 +36,19 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
     }
 
     void Update() {
+        countText.text = string.Format("{0:f3}", intervalCount);
+        if (bulletStock < maxBulletStock && intervalCount == 0) {
+            intervalCount = bulletInterval;
+        }
+
+        if(intervalCount > 0.0f) {
+            intervalCount -= Time.deltaTime;
+            if(intervalCount <= 0.0f) {
+                intervalCount = 0.0f;
+                bulletStock += 1;
+            }
+        }
+
         stockText.text = bulletStock.ToString();
         if (bulletStock != 0 && Input.GetMouseButtonDown(0)) {
             bulletStock--;
@@ -61,23 +71,5 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
 
     private void Shoot() {
         Instantiate(charaBulletPrefab, new Vector3((float)entryX, -4.0f, 0.0f), Quaternion.Euler(0, 0, 0));
-    }
-
-    public IEnumerator Counter() {
-        count = bulletInterval;
-        while (true) {
-            if (count > 0) {
-                count--;
-                countText.text = "IN " + count.ToString() + "sec";
-                if (count == 0) {
-                    bulletStock++;
-                    if(bulletStock < maxBulletStock) {
-                        StartCoroutine(Counter());
-                    }
-                    yield break;
-                }
-            }
-            yield return new WaitForSeconds(1.0f);
-        }
     }
 }
