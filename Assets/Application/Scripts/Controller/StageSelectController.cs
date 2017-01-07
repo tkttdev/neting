@@ -3,15 +3,20 @@ using System.Collections;
 
 public class StageSelectController : MonoBehaviour {
 
-    [SerializeField] RectTransform stageButtonTransform;
+    [SerializeField] private GameObject stageButtonRoot;
     private bool isTouch = false;
-    private float[] stageButtonRootFixedX = new float[2];
     private float frickDist = 0.0f;
+    private float unitX;
+    private int displayStagePanelIndex = 0;
+    private int stagePanelNum = 2;
+
+    private Vector3 lastPos;
+    private bool isMove = false;
+    private int purposePanelIndex = 0;
 
 	// Use this for initialization
 	void Start () {
-        stageButtonRootFixedX[0] = 0;
-        stageButtonRootFixedX[1] = 800;
+        unitX = new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(-Screen.width / 2, 0, 0)).x, 0, 0).x;
 		#if UNITY_EDITOR
 		if(GameObject.Find("Systems") == null){
 			GameObject obj = Resources.Load("Prefabs/Systems") as GameObject;
@@ -19,23 +24,46 @@ public class StageSelectController : MonoBehaviour {
 		}
 		#endif
 	}
-	
-	// Update is called once per frame
-	void Update () {
-       /* if (Input.GetMouseButtonDown(0)) {
-            isTouch = true;
-            frickDist = 0.0f;
+    float buttonRootX = 0;
+    int nearbyStagePanelIndex = 0;
+    // Update is called once per frame
+    void Update () {
+        
+        if (Input.GetMouseButtonDown(0)) {
+            isMove = false;
+            lastPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         } else if (Input.GetMouseButton(0)) {
-            if(stageButtonTransform.position.x >= 0 && stageButtonTransform.position.x <= 800) {
-
+            frickDist = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - lastPos.x;
+            if (!(displayStagePanelIndex == 0 && frickDist > 0.0f) && !(displayStagePanelIndex == stagePanelNum && frickDist < 0.0f)) {
+                stageButtonRoot.transform.position += new Vector3(frickDist, 0, 0);
+                lastPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             }
         } else if (Input.GetMouseButtonUp(0)) {
-            isTouch = false;
+            isMove = true;
+            buttonRootX = stageButtonRoot.transform.position.x;
+            nearbyStagePanelIndex = (int)((buttonRootX + unitX / 2.0f) / unitX);
+            Debug.Log(nearbyStagePanelIndex);
+            if(nearbyStagePanelIndex > 1) {
+                nearbyStagePanelIndex = 1;
+            }
         }
 
-        if (!isTouch) {
-            if(stageButtonTransform.position.x != stageButtonRootFixedX[0] && stageButtonTransform.position.x != stageButtonRootFixedX[1]) {
+        if (isMove) {
+            int direction;
+            if(stageButtonRoot.transform.position.x > nearbyStagePanelIndex * unitX) {
+                direction = -1;
+            }else {
+                direction = 1;
             }
-        }*/
+
+            stageButtonRoot.transform.position += new Vector3(3.0f * Time.deltaTime * direction, 0, 0);
+
+            if(stageButtonRoot.transform.position.x >= nearbyStagePanelIndex*unitX - 0.2f && stageButtonRoot.transform.position.x <= nearbyStagePanelIndex * unitX + 0.2f) {
+                displayStagePanelIndex = nearbyStagePanelIndex;
+                stageButtonRoot.transform.position = new Vector3(nearbyStagePanelIndex * unitX, 0, 0);
+                isMove = false;
+            }
+            
+        }
 	}
 }
