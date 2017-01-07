@@ -11,6 +11,7 @@ public class StageTest : GameManager {
     private List<float> enemyArriveTime = new List<float>();
     private List<int> enemyId = new List<int>();
     private List<int> enemyHP = new List<int>();
+    private List<int> enemyDamage = new List<int>();
     private int testStageIndex = 0;
     private float spendGameTime = 0.0f;
     private bool isSpawn = false;
@@ -60,9 +61,14 @@ public class StageTest : GameManager {
         testStageIndex++;
         testStageSpawner = testStage.GetComponent<EnemySpawner>();
         spendGameTime = 0.0f;
+
+        //enemy情報格納部分初期化
         enemySpawnTime.Clear();
         enemyArriveTime.Clear();
         enemyId.Clear();
+        enemyHP.Clear();
+        enemyDamage.Clear();
+
         isSpawn = true;
     }
 
@@ -74,13 +80,14 @@ public class StageTest : GameManager {
             List<float> testEnemySpawnTime = new List<float>(enemySpawnTime);
             List<float> testEnemyArriveTime = new List<float>(enemyArriveTime);
             List<int> testEnemyHP = new List<int>(enemyHP);
+            List<int> testEnemyDamage = new List<int>(enemyDamage);
 
             for (float time = 0.0f; time <= spendGameTime + 0.5f; time += 1.0f / 60.0f) {
                 //敵到着の処理
                 List<int> removeIndex = new List<int>();
                 foreach (float eAriveTime in testEnemyArriveTime) {
                     if (time > eAriveTime) {
-                        testCharaLife[charaId]--;
+                        testCharaLife[charaId] -= testEnemyDamage[testEnemyArriveTime.IndexOf(eAriveTime)];
                         removeIndex.Add(testEnemyArriveTime.IndexOf(eAriveTime));
                     }
                 }
@@ -89,6 +96,7 @@ public class StageTest : GameManager {
                     testEnemySpawnTime.RemoveAt(index);
                     testEnemyArriveTime.RemoveAt(index);
                     testEnemyHP.RemoveAt(index);
+                    testEnemyDamage.RemoveAt(index);
                 }
 
                 removeIndex.Clear();
@@ -127,6 +135,7 @@ public class StageTest : GameManager {
                     testEnemySpawnTime.RemoveAt(index);
                     testEnemyArriveTime.RemoveAt(index);
                     testEnemyHP.RemoveAt(index);
+                    testEnemyDamage.RemoveAt(index);
                 }
 
                 removeIndex.Clear();
@@ -162,10 +171,12 @@ public class StageTest : GameManager {
 
 
     private void OnTriggerEnter2D(Collider2D other) {
+        //敵情報の登録
         enemyId.Add(other.GetComponent<Enemy>().id);
         enemySpawnTime.Add(other.GetComponent<Enemy>().spawnTime - stageStartTime);
         enemyArriveTime.Add(spendGameTime);
         enemyHP.Add(ENEMY_DEFINE.HP[other.GetComponent<Enemy>().id]);
+        enemyDamage.Add(ENEMY_DEFINE.DAMAGE[other.GetComponent<Enemy>().id]);
 
         Destroy(other.gameObject);
         if(enemyId.Count == testStageSpawner.allEnemyNum) {
