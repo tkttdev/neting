@@ -5,10 +5,12 @@ public class Enemy : MoveObjectBase {
 
     [SerializeField] private int hp;
     public int id;
+    public float spawnTime;
 
 	protected override void Initialize (){
 		base.Initialize ();
 		SetMoveToPlayer ();
+        spawnTime = Time.timeSinceLevelLoad;
 	}
 
 	protected override void Update (){

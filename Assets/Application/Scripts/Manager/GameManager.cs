@@ -15,7 +15,7 @@ public class GameManager : SingletonBehaviour<GameManager> {
 
 	protected override void Initialize (){
 		base.Initialize ();
-        gameStatus = GameStatus.WAIT;
+        gameStatus = GameStatus.PLAY;
 	}
 
     public void SetWait() {
