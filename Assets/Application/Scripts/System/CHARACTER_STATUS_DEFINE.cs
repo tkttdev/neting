@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System;
-using UnityEngine;
 
 public enum CharacterID : int {
     CHARA0 = 0,
