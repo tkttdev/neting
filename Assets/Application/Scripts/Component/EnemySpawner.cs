@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
+public class EnemySpawner : MonoBehaviour {
 
     
     [SerializeField] private Transform[] spawnerPos;
@@ -12,8 +12,8 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
     private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 
     private float playTime = 0.0f;
+    public int allEnemyNum = 0;
     
-
 	// Use this for initialization
 	void Start () {
         ParseSpawnerInfoText();
@@ -30,33 +30,40 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
             spawnerInfo.spawnTime.Add(float.Parse(values[1]));
             spawnerInfo.spawnPos.Add(int.Parse(values[2]));
         }
-        spawnerInfo.allSpawnEnemuNum = spawnerInfo.enemyId.Count;
+        allEnemyNum = spawnerInfo.enemyId.Count;
     }
 
     // Update is called once per frame
     void Update() {
-        if (true) {
+        if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
             playTime += Time.deltaTime;
             CheckSpawn();
         }
     }
 
     private void CheckSpawn() {
-        if(spawnerInfo.allSpawnEnemuNum == 0) {
+        if (spawnerInfo.allSpawnEnemyNum == allEnemyNum) {
             return;
         }
 
-        if(playTime > spawnerInfo.spawnTime[0]) {
-            if(enemyPrefabs[spawnerInfo.enemyId[0]] == null) {
-                enemyPrefabs[spawnerInfo.enemyId[0]] = Resources.Load(ENEMY_DEFINE.PATHS[spawnerInfo.enemyId[0]]) as GameObject;
+        while (playTime > spawnerInfo.spawnTime[0]) {
+            SpawnEnemy();
+            if (spawnerInfo.allSpawnEnemyNum == allEnemyNum) {
+                return;
             }
-            Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
-
-            spawnerInfo.enemyId.RemoveAt(0);
-            spawnerInfo.spawnTime.RemoveAt(0);
-            spawnerInfo.spawnPos.RemoveAt(0);
-            spawnerInfo.allSpawnEnemuNum--;
         }
+    }
+
+    private void SpawnEnemy() {
+        if (enemyPrefabs[spawnerInfo.enemyId[0]] == null) {
+            enemyPrefabs[spawnerInfo.enemyId[0]] = Resources.Load(ENEMY_DEFINE.PATHS[spawnerInfo.enemyId[0]]) as GameObject;
+        }
+        Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
+
+        spawnerInfo.enemyId.RemoveAt(0);
+        spawnerInfo.spawnTime.RemoveAt(0);
+        spawnerInfo.spawnPos.RemoveAt(0);
+        spawnerInfo.allSpawnEnemyNum++;
     }
 }
 
@@ -64,5 +71,5 @@ public class SpawnerInfo {
     public List<int> enemyId = new List<int>();
     public List<float> spawnTime = new List<float>();
     public List<int> spawnPos = new List<int>();
-    public int allSpawnEnemuNum = 0;
+    public int allSpawnEnemyNum = 0;
 }

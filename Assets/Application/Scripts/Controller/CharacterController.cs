@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterBulletController : SingletonBehaviour<CharacterBulletController> {
+public class CharacterController : SingletonBehaviour<CharacterController> {
 
-    [SerializeField]  private int fullTime = 2;
+    [SerializeField] private int fullTime = 2;
     private float intervalCount = 0;
     private int entryX = 0;
     [SerializeField] private Text countText;
@@ -15,6 +15,7 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
     private int bulletStock = 0;
     private int maxBulletStock = 0;
     private GameObject charaBulletPrefab;
+    private int life = 0;
     [SerializeField] private bool isDemo = false;
 
 
@@ -28,11 +29,15 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
         }
         #endif
 
-        //キャラ毎のstatus設定
+        LoadCharaStatus();
+    }
+
+    private void LoadCharaStatus() {
         useCharaIndex = UserDataManager.I.GetUseCharaIndex();
-        bulletInterval = CHARACTER_STATUS_DEFINE.BULLET_INTERVAL[useCharaIndex];
-        maxBulletStock = CHARACTER_STATUS_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
-        charaBulletPrefab = Resources.Load(CHARACTER_STATUS_DEFINE.BULLET_PREFAB_PATHS[useCharaIndex]) as GameObject;
+        bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
+        maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
+        charaBulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATHS[useCharaIndex]) as GameObject;
+        life = CHARACTER_DEFINE.LIFE[useCharaIndex];
     }
 
     void Update() {
@@ -41,9 +46,9 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
             intervalCount = bulletInterval;
         }
 
-        if(intervalCount > 0.0f) {
+        if (intervalCount > 0.0f) {
             intervalCount -= Time.deltaTime;
-            if(intervalCount <= 0.0f) {
+            if (intervalCount <= 0.0f) {
                 intervalCount = 0.0f;
                 bulletStock += 1;
             }

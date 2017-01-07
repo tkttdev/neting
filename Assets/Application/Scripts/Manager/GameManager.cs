@@ -11,7 +11,7 @@ public enum GameStatus : int {
 
 public class GameManager : SingletonBehaviour<GameManager> {
 
-    GameStatus gameStatus = GameStatus.WAIT;
+    protected GameStatus gameStatus = GameStatus.WAIT;
 
 	protected override void Initialize (){
 		base.Initialize ();

@@ -4,6 +4,7 @@ using System.Collections;
 public class Enemy : MoveObjectBase {
 
     [SerializeField] private int hp;
+    public int id;
 
 	protected override void Initialize (){
 		base.Initialize ();
