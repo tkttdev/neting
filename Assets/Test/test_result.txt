@@ -1,0 +1,22 @@
+Stage1
+Chara0 LIFE : 1
+Chara1 LIFE : 4
+Chara2 LIFE : 1
+Chara3 LIFE : 4
+Chara4 LIFE : 5
+Chara5 LIFE : 2
+Chara6 LIFE : 4
+Chara7 LIFE : 7
+Chara8 LIFE : 2
+Chara9 LIFE : 8
+Stage1
+Chara0 LIFE : 1
+Chara1 LIFE : 4
+Chara2 LIFE : 1
+Chara3 LIFE : 4
+Chara4 LIFE : 5
+Chara5 LIFE : 2
+Chara6 LIFE : 4
+Chara7 LIFE : 7
+Chara8 LIFE : 2
+Chara9 LIFE : 8

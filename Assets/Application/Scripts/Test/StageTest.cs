@@ -55,8 +55,9 @@ public class StageTest : GameManager {
     private void StartTest() {
         stageStartTime = Time.timeSinceLevelLoad;
         gameStatus = GameStatus.PLAY;
-        GameObject testStage = Instantiate(testStagePrefabs[testStageIndex++]);
-        stageName = testStage.transform.name;
+        GameObject testStage = Instantiate(testStagePrefabs[testStageIndex]);
+        stageName = testStagePrefabs[testStageIndex].transform.name;
+        testStageIndex++;
         testStageSpawner = testStage.GetComponent<EnemySpawner>();
         spendGameTime = 0.0f;
         enemySpawnTime.Clear();
@@ -129,15 +130,34 @@ public class StageTest : GameManager {
                 }
 
                 removeIndex.Clear();
-                
             }
             
         }
-        
+
+        SaveResult();
+
         //まだテストしていないステージがあれば実行する
         if (testStageIndex < testStagePrefabs.Length) {
             StartTest();
         }
+    }
+
+    private void SaveResult() {
+        bool notFirstTest = false;
+        if (testStageIndex == 1) {
+            notFirstTest = false;
+        }else {
+            notFirstTest = true;
+        }
+        StreamWriter sw = new StreamWriter(Application.dataPath + "/Test/test_result.txt", notFirstTest);
+
+
+        sw.WriteLine(stageName);
+        for(int charaId = 0; charaId < CHARACTER_DEFINE.characterVarietyNum; charaId++) {
+            sw.WriteLine("Chara" + charaId.ToString() + " LIFE : " + testCharaLife[charaId]);
+        }
+        sw.Flush();
+        sw.Close();
     }
 
 
