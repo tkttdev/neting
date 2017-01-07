@@ -11,7 +11,7 @@ public class CharacterBulletController : SingletonBehaviour<CharacterBulletContr
     [SerializeField] private Text countText;
     [SerializeField] private Text stockText;
     private int useCharaIndex = 0;
-    private int bulletInterval = 2;
+    private float bulletInterval = 2;
     private int bulletStock = 0;
     private int maxBulletStock = 0;
     private GameObject charaBulletPrefab;

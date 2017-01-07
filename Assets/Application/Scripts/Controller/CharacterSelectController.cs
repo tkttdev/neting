@@ -12,9 +12,13 @@ public class CharacterSelectController : MonoBehaviour {
 		}
 		#endif
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void CharacterSelectButton(int _charaIndex) {
+        UserDataManager.I.SetUseCharacterIndex(_charaIndex);
+        
+    }
+
+    public void ReturnButton() {
+        AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
+    }
 }
