@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEditor;
 
 public class StageTest : GameManager {
 
@@ -28,8 +29,11 @@ public class StageTest : GameManager {
     private int[] testCharaBulletStock = new int[CHARACTER_DEFINE.characterVarietyNum];
 
     private float stageStartTime = 0.0f;
+	private bool notFirstTest = false;
 
     private void Start() {
+		notFirstTest = false;
+
         for (int i = 0; i < CHARACTER_DEFINE.characterVarietyNum; i++) {
             charaLife[i] = CHARACTER_DEFINE.LIFE[i];
             charaBulletInterval[i] = CHARACTER_DEFINE.BULLET_INTERVAL[i];
@@ -77,22 +81,37 @@ public class StageTest : GameManager {
         
         for (int charaId = 0; charaId < CHARACTER_DEFINE.characterVarietyNum; charaId++) {
             //テスト用にステージ実行により得られた敵のデータを複製
+			List<int> testEnemyId = new List<int>(enemyId);
             List<float> testEnemySpawnTime = new List<float>(enemySpawnTime);
             List<float> testEnemyArriveTime = new List<float>(enemyArriveTime);
             List<int> testEnemyHP = new List<int>(enemyHP);
             List<int> testEnemyDamage = new List<int>(enemyDamage);
 
+			//テスト結果用リスト
+			List<float> testArriveEnemySpawnTime = new List<float>();
+			List<int> testArriveEnemyId = new List<int> ();
+			List<int> testArriveEnemyHP = new List<int> ();
+
+			List<float> testDeadEnemySpawnTime = new List<float> ();
+			List<int> testDeadEnemyId = new List<int> ();
+			List<float> expectedUserMarginTime = new List<float> ();
+
             for (float time = 0.0f; time <= spendGameTime + 0.5f; time += 1.0f / 60.0f) {
                 //敵到着の処理
                 List<int> removeIndex = new List<int>();
                 foreach (float eAriveTime in testEnemyArriveTime) {
-                    if (time > eAriveTime) {
-                        testCharaLife[charaId] -= testEnemyDamage[testEnemyArriveTime.IndexOf(eAriveTime)];
-                        removeIndex.Add(testEnemyArriveTime.IndexOf(eAriveTime));
-                    }
+					if (time > eAriveTime) {
+						testCharaLife [charaId] -= testEnemyDamage [testEnemyArriveTime.IndexOf (eAriveTime)];
+						removeIndex.Add (testEnemyArriveTime.IndexOf (eAriveTime));
+
+						testArriveEnemySpawnTime.Add (testEnemySpawnTime [testEnemyArriveTime.IndexOf (eAriveTime)]);
+						testArriveEnemyId.Add (testEnemyId [testEnemyArriveTime.IndexOf (eAriveTime)]);
+						testArriveEnemyHP.Add (testEnemyHP [testEnemyArriveTime.IndexOf (eAriveTime)]);
+					}
                 }
 
                 foreach(int index in removeIndex) {
+					testEnemyId.RemoveAt (index);
                     testEnemySpawnTime.RemoveAt(index);
                     testEnemyArriveTime.RemoveAt(index);
                     testEnemyHP.RemoveAt(index);
@@ -120,8 +139,12 @@ public class StageTest : GameManager {
                             }
                             testCharaBulletStock[charaId]--;
                             testEnemyHP[targetIndex] -= charaBulletDamage[charaId];
+							//敵キャラクター死亡処理
                             if (testEnemyHP[targetIndex] <= 0) {
                                 removeIndex.Add(targetIndex);
+								testDeadEnemyId.Add (testEnemyId [targetIndex]);
+								testDeadEnemySpawnTime.Add (testEnemySpawnTime [targetIndex]);
+								expectedUserMarginTime.Add (testEnemyArriveTime[targetIndex] - time);
                             }
                             if(testCharaBulletStock[charaId] == 0) {
                                 break;
@@ -132,6 +155,7 @@ public class StageTest : GameManager {
                 }
                 
                 foreach (int index in removeIndex) {
+					testEnemyId.RemoveAt (index);
                     testEnemySpawnTime.RemoveAt(index);
                     testEnemyArriveTime.RemoveAt(index);
                     testEnemyHP.RemoveAt(index);
@@ -139,32 +163,61 @@ public class StageTest : GameManager {
                 }
 
                 removeIndex.Clear();
-            }
-            
-        }
 
-        SaveResult();
+
+            }
+			SaveResult (charaId, testArriveEnemySpawnTime, testArriveEnemyId, testArriveEnemyHP, testDeadEnemySpawnTime, testDeadEnemyId, expectedUserMarginTime);
+        }
 
         //まだテストしていないステージがあれば実行する
-        if (testStageIndex < testStagePrefabs.Length) {
-            StartTest();
-        }
+		if (testStageIndex < testStagePrefabs.Length) {
+			StartTest ();
+		} else {
+			Debug.Log ("TEST COMPLETE");
+			EditorApplication.isPlaying = false;
+		}
     }
 
-    private void SaveResult() {
-        bool notFirstTest = false;
-        if (testStageIndex == 1) {
-            notFirstTest = false;
-        }else {
-            notFirstTest = true;
-        }
+	private void SaveResult(int _charaId, List<float> _testArriveEnemySpawnTime, List<int> _testArriveEnemyId, List<int> _testArriveEnemyHP, List<float> _testDeadEnemySpawnTime, List<int> _testDeadEnemyId, List<float> _expectedUserMarginTime) {
         StreamWriter sw = new StreamWriter(Application.dataPath + "/Test/test_result.txt", notFirstTest);
 
+		if(!notFirstTest){
+			notFirstTest = true;
+		}
 
-        sw.WriteLine(stageName);
-        for(int charaId = 0; charaId < CHARACTER_DEFINE.characterVarietyNum; charaId++) {
-            sw.WriteLine("Chara" + charaId.ToString() + " LIFE : " + testCharaLife[charaId]);
-        }
+		if (_charaId == 0) {
+			sw.WriteLine ("=======================================" + stageName + " Test Info =======================================");
+		}
+
+		sw.WriteLine ("\r\nCharaID : " + _charaId.ToString () + " Result");
+		sw.WriteLine ("Arrive Enemies");
+		string arriveResult = "";
+
+		if (_testArriveEnemyId.Count == 0) {
+			arriveResult = "NONE\r\n";
+		}
+
+		for(int i = 0; i < _testArriveEnemyId.Count; i++){
+			arriveResult += string.Format("EnemyID : {0} SpawnTime : {1:f3} Arrived HP : {2}{3}",_testArriveEnemyId[i],_testArriveEnemySpawnTime[i],_testArriveEnemyHP[i],"\r\n");
+		}
+		sw.Write (arriveResult);
+
+		sw.WriteLine ("Dead Enemies");
+		string deadResult = "";
+
+		if (_testDeadEnemyId.Count == 0) {
+			deadResult = "NONE\r\n";
+		}
+			
+		for(int i = 0; i < _testDeadEnemyId.Count; i++){
+			deadResult += string.Format("EnemyID : {0} SpawnTime : {1:f3} ExpectedUserMarginTime : {2:f3}{3}",_testDeadEnemyId[i],_testDeadEnemySpawnTime[i], _expectedUserMarginTime[i],"\r\n");
+		}
+
+		sw.Write (deadResult);
+
+		if (_charaId == CHARACTER_DEFINE.characterVarietyNum - 1) {
+			sw.WriteLine ("===============================================================================================\r\n");
+		}
         sw.Flush();
         sw.Close();
     }

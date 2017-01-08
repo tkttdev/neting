@@ -1,22 +1,140 @@
-Stage1
-Chara0 LIFE : 1
-Chara1 LIFE : 4
-Chara2 LIFE : 1
-Chara3 LIFE : 4
-Chara4 LIFE : 5
-Chara5 LIFE : 2
-Chara6 LIFE : 4
-Chara7 LIFE : 7
-Chara8 LIFE : 2
-Chara9 LIFE : 8
-Stage1
-Chara0 LIFE : 1
-Chara1 LIFE : 4
-Chara2 LIFE : 1
-Chara3 LIFE : 4
-Chara4 LIFE : 5
-Chara5 LIFE : 2
-Chara6 LIFE : 4
-Chara7 LIFE : 7
-Chara8 LIFE : 2
-Chara9 LIFE : 8
+=======================================Stage1 Test Info =======================================
+
+CharaID : 0 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 0.495 Arrived HP : 30
+EnemyID : 0 SpawnTime : 1.003 Arrived HP : 30
+Dead Enemies
+NONE
+
+CharaID : 1 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 3.391
+EnemyID : 0 SpawnTime : 1.003 ExpectedUserMarginTime : 2.871
+
+CharaID : 2 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 1.003 Arrived HP : 30
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 1.891
+
+CharaID : 3 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 3.558
+EnemyID : 0 SpawnTime : 1.003 ExpectedUserMarginTime : 3.205
+
+CharaID : 4 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 2.724
+EnemyID : 0 SpawnTime : 1.003 ExpectedUserMarginTime : 1.538
+
+CharaID : 5 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 3.558
+EnemyID : 0 SpawnTime : 1.003 ExpectedUserMarginTime : 3.205
+
+CharaID : 6 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 2.724
+EnemyID : 0 SpawnTime : 1.003 ExpectedUserMarginTime : 1.538
+
+CharaID : 7 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 2.724
+EnemyID : 0 SpawnTime : 1.003 ExpectedUserMarginTime : 1.538
+
+CharaID : 8 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 1.003 Arrived HP : 30
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 1.474
+
+CharaID : 9 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 1.003 Arrived HP : 20
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.495 ExpectedUserMarginTime : 1.108
+===============================================================================================
+
+=======================================Stage1 Test Info =======================================
+
+CharaID : 0 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 0.491 Arrived HP : 30
+EnemyID : 0 SpawnTime : 1.004 Arrived HP : 30
+Dead Enemies
+NONE
+
+CharaID : 1 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 3.355
+EnemyID : 0 SpawnTime : 1.004 ExpectedUserMarginTime : 2.904
+
+CharaID : 2 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 1.004 Arrived HP : 30
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 1.855
+
+CharaID : 3 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 3.522
+EnemyID : 0 SpawnTime : 1.004 ExpectedUserMarginTime : 3.237
+
+CharaID : 4 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 2.689
+EnemyID : 0 SpawnTime : 1.004 ExpectedUserMarginTime : 1.570
+
+CharaID : 5 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 3.522
+EnemyID : 0 SpawnTime : 1.004 ExpectedUserMarginTime : 3.237
+
+CharaID : 6 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 2.689
+EnemyID : 0 SpawnTime : 1.004 ExpectedUserMarginTime : 1.570
+
+CharaID : 7 Result
+Arrive Enemies
+NONE
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 2.689
+EnemyID : 0 SpawnTime : 1.004 ExpectedUserMarginTime : 1.570
+
+CharaID : 8 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 1.004 Arrived HP : 30
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 1.439
+
+CharaID : 9 Result
+Arrive Enemies
+EnemyID : 0 SpawnTime : 1.004 Arrived HP : 20
+Dead Enemies
+EnemyID : 0 SpawnTime : 0.491 ExpectedUserMarginTime : 1.072
+===============================================================================================
+
