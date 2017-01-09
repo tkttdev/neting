@@ -42,7 +42,6 @@ public class StageSelectController : MonoBehaviour {
             isMove = true;
             buttonRootX = stageButtonRoot.transform.position.x;
             nearbyStagePanelIndex = (int)((buttonRootX + unitX / 2.0f) / unitX);
-            Debug.Log(nearbyStagePanelIndex);
             if(nearbyStagePanelIndex > 1) {
                 nearbyStagePanelIndex = 1;
             }
@@ -65,5 +64,21 @@ public class StageSelectController : MonoBehaviour {
             }
             
         }
+	}
+
+	public void StageSelectButton(int stageLevel){
+		if (stageLevel == 0) {
+			stageLevel = 1;
+		}
+		StageLevelManager.I.SetStageLevel (stageLevel);
+		AppSceneManager.I.GoScene(GameSceneType.GAME_SCENE);
+	}
+
+	public void CharacterButton() {
+		AppSceneManager.I.GoScene(GameSceneType.CHARACTER_SELECT_SCENE);
+	}
+
+	public void StoreButton() {
+		AppSceneManager.I.GoScene(GameSceneType.STORE_SCENE);
 	}
 }
