@@ -2,10 +2,12 @@
 using System.Collections;
 
 public class Enemy : MoveObjectBase {
-
-	[SerializeField] private int hp;
-	[SerializeField] private int id;
+	
+	[SerializeField]private int id;
+	private int hp;
+	private int damage;
     public float spawnTime;
+
 	[SerializeField] private EnemyEffectBase[] enemyEffect;
 
 	protected override void Initialize (){
@@ -13,6 +15,7 @@ public class Enemy : MoveObjectBase {
 		SetMoveToPlayer ();
         spawnTime = Time.timeSinceLevelLoad;
 		hp = ENEMY_DEFINE.HP [id];
+		damage = ENEMY_DEFINE.DAMAGE [id];
 	}
 
 	protected override void Update (){
@@ -56,6 +59,10 @@ public class Enemy : MoveObjectBase {
 		base.OnTriggerEnter2D (other);
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].CollisionEffect ();
+		}
+		if (other.tag == "DamageZone") {
+			GameCharacter.I.TakeDamage (damage);
+			DeadEnemy ();
 		}
 	}
 }

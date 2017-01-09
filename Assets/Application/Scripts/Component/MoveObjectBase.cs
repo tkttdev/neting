@@ -13,7 +13,6 @@ public class MoveObjectBase : MonoBehaviour {
 		FORWARD = 0,
 		LEFT = 1,
 		RIGHT = 2,
-		IGNORE = 3,
 	}
 
 	protected enum MoveMode : int {
@@ -83,8 +82,7 @@ public class MoveObjectBase : MonoBehaviour {
 	protected virtual void OnTriggerEnter2D(Collider2D other){
 		if (moveMode == MoveMode.IGNORE) {
 			return;
-		}
-		if (other.tag == "LeftCorner") {
+		} else if (other.tag == "LeftCorner") {
 			gameObject.transform.position = other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.LEFT;
