@@ -8,7 +8,7 @@ public class Enemy : MoveObjectBase {
 	private int damage;
     public float spawnTime;
 
-	[SerializeField] private EnemyEffectBase[] enemyEffect;
+	private EnemyEffectBase[] enemyEffect;
 
 	protected override void Initialize (){
 		base.Initialize ();
@@ -16,6 +16,7 @@ public class Enemy : MoveObjectBase {
         spawnTime = Time.timeSinceLevelLoad;
 		hp = ENEMY_DEFINE.HP [id];
 		damage = ENEMY_DEFINE.DAMAGE [id];
+		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
 	}
 
 	protected override void Update (){
