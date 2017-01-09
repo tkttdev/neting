@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class CharacterBullet : MoveObjectBase {
 
-    [SerializeField]  private int damage = 100;
+    [SerializeField] private int damage;
 
     protected override void Initialize() {
-        base.Initialize();
+		base.Initialize ();
+		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharaIndex ()];
         SetMoveToEnemy();
     }
 

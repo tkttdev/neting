@@ -5,7 +5,6 @@ using System.IO;
 
 public class EnemySpawner : MonoBehaviour {
 
-    
     [SerializeField] private Transform[] spawnerPos;
     [SerializeField] private TextAsset spawnerInfoText;
     private SpawnerInfo spawnerInfo = new SpawnerInfo();
@@ -57,6 +56,7 @@ public class EnemySpawner : MonoBehaviour {
     private void SpawnEnemy() {
         if (enemyPrefabs[spawnerInfo.enemyId[0]] == null) {
             enemyPrefabs[spawnerInfo.enemyId[0]] = Resources.Load(ENEMY_DEFINE.PATHS[spawnerInfo.enemyId[0]]) as GameObject;
+			enemyPrefabs [spawnerInfo.enemyId [0]].GetComponent<Enemy> ().SetId (spawnerInfo.enemyId [0]);
         }
         Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
 

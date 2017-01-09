@@ -166,7 +166,7 @@ public class StageTest : GameManager {
 
 
             }
-			SaveResult (charaId, testArriveEnemySpawnTime, testArriveEnemyId, testArriveEnemyHP, testDeadEnemySpawnTime, testDeadEnemyId, expectedUserMarginTime);
+			SaveResult (charaId, testCharaLife, testArriveEnemySpawnTime, testArriveEnemyId, testArriveEnemyHP, testDeadEnemySpawnTime, testDeadEnemyId, expectedUserMarginTime);
         }
 
         //まだテストしていないステージがあれば実行する
@@ -178,7 +178,7 @@ public class StageTest : GameManager {
 		}
     }
 
-	private void SaveResult(int _charaId, List<float> _testArriveEnemySpawnTime, List<int> _testArriveEnemyId, List<int> _testArriveEnemyHP, List<float> _testDeadEnemySpawnTime, List<int> _testDeadEnemyId, List<float> _expectedUserMarginTime) {
+	private void SaveResult(int _charaId, int[] _testCharaLife, List<float> _testArriveEnemySpawnTime, List<int> _testArriveEnemyId, List<int> _testArriveEnemyHP, List<float> _testDeadEnemySpawnTime, List<int> _testDeadEnemyId, List<float> _expectedUserMarginTime) {
         StreamWriter sw = new StreamWriter(Application.dataPath + "/Test/test_result.txt", notFirstTest);
 
 		if(!notFirstTest){
@@ -190,6 +190,7 @@ public class StageTest : GameManager {
 		}
 
 		sw.WriteLine ("\r\nCharaID : " + _charaId.ToString () + " Result");
+		sw.WriteLine (string.Format("Last Chara Life : {0}", _testCharaLife[_charaId]));
 		sw.WriteLine ("Arrive Enemies");
 		string arriveResult = "";
 
@@ -225,11 +226,11 @@ public class StageTest : GameManager {
 
     private void OnTriggerEnter2D(Collider2D other) {
         //敵情報の登録
-        enemyId.Add(other.GetComponent<Enemy>().id);
+		enemyId.Add(other.GetComponent<Enemy>().GetId());
         enemySpawnTime.Add(other.GetComponent<Enemy>().spawnTime - stageStartTime);
         enemyArriveTime.Add(spendGameTime);
-        enemyHP.Add(ENEMY_DEFINE.HP[other.GetComponent<Enemy>().id]);
-        enemyDamage.Add(ENEMY_DEFINE.DAMAGE[other.GetComponent<Enemy>().id]);
+		enemyHP.Add(ENEMY_DEFINE.HP[other.GetComponent<Enemy>().GetId()]);
+		enemyDamage.Add(ENEMY_DEFINE.DAMAGE[other.GetComponent<Enemy>().GetId()]);
 
         Destroy(other.gameObject);
         if(enemyId.Count == testStageSpawner.allEnemyNum) {
