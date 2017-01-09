@@ -6,6 +6,7 @@ public class Enemy : MoveObjectBase {
 	[SerializeField] private int hp;
 	[SerializeField] private int id;
     public float spawnTime;
+	[SerializeField] private EnemyEffectBase[] enemyEffect;
 
 	protected override void Initialize (){
 		base.Initialize ();
@@ -16,9 +17,19 @@ public class Enemy : MoveObjectBase {
 
 	protected override void Update (){
 		base.Update ();
+		for (int i = 0; i < enemyEffect.Length; i++) {
+			enemyEffect [i].MoveEffect ();
+		}
         if (hp <= 0) {
-            Destroy(gameObject);
+			DeadEnemy ();
         }
+	}
+
+	private void DeadEnemy(){
+		for (int i = 0; i < enemyEffect.Length; i++) {
+			enemyEffect [i].DeadEffect ();
+		}
+		Destroy (gameObject);
 	}
 
     public void TakeDamage(int _damage) {
@@ -31,5 +42,20 @@ public class Enemy : MoveObjectBase {
 
 	public int GetId(){
 		return id;
+	}
+
+	public void SetMoveSpeed(float _moveSpeed){
+		moveSpeed = _moveSpeed;
+	}
+
+	public float GetMoveSpeed(){
+		return moveSpeed;
+	}
+
+	protected override void OnTriggerEnter2D (Collider2D other){
+		base.OnTriggerEnter2D (other);
+		for (int i = 0; i < enemyEffect.Length; i++) {
+			enemyEffect [i].CollisionEffect ();
+		}
 	}
 }
