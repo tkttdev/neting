@@ -123,7 +123,7 @@ public class StageTest : GameManager {
                 //弾のinterval、shoot処理
                 //stock処理
                 if (testCharaBulletStock[charaId] < charaMaxBulletStock[charaId]) {
-                    testCharaBulletInterval[charaId] += Time.deltaTime;
+					testCharaBulletInterval [charaId] += 1.0f / 60.0f;
                 }
                 if (testCharaBulletInterval[charaId] > charaBulletInterval[charaId]) {
                     testCharaBulletInterval[charaId] = 0.0f;

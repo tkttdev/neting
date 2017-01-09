@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
-    private UserData userData = new UserData();
+	private UserData userData = new UserData();
 
     protected override void Initialize() {
         base.Initialize();
