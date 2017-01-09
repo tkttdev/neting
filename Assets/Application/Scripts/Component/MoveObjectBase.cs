@@ -13,9 +13,19 @@ public class MoveObjectBase : MonoBehaviour {
 		FORWARD = 0,
 		LEFT = 1,
 		RIGHT = 2,
+		IGNORE = 3,
+	}
+
+	protected enum MoveMode : int {
+		NORMAL = 0,
+		IGNORE = 1,
 	}
 
 	protected MoveDir moveDir = MoveDir.FORWARD;
+	protected MoveMode moveMode = MoveMode.NORMAL;
+
+	[SerializeField] MoveDir initMoveDir = MoveDir.FORWARD;
+	[SerializeField] MoveMode initMoveMode = MoveMode.NORMAL;
 
 	/// <summary>
 	/// Don't use this function to initialize.
@@ -29,7 +39,8 @@ public class MoveObjectBase : MonoBehaviour {
 	/// To use initialize this function.
 	/// </summary>
 	protected virtual void Initialize(){
-		moveDir = MoveDir.FORWARD;
+		moveDir = initMoveDir;
+		moveMode = initMoveMode;
 	}
 
 	/// <summary>
@@ -70,6 +81,9 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D other){
+		if (moveMode == MoveMode.IGNORE) {
+			return;
+		}
 		if (other.tag == "LeftCorner") {
 			gameObject.transform.position = other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
@@ -86,6 +100,4 @@ public class MoveObjectBase : MonoBehaviour {
 			}
 		}
 	}
-
-
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterBullet : MoveObjectBase {
 
-    [SerializeField] private int damage;
+    private int damage;
 
     protected override void Initialize() {
 		base.Initialize ();
