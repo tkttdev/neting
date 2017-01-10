@@ -56,14 +56,14 @@ public class Enemy : MoveObjectBase {
 		return moveSpeed;
 	}
 
-	protected override void OnTriggerEnter2D (Collider2D other){
-		base.OnTriggerEnter2D (other);
+	protected override void OnTriggerEnter2D (Collider2D _other){
 		for (int i = 0; i < enemyEffect.Length; i++) {
-			enemyEffect [i].CollisionEffect ();
+			enemyEffect [i].OnTrriger2DEffect (_other, id);
 		}
-		if (other.tag == "DamageZone") {
+		if (_other.tag == "DamageZone") {
 			GameCharacter.I.TakeDamage (damage);
 			DeadEnemy ();
 		}
+		base.OnTriggerEnter2D (_other);
 	}
 }

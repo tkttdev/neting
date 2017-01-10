@@ -79,18 +79,18 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 	}
 
-	protected virtual void OnTriggerEnter2D(Collider2D other){
+	protected virtual void OnTriggerEnter2D(Collider2D _other){
 		if (moveMode == MoveMode.IGNORE) {
 			return;
-		} else if (other.tag == "LeftCorner") {
-			gameObject.transform.position = other.transform.position;
+		} else if (_other.tag == "LeftCorner") {
+			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.LEFT;
 			} else {
 				moveDir = MoveDir.FORWARD;
 			}
-		} else if (other.tag == "RightCorner") {
-			gameObject.transform.position = other.transform.position;
+		} else if (_other.tag == "RightCorner") {
+			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.RIGHT;
 			} else {

@@ -12,5 +12,5 @@ public class EnemyEffectBase : MonoBehaviour {
 
 	public virtual void MoveEffect(){}
 	public virtual void DeadEffect(){}
-	public virtual void CollisionEffect(){}
+	public virtual void OnTrriger2DEffect(Collider2D _other, int _enemyId){}
 }
