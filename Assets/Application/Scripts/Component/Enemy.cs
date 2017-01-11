@@ -8,6 +8,8 @@ public class Enemy : MoveObjectBase {
 	private int damage;
     public float spawnTime;
 
+	public bool firstColliderAfterCopy = false;
+
 	private EnemyEffectBase[] enemyEffect;
 
 	protected override void Initialize (){
@@ -57,6 +59,7 @@ public class Enemy : MoveObjectBase {
 	}
 
 	protected override void OnTriggerEnter2D (Collider2D _other){
+		base.OnTriggerEnter2D (_other);
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].OnTrriger2DEffect (_other, id);
 		}
@@ -64,6 +67,5 @@ public class Enemy : MoveObjectBase {
 			GameCharacter.I.TakeDamage (damage);
 			DeadEnemy ();
 		}
-		base.OnTriggerEnter2D (_other);
 	}
 }

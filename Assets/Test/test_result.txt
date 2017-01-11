@@ -157,4 +157,3 @@ Dead Enemies
 EnemyID : 1 SpawnTime : 0.487 ExpectedUserMarginTime : 1.953
 EnemyID : 0 SpawnTime : 1.002 ExpectedUserMarginTime : 1.168
 ===============================================================================================
-

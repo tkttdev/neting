@@ -9,7 +9,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[Range(2.0f,20.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
 
-	protected enum MoveDir : int {
+	public enum MoveDir : int {
 		FORWARD = 0,
 		LEFT = 1,
 		RIGHT = 2,
@@ -20,11 +20,13 @@ public class MoveObjectBase : MonoBehaviour {
 		IGNORE = 1,
 	}
 
-	protected MoveDir moveDir = MoveDir.FORWARD;
+	public MoveDir moveDir = MoveDir.FORWARD;
 	protected MoveMode moveMode = MoveMode.NORMAL;
 
-	[SerializeField] MoveDir initMoveDir = MoveDir.FORWARD;
-	[SerializeField] MoveMode initMoveMode = MoveMode.NORMAL;
+	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
+	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
+
+	[HideInInspector] public bool isTriggerEnter2D = false;
 
 	/// <summary>
 	/// Don't use this function to initialize.
@@ -79,8 +81,10 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 	}
 
+	bool afterWarp = false;
+
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
-		if (moveMode == MoveMode.IGNORE) {
+		if (moveMode == MoveMode.IGNORE || isTriggerEnter2D) {
 			return;
 		} else if (_other.tag == "LeftCorner") {
 			gameObject.transform.position = _other.transform.position;
@@ -96,6 +100,22 @@ public class MoveObjectBase : MonoBehaviour {
 			} else {
 				moveDir = MoveDir.FORWARD;
 			}
+		} else if (_other.tag == "Warp") {
+			if (afterWarp) {
+				afterWarp = false;
+				return;
+			}
+			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
+			afterWarp = true;
 		}
+
+		isTriggerEnter2D = true;
+
 	}
+
+	protected virtual void OnTriggerExit2D(){
+		isTriggerEnter2D = false;
+	}
+
+
 }
