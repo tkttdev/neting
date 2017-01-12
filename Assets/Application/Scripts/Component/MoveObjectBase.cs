@@ -26,7 +26,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
 
-	[HideInInspector] public bool isTriggerEnter2D = false;
+	[HideInInspector] public bool isInCorner = false;
 
 	/// <summary>
 	/// Don't use this function to initialize.
@@ -84,16 +84,18 @@ public class MoveObjectBase : MonoBehaviour {
 	bool afterWarp = false;
 
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
-		if (moveMode == MoveMode.IGNORE || isTriggerEnter2D) {
+		if (moveMode == MoveMode.IGNORE) {
 			return;
-		} else if (_other.tag == "LeftCorner") {
+		} else if (_other.tag == "LeftCorner" && !isInCorner) {
+			isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.LEFT;
 			} else {
 				moveDir = MoveDir.FORWARD;
 			}
-		} else if (_other.tag == "RightCorner") {
+		} else if (_other.tag == "RightCorner" && !isInCorner) {
+			isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD) {
 				moveDir = MoveDir.RIGHT;
@@ -109,12 +111,12 @@ public class MoveObjectBase : MonoBehaviour {
 			afterWarp = true;
 		}
 
-		isTriggerEnter2D = true;
-
 	}
 
-	protected virtual void OnTriggerExit2D(){
-		isTriggerEnter2D = false;
+	protected virtual void OnTriggerExit2D(Collider2D _other){
+		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner") {
+			isInCorner = false;
+		}
 	}
 
 
