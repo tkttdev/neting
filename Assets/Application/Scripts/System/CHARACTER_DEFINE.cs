@@ -12,10 +12,10 @@ public enum CharacterID : int {
 public static class CHARACTER_DEFINE {
 
     public const int characterVarietyNum = 10;
-    public static readonly ReadOnlyCollection<int>    LIFE                = Array.AsReadOnly(new int[]    {    3,    4,    2,    4,    5,    2,    4,    7,   3,     8 });
-    public static readonly ReadOnlyCollection<int>    MAX_BULLET_STOCK    = Array.AsReadOnly(new int[]    {    3,    2,    5,    5,    2,    3,    4,    5,   7,    10 });
-    public static readonly ReadOnlyCollection<float>  BULLET_INTERVAL     = Array.AsReadOnly(new float[]  { 3.0f, 1.2f, 3.0f, 1.0f, 2.0f, 1.0f, 2.0f, 2.0f, 3.5f, 1.3f });
-    public static readonly ReadOnlyCollection<int>    BULLET_DAMAGE       = Array.AsReadOnly(new int[]    {    1,    1,    1,    2,    2,    1,    2,    1,    1,    2 });
+    public static readonly ReadOnlyCollection<int>    LIFE                = Array.AsReadOnly(new int[]    {    3,    3,    2,    3,    4,    2,    3,    2,    4,    1 });
+    public static readonly ReadOnlyCollection<int>    MAX_BULLET_STOCK    = Array.AsReadOnly(new int[]    {    3,    2,    5,    3,    1,    2,    4,    5,    3,    1 });
+    public static readonly ReadOnlyCollection<float>  BULLET_INTERVAL     = Array.AsReadOnly(new float[]  { 2.0f, 1.5f, 2.0f, 2.5f, 1.0f, 2.0f, 1.5f, 2.0f, 2.5f, 0.5f });
+    public static readonly ReadOnlyCollection<int>    BULLET_DAMAGE       = Array.AsReadOnly(new int[]    {    1,    1,    1,    2,    1,    2,    1,    2,    3,    1 });
     public static readonly ReadOnlyCollection<string> BULLET_PREFAB_PATH  = Array.AsReadOnly(new string[] { "Prefabs/Bullet/CharacterBullet",
                                                                                                             "Prefabs/Bullet/CharacterBullet",
                                                                                                             "Prefabs/Bullet/CharacterBullet",
