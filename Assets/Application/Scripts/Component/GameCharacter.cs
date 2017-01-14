@@ -42,37 +42,38 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	void Update() {
-		countText.text = string.Format("{0:f3}", intervalCount);
-		lifeText.text = life.ToString ();
-		if (bulletStock < maxBulletStock && intervalCount == 0) {
-			intervalCount = bulletInterval;
-		}
+		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			countText.text = string.Format ("{0:f3}", intervalCount);
+			lifeText.text = life.ToString ();
+			if (bulletStock < maxBulletStock && intervalCount == 0) {
+				intervalCount = bulletInterval;
+			}
 
-		if (intervalCount > 0.0f) {
-			intervalCount -= Time.deltaTime;
-			if (intervalCount <= 0.0f) {
-				intervalCount = 0.0f;
-				bulletStock += 1;
+			if (intervalCount > 0.0f) {
+				intervalCount -= Time.deltaTime;
+				if (intervalCount <= 0.0f) {
+					intervalCount = 0.0f;
+					bulletStock += 1;
+				}
+			}
+
+			stockText.text = bulletStock.ToString ();
+			if (bulletStock != 0 && Input.GetMouseButtonDown (0)) {
+				bulletStock--;
+				if (Input.mousePosition.x < Screen.width / 5.0f) {
+					entryX = -2;
+				} else if (Input.mousePosition.x < (Screen.width / 5.0f) * 2.0f) {
+					entryX = -1;
+				} else if (Input.mousePosition.x < (Screen.width / 5.0f) * 3.0f) {
+					entryX = 0;
+				} else if (Input.mousePosition.x < (Screen.width / 5.0f) * 4.0f) {
+					entryX = 1;
+				} else {
+					entryX = 2;
+				}
+				Shoot ();
 			}
 		}
-
-		stockText.text = bulletStock.ToString();
-		if (bulletStock != 0 && Input.GetMouseButtonDown(0)) {
-			bulletStock--;
-			if (Input.mousePosition.x < Screen.width / 5.0f) {
-				entryX = -2;
-			} else if (Input.mousePosition.x < (Screen.width / 5.0f) * 2.0f) {
-				entryX = -1;
-			} else if (Input.mousePosition.x < (Screen.width / 5.0f) * 3.0f) {
-				entryX = 0;
-			} else if (Input.mousePosition.x < (Screen.width / 5.0f) * 4.0f) {
-				entryX = 1;
-			} else {
-				entryX = 2;
-			}
-			Shoot();
-		}
-
 
 	}
 

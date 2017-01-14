@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class Enemy : MoveObjectBase {
 	
@@ -35,7 +36,7 @@ public class Enemy : MoveObjectBase {
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].DeadEffect ();
 		}
-		Destroy (gameObject);
+		DestroyOwn ();
 	}
 
     public void TakeDamage(int _damage) {
@@ -65,7 +66,15 @@ public class Enemy : MoveObjectBase {
 		}
 		if (_other.tag == "DamageZone") {
 			GameCharacter.I.TakeDamage (damage);
-			Destroy (gameObject);
+			DestroyOwn ();
 		}
+	}
+
+	private void DestroyOwn(){
+		ExecuteEvents.Execute<IRecieveMessage>(
+			target: EnemySpawner.I.gameObject, // 呼び出す対象のオブジェクト
+			eventData: null,  // イベントデータ（モジュール等の情報）
+			functor: (recieveTarget,y)=>recieveTarget.OnRecieveInfo());
+		Destroy (gameObject);
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class EnemySpawner : MonoBehaviour {
+public class EnemySpawner : SingletonBehaviour<EnemySpawner>, IRecieveMessage {
 
     [SerializeField] private Transform[] spawnerPos;
     [SerializeField] private TextAsset spawnerInfoText;
@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour {
 
     private float playTime = 0.0f;
     public int allEnemyNum = 0;
+	private int allDeadEnemyNum = 0;
     
 	// Use this for initialization
 	void Start () {
@@ -65,6 +66,13 @@ public class EnemySpawner : MonoBehaviour {
         spawnerInfo.spawnPos.RemoveAt(0);
         spawnerInfo.allSpawnEnemyNum++;
     }
+
+	public void OnRecieveInfo(){
+		allDeadEnemyNum++;
+		if (allEnemyNum == allDeadEnemyNum) {
+			GameManager.I.SetEnd ();
+		}
+	}
 }
 
 public class SpawnerInfo {

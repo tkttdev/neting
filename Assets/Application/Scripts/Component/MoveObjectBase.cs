@@ -77,22 +77,24 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void Update(){
-		switch (moveDir) {
-		case MoveDir.FORWARD :
-			gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
-			break;
-		case MoveDir.LEFT:
-			gameObject.transform.position += new Vector3 (-moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
-			break;
-		case MoveDir.RIGHT:
-			gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
-			break;
-		case MoveDir.UP:
-			gameObject.transform.position += new Vector3 (0, (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
-			break;
-		case MoveDir.DOWN:
-			gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
-			break;
+		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			switch (moveDir) {
+			case MoveDir.FORWARD:
+				gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+				break;
+			case MoveDir.LEFT:
+				gameObject.transform.position += new Vector3 (-moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
+				break;
+			case MoveDir.RIGHT:
+				gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
+				break;
+			case MoveDir.UP:
+				gameObject.transform.position += new Vector3 (0, (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+				break;
+			case MoveDir.DOWN:
+				gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+				break;
+			}
 		}
 	}
 
