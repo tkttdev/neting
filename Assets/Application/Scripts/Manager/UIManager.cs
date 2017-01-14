@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour {
+public class UIManager : SingletonBehaviour<UIManager> {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public DialogBase gameOverDialog;
+	public DialogBase pauseDialog;
+	public DialogBase stageClearDialog;
+
+
 }

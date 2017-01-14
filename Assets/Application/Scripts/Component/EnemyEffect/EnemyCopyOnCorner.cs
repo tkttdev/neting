@@ -7,7 +7,8 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 	public bool isFirstCopy = true;
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
-		if (isFirstCopy) {
+		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "Warp");
+		if (isFirstCopy && isCorner) {
 			GameObject copy = Instantiate (gameObject, gameObject.transform.position, Quaternion.identity) as GameObject;
 			copy.GetComponent<EnemyCopyOnCorner> ().isFirstCopy = false;
 			copy.GetComponent<Enemy> ().moveDir = MoveObjectBase.MoveDir.FORWARD;

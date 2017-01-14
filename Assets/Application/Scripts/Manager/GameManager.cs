@@ -47,6 +47,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
         gameStatus = GameStatus.END;
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
 		UserDataManager.I.SaveData ();
+		UIManager.I.stageClearDialog.Show ();
     }
 
     public bool CheckGameStatus(GameStatus _checkStatus) {

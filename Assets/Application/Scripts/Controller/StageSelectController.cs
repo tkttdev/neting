@@ -75,10 +75,6 @@ public class StageSelectController : MonoBehaviour {
 	}
 
 	public void CharacterButton() {
-		AppSceneManager.I.GoScene(GameSceneType.CHARACTER_SELECT_SCENE);
-	}
-
-	public void StoreButton() {
-		AppSceneManager.I.GoScene(GameSceneType.STORE_SCENE);
+		AppSceneManager.I.GoScene(GameSceneType.CHARACTER_STORE);
 	}
 }

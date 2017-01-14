@@ -6,10 +6,9 @@ using UnityEngine.SceneManagement;
 public enum GameSceneType : int {
     TITLE_SCENE = 0,
     MENU_SCENE = 1,
-    CHARACTER_SELECT_SCENE = 2,
-    STORE_SCENE = 3,
-    GAME_SCENE = 4,
-    CREDIT_SCENE = 5,
+    CHARACTER_STORE = 2,
+    GAME_SCENE = 3,
+    CREDIT_SCENE = 4,
 }
 
 public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
