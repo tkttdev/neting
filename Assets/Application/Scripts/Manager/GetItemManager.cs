@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GetItemManager : MonoBehaviour {
+public class GetItemManager : SingletonBehaviour<GetItemManager> {
 
-	// Use this for initialization
-	void Start () {
-		
+	private int earnMoney = 0;
+
+	public void AddEarnMoney(int _earnMoney){
+		earnMoney += _earnMoney;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public int GetEarnMoney(){
+		return earnMoney;
 	}
 }
