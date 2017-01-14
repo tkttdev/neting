@@ -14,6 +14,8 @@ public class CharacterBullet : MoveObjectBase {
 
     protected override void Update() {
         base.Update();
+		float scale = Mathf.PingPong (Time.time*2.0f, 1.0f) + 3.0f;
+		gameObject.transform.localScale = new Vector3 (scale, scale, scale);
     }
 
     protected override void OnTriggerEnter2D(Collider2D _other) {
