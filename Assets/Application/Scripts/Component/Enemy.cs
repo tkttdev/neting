@@ -72,7 +72,7 @@ public class Enemy : MoveObjectBase {
 
 	private void DestroyOwn(){
 		ExecuteEvents.Execute<IRecieveMessage>(
-			target: EnemySpawner.I.gameObject, // 呼び出す対象のオブジェクト
+			target: GameManager.I.gameObject, // 呼び出す対象のオブジェクト
 			eventData: null,  // イベントデータ（モジュール等の情報）
 			functor: (recieveTarget,y)=>recieveTarget.OnRecieveInfo());
 		Destroy (gameObject);

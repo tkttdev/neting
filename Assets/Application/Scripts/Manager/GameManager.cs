@@ -9,10 +9,12 @@ public enum GameStatus : int {
     END = 3,
 }
 
-public class GameManager : SingletonBehaviour<GameManager> {
+public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 
 	[SerializeField] protected bool isDemo = false;
     protected GameStatus gameStatus = GameStatus.WAIT;
+	public int allDeadEnemyNum;
+	public int allEnemyNum;
 
 	protected override void Initialize (){
 		base.Initialize ();
@@ -48,4 +50,15 @@ public class GameManager : SingletonBehaviour<GameManager> {
     public bool CheckGameStatus(GameStatus _checkStatus) {
         return (_checkStatus == gameStatus);
     }
+
+	public void OnRecieveInfo(int _allEnemyNum){
+		allEnemyNum = _allEnemyNum;
+	}
+
+	public void OnRecieveInfo(){
+		allDeadEnemyNum++;
+		if (allDeadEnemyNum == allEnemyNum) {
+			SetEnd ();
+		}
+	}
 }

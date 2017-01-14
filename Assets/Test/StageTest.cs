@@ -233,7 +233,7 @@ public class StageTest : GameManager {
 		enemyDamage.Add(ENEMY_DEFINE.DAMAGE[other.GetComponent<Enemy>().GetId()]);
 
         Destroy(other.gameObject);
-        if(enemyId.Count == testStageSpawner.allEnemyNum) {
+		if(enemyId.Count == this.allEnemyNum) {
             isSpawn = false;
             gameStatus = GameStatus.END;
             Destroy(testStageSpawner.gameObject);

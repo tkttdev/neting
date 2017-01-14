@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.EventSystems;
 
-public class EnemySpawner : SingletonBehaviour<EnemySpawner>, IRecieveMessage {
+public class EnemySpawner : MonoBehaviour {
 
     [SerializeField] private Transform[] spawnerPos;
     [SerializeField] private TextAsset spawnerInfoText;
@@ -11,13 +12,16 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner>, IRecieveMessage {
     private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 
     private float playTime = 0.0f;
-    public int allEnemyNum = 0;
-	private int allDeadEnemyNum = 0;
-    
+    private int allEnemyNum = 0;
+
 	// Use this for initialization
 	void Start () {
-        ParseSpawnerInfoText();
+		ParseSpawnerInfoText();
         playTime = 0.0f;
+		ExecuteEvents.Execute<IRecieveMessage>(
+			target: GameManager.I.gameObject, // 呼び出す対象のオブジェクト
+			eventData: null,  // イベントデータ（モジュール等の情報）
+			functor: (recieveTarget,y)=>recieveTarget.OnRecieveInfo(allEnemyNum));
 	}
 
     private void ParseSpawnerInfoText() {
@@ -66,13 +70,6 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner>, IRecieveMessage {
         spawnerInfo.spawnPos.RemoveAt(0);
         spawnerInfo.allSpawnEnemyNum++;
     }
-
-	public void OnRecieveInfo(){
-		allDeadEnemyNum++;
-		if (allEnemyNum == allDeadEnemyNum) {
-			GameManager.I.SetEnd ();
-		}
-	}
 }
 
 public class SpawnerInfo {
