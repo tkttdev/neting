@@ -60,7 +60,7 @@ public class EnemySpawner : MonoBehaviour {
 
     private void SpawnEnemy() {
         if (enemyPrefabs[spawnerInfo.enemyId[0]] == null) {
-			enemyPrefabs[spawnerInfo.enemyId[0]] = Resources.Load(ENEMY_DEFINE.PATH[spawnerInfo.enemyId[0]]) as GameObject;
+			enemyPrefabs [spawnerInfo.enemyId [0]] = Resources.Load (ENEMY_DEFINE.PATH [spawnerInfo.enemyId [0]]) as GameObject;
 			enemyPrefabs [spawnerInfo.enemyId [0]].GetComponent<Enemy> ().SetId (spawnerInfo.enemyId [0]);
         }
         Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
