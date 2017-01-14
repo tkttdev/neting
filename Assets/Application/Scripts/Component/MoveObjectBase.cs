@@ -14,6 +14,7 @@ public class MoveObjectBase : MonoBehaviour {
 		LEFT = 1,
 		RIGHT = 2,
 		UP = 3,
+		DOWN = 4,
 	}
 
 	protected enum MoveMode : int {
@@ -87,7 +88,10 @@ public class MoveObjectBase : MonoBehaviour {
 			gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
 			break;
 		case MoveDir.UP:
-			gameObject.transform.position += new Vector3 (0, -moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+			gameObject.transform.position += new Vector3 (0, (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+			break;
+		case MoveDir.DOWN:
+			gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
 			break;
 		}
 	}
@@ -122,7 +126,7 @@ public class MoveObjectBase : MonoBehaviour {
 		} else if (_other.tag == "UpLeftCorner" && !isInCorner) {
 			isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
-			if (moveDir != MoveDir.FORWARD) {
+			if (moveDir == MoveDir.RIGHT) {
 				moveDir = MoveDir.UP;	
 			} else {
 				moveDir = MoveDir.LEFT; 
@@ -130,8 +134,24 @@ public class MoveObjectBase : MonoBehaviour {
 		} else if (_other.tag == "UpRightCorner" && !isInCorner) {
 			isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
-			if (moveDir != MoveDir.FORWARD) {
+			if (moveDir == MoveDir.LEFT) {
 				moveDir = MoveDir.UP;	
+			} else {
+				moveDir = MoveDir.RIGHT; 
+			}
+		} else if (_other.tag == "DownLeftCorner" && !isInCorner) {
+			isInCorner = true;
+			gameObject.transform.position = _other.transform.position;
+			if (moveDir == MoveDir.RIGHT) {
+				moveDir = MoveDir.DOWN;	
+			} else {
+				moveDir = MoveDir.LEFT; 
+			}
+		} else if (_other.tag == "DownRightCorner" && !isInCorner) {
+			isInCorner = true;
+			gameObject.transform.position = _other.transform.position;
+			if (moveDir == MoveDir.LEFT) {
+				moveDir = MoveDir.DOWN;	
 			} else {
 				moveDir = MoveDir.RIGHT; 
 			}
