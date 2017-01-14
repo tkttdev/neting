@@ -6,7 +6,8 @@ public static class ENEMY_DEFINE {
     public const int enemyVarietyNum = 10;
     public static readonly ReadOnlyCollection<int> HP = Array.AsReadOnly(new int[]	   { 1, 1, 1, 1, 1, 1, 1, 2, 1, 3 });
     public static readonly ReadOnlyCollection<int> DAMAGE = Array.AsReadOnly(new int[] { 1, 1, 1, 0, 1, 1, 1, 2, 2, 1 });
-    public static readonly ReadOnlyCollection<string> PATH = Array.AsReadOnly(new string[] {  "Prefabs/Enemy/Enemy0",
+	public static readonly ReadOnlyCollection<int> MONEY = Array.AsReadOnly(new int[]  { 1, 1, 2, 0, 3, 4, 3, 5, 3, 5 });
+	public static readonly ReadOnlyCollection<string> PATH = Array.AsReadOnly(new string[] {  "Prefabs/Enemy/Enemy0",
                                                                                               "Prefabs/Enemy/Enemy1",
                                                                                               "Prefabs/Enemy/Enemy2",
                                                                                               "Prefabs/Enemy/Enemy3",
