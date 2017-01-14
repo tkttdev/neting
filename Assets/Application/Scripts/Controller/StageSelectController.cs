@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class StageSelectController : MonoBehaviour {
-
+	
+	[SerializeField] private Text moneyText;
     [SerializeField] private GameObject stageButtonRoot;
     private bool isTouch = false;
     private float frickDist = 0.0f;
@@ -23,6 +25,8 @@ public class StageSelectController : MonoBehaviour {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
+
+		moneyText.text = string.Format ("Money : {0}", UserDataManager.I.GetMoney ().ToString ());
 	}
     float buttonRootX = 0;
     int nearbyStagePanelIndex = 0;

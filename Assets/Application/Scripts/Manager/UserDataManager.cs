@@ -49,6 +49,10 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		userData.money -= _money;
 	}
 
+	public int GetMoney(){
+		return userData.money;
+	}
+
 	public void SaveData (){
 		string jData = JsonUtility.ToJson (userData);
 		byte[] bData = Encoding.ASCII.GetBytes (jData);
