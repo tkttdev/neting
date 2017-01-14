@@ -20,8 +20,15 @@ public class MoveObjectBase : MonoBehaviour {
 		IGNORE = 1,
 	}
 
+	protected enum EffectMode : int {
+		LOW_SPEED = 5,
+		NORMAL = 10,
+		HIGH_SPEED = 15,
+	}
+
 	public MoveDir moveDir = MoveDir.FORWARD;
 	protected MoveMode moveMode = MoveMode.NORMAL;
+	protected EffectMode effectMode = EffectMode.NORMAL;
 
 	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
@@ -70,20 +77,26 @@ public class MoveObjectBase : MonoBehaviour {
 	protected virtual void Update(){
 		switch (moveDir) {
 		case MoveDir.FORWARD :
-			gameObject.transform.position += new Vector3 (0, moveDesMode * moveSpeed * Time.deltaTime, 0);
+			gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
 			break;
 		case MoveDir.LEFT:
-			gameObject.transform.position += new Vector3 (-moveSpeed * Time.deltaTime, 0, 0);
+			gameObject.transform.position += new Vector3 (-moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
 			break;
 		case MoveDir.RIGHT:
-			gameObject.transform.position += new Vector3 (moveSpeed * Time.deltaTime, 0, 0);
+			gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
 			break;
 		}
 	}
 
-	bool afterWarp = false;
+	protected bool afterWarp = false;
 
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
+		if (_other.tag == "LowSpeedZone") {
+			effectMode = EffectMode.LOW_SPEED;
+		} else if (_other.tag == "HighSpeedZone") {
+			effectMode = EffectMode.HIGH_SPEED;
+		}
+
 		if (moveMode == MoveMode.IGNORE) {
 			return;
 		} else if (_other.tag == "LeftCorner" && !isInCorner) {
@@ -116,6 +129,10 @@ public class MoveObjectBase : MonoBehaviour {
 	protected virtual void OnTriggerExit2D(Collider2D _other){
 		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner") {
 			isInCorner = false;
+		}
+
+		if (_other.tag == "LowSpeedZone" || _other.tag == "HighSpeedZone") {
+			effectMode = EffectMode.NORMAL;
 		}
 	}
 
