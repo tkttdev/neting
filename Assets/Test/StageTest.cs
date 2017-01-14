@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using UnityEditor;
+//using UnityEditor;
 
 public class StageTest : GameManager {
 
@@ -174,7 +174,7 @@ public class StageTest : GameManager {
 			StartTest ();
 		} else {
 			Debug.Log ("TEST COMPLETE");
-			EditorApplication.isPlaying = false;
+			//EditorApplication.isPlaying = false;
 		}
     }
 
