@@ -13,6 +13,7 @@ public class MoveObjectBase : MonoBehaviour {
 		FORWARD = 0,
 		LEFT = 1,
 		RIGHT = 2,
+		UP = 3,
 	}
 
 	protected enum MoveMode : int {
@@ -85,6 +86,9 @@ public class MoveObjectBase : MonoBehaviour {
 		case MoveDir.RIGHT:
 			gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
 			break;
+		case MoveDir.UP:
+			gameObject.transform.position += new Vector3 (0, -moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+			break;
 		}
 	}
 
@@ -114,6 +118,22 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.RIGHT;
 			} else {
 				moveDir = MoveDir.FORWARD;
+			}
+		} else if (_other.tag == "UpLeftCorner" && !isInCorner) {
+			isInCorner = true;
+			gameObject.transform.position = _other.transform.position;
+			if (moveDir != MoveDir.FORWARD) {
+				moveDir = MoveDir.UP;	
+			} else {
+				moveDir = MoveDir.LEFT; 
+			}
+		} else if (_other.tag == "UpRightCorner" && !isInCorner) {
+			isInCorner = true;
+			gameObject.transform.position = _other.transform.position;
+			if (moveDir != MoveDir.FORWARD) {
+				moveDir = MoveDir.UP;	
+			} else {
+				moveDir = MoveDir.RIGHT; 
 			}
 		} else if (_other.tag == "Warp") {
 			if (afterWarp) {
