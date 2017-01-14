@@ -16,14 +16,11 @@ public class EnemyAlphaChange : EnemyEffectBase {
 	private float enemyAlpha;
 	private SpriteRenderer spriteRenderer;
 
-	protected override void Start () {
-		base.Start ();
+	private void Start () {
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer> ();
 	}
 
 	public override void MoveEffect (){
-		base.MoveEffect ();
-
 		if (isChange) {
 			enemyAlpha = spriteRenderer.color.a;
 			enemyAlpha += (int)changeMode * changeRateParsec * Time.deltaTime;

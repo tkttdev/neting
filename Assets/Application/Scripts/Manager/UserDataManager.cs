@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 
 public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
@@ -17,10 +20,17 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		}
 	}
 
-	private UserData userData = new UserData();
+	private UserData userData;
 
     protected override void Initialize() {
         base.Initialize();
+
+		userData = new UserData ();
+		if (File.Exists (Application.dataPath + "/Application/Resources/SaveData/savedata.txt")) {
+			LoadData ();
+		} else {
+			SaveData ();
+		}
     }
 
     public int GetUseCharaIndex() {
@@ -30,4 +40,72 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
     public void SetUseCharacterIndex(int _characterIndex) {
         userData.useCharaIndex = _characterIndex;
     }
+
+	public void AddMoney(int _money){
+		userData.money += _money;
+	}
+
+	public void ReduceMoney(int _money){
+		userData.money -= _money;
+	}
+
+	public void SaveData (){
+		string jData = JsonUtility.ToJson (userData);
+		byte[] bData = Encoding.ASCII.GetBytes (jData);
+		byte[] eData = EncryptData (bData);
+		File.WriteAllBytes (Application.dataPath + "/Application/Resources/SaveData/savedata.txt", eData);
+	}
+
+	public void LoadData (){
+		byte[] eData = File.ReadAllBytes (Application.dataPath + "/Application/Resources/SaveData/savedata.txt");
+		byte[] dData = DecodeData (eData);
+		string jData = Encoding.ASCII.GetString (dData);
+		userData = JsonUtility.FromJson<UserData>(jData);
+	}
+
+	private byte[] EncryptData(byte[] data){
+		RijndaelManaged rijndael = new RijndaelManaged ();
+		rijndael.KeySize = 128;
+		rijndael.BlockSize = 128;
+
+		string pw = "NetShootingPass";
+		string salt = "SaltOfNetShooting";
+
+		byte[] bSalt = Encoding.UTF8.GetBytes (salt);
+		Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes (pw, bSalt);
+		deriveBytes.IterationCount = 1000;
+
+		rijndael.Key = deriveBytes.GetBytes (rijndael.KeySize / 8);
+		rijndael.IV = deriveBytes.GetBytes (rijndael.BlockSize / 8);
+
+		ICryptoTransform encryptor = rijndael.CreateEncryptor ();
+		byte[] encryptedData = encryptor.TransformFinalBlock (data, 0, data.Length);
+
+		encryptor.Dispose ();
+
+		return encryptedData;
+	}
+
+	private byte[] DecodeData(byte[] data){
+		RijndaelManaged rijndael = new RijndaelManaged ();
+		rijndael.KeySize = 128;
+		rijndael.BlockSize = 128;
+
+		string pw = "NetShootingPass";
+		string salt = "SaltOfNetShooting";
+
+		byte[] bSalt = Encoding.UTF8.GetBytes (salt);
+		Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes (pw, bSalt);
+		deriveBytes.IterationCount = 1000;
+
+		rijndael.Key = deriveBytes.GetBytes (rijndael.KeySize / 8);
+		rijndael.IV = deriveBytes.GetBytes (rijndael.BlockSize / 8);
+
+		ICryptoTransform decryptor = rijndael.CreateDecryptor ();
+		byte[] decodedData = decryptor.TransformFinalBlock (data, 0, data.Length);
+
+		decryptor.Dispose ();
+
+		return decodedData;
+	}
 }

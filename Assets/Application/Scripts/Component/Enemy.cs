@@ -65,7 +65,7 @@ public class Enemy : MoveObjectBase {
 		}
 		if (_other.tag == "DamageZone") {
 			GameCharacter.I.TakeDamage (damage);
-			DeadEnemy ();
+			Destroy (gameObject);
 		}
 	}
 }

@@ -16,10 +16,13 @@ public class EnemyMoveSpeedChange : EnemyEffectBase {
 
 	private float moveSpeed;
 	private bool isChange = true;
+	private Enemy targetEnemy;
+
+	private void Start (){
+		targetEnemy = gameObject.GetComponent<Enemy> ();
+	}
 
 	public override void MoveEffect (){
-		base.MoveEffect ();
-
 		if (isChange) {
 			moveSpeed = targetEnemy.GetMoveSpeed ();
 			moveSpeed += (int)changeMode * changeRateParsec * Time.deltaTime;
