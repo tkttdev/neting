@@ -147,7 +147,7 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
-		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner") {
+		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "UpLeftCorner" || _other.tag == "UpRightCorner") {
 			isInCorner = false;
 		}
 
