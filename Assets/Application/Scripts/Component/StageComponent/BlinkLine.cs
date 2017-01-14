@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
 public class BlinkLine : MonoBehaviour {
-	[SerializeField] private GameObject[] targetLine;
+	[SerializeField] private SpriteRenderer[] targetLine;
 	[SerializeField] private GameObject[] targetCorner;
 
 	private List<GameObject> stayMoveObject = new List<GameObject>();
@@ -19,7 +19,7 @@ public class BlinkLine : MonoBehaviour {
 		if (stayMoveObject.Count == 0) {
 			if (isExist) {
 				for (int i = 0; i < targetLine.Length; i++) {
-					targetLine [i].SetActive (false);
+					targetLine[i].enabled = false;
 				}
 				for (int i = 0; i < targetCorner.Length; i++) {
 					targetCorner [i].SetActive (false);
@@ -27,7 +27,7 @@ public class BlinkLine : MonoBehaviour {
 				isExist = false;
 			} else {
 				for (int i = 0; i < targetLine.Length; i++) {
-					targetLine [i].SetActive (true);
+					targetLine[i].enabled = true;
 				}
 				for (int i = 0; i < targetCorner.Length; i++) {
 					targetCorner [i].SetActive (true);
