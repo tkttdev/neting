@@ -83,5 +83,12 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 
 	public void TakeDamage(int _damage){
 		life -= _damage;
+		if (life <= 0) {
+			GameManager.I.SetEnd ();
+		}
+	}
+
+	public int GetLife(){
+		return life;
 	}
 }
