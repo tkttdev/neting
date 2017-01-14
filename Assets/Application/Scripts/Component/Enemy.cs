@@ -7,6 +7,7 @@ public class Enemy : MoveObjectBase {
 	[SerializeField]private int id;
 	private int hp;
 	private int damage;
+	private int money;
     public float spawnTime;
 
 	public bool firstColliderAfterCopy = false;
@@ -19,6 +20,7 @@ public class Enemy : MoveObjectBase {
         spawnTime = Time.timeSinceLevelLoad;
 		hp = ENEMY_DEFINE.HP [id];
 		damage = ENEMY_DEFINE.DAMAGE [id];
+		money = ENEMY_DEFINE.MONEY [id];
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
 	}
 
@@ -27,9 +29,6 @@ public class Enemy : MoveObjectBase {
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].MoveEffect ();
 		}
-        if (hp <= 0) {
-			DeadEnemy ();
-        }
 	}
 
 	private void DeadEnemy(){
@@ -41,6 +40,10 @@ public class Enemy : MoveObjectBase {
 
     public void TakeDamage(int _damage) {
         hp -= _damage;
+		if (hp <= 0) {
+			GetItemManager.I.AddEarnMoney (money);
+			DeadEnemy ();
+		}
     }
 
 	public void SetId(int _id){
