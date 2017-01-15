@@ -21,6 +21,10 @@ public class TitleController : MonoBehaviour {
 		AppSceneManager.I.GoScene (GameSceneType.MENU_SCENE);
 	}
 
+	public void CreditButton(){
+		AppSceneManager.I.GoScene (GameSceneType.CREDIT_SCENE);
+	}
+
 	private void BackgroundEffect(){
 		background.color = new Color (background.color.r, background.color.g, background.color.b, Mathf.PingPong (Time.time * backgroundBlinkTime, 0.7f) + 0.3f);
 	}

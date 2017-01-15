@@ -16,7 +16,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		public UserData() {
 			hasChara[0] = true;
 			for(int i = 1; i < 10; i++){
-				hasChara[i] = false;
+				hasChara[i] = true;
 			}
 
 			for(int i = 0; i < 20; i++){
@@ -38,7 +38,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		}
     }
 
-    public int GetUseCharaIndex() {
+    public int GetUseCharacterIndex() {
         return userData.useCharaIndex;
     }
 
@@ -52,6 +52,10 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 	public void ReduceMoney(int _money){
 		userData.money -= _money;
+	}
+
+	public bool IsPermitUseCharacter(int _characterIndex){
+		return userData.hasChara [_characterIndex];
 	}
 
 	public int GetMoney(){

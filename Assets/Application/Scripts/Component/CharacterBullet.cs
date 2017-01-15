@@ -8,7 +8,7 @@ public class CharacterBullet : MoveObjectBase {
 
     protected override void Initialize() {
 		base.Initialize ();
-		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharaIndex ()];
+		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
         SetMoveToEnemy();
     }
 

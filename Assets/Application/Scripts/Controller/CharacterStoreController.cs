@@ -14,14 +14,16 @@ public class CharacterStoreController : MonoBehaviour {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
-		selectCharacterBackground [UserDataManager.I.GetUseCharaIndex ()].color = Color.red;
+		selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
 	}
 
 	public void CharacterSelectButton(int _charaIndex) {
-		selectCharacterBackground [UserDataManager.I.GetUseCharaIndex ()].color = Color.white;
-		selectCharacterBackground [_charaIndex].color = Color.red;
-		UserDataManager.I.SetUseCharacterIndex(_charaIndex);
-		UserDataManager.I.SaveData ();
+		if (UserDataManager.I.IsPermitUseCharacter (_charaIndex)) {
+			selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.white;
+			selectCharacterBackground [_charaIndex].color = Color.red;
+			UserDataManager.I.SetUseCharacterIndex (_charaIndex);
+			UserDataManager.I.SaveData ();
+		}
 
 	}
 
