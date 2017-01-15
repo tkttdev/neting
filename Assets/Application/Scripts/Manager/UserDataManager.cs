@@ -26,12 +26,16 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 	}
 
 	private UserData userData;
+	private string dataPath;
 
     protected override void Initialize() {
         base.Initialize();
 
+		dataPath = Application.persistentDataPath + "/savedata.txt";
+
+
 		userData = new UserData ();
-		if (File.Exists (Application.dataPath + "/Application/Resources/SaveData/savedata.txt")) {
+		if (File.Exists (dataPath)) {
 			LoadData ();
 		} else {
 			SaveData ();
@@ -66,11 +70,11 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		string jData = JsonUtility.ToJson (userData);
 		byte[] bData = Encoding.ASCII.GetBytes (jData);
 		byte[] eData = EncryptData (bData);
-		File.WriteAllBytes (Application.dataPath + "/Application/Resources/SaveData/savedata.txt", eData);
+		File.WriteAllBytes (dataPath, eData);
 	}
 
 	public void LoadData (){
-		byte[] eData = File.ReadAllBytes (Application.dataPath + "/Application/Resources/SaveData/savedata.txt");
+		byte[] eData = File.ReadAllBytes (dataPath);
 		byte[] dData = DecodeData (eData);
 		string jData = Encoding.ASCII.GetString (dData);
 		userData = JsonUtility.FromJson<UserData>(jData);

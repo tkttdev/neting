@@ -53,7 +53,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
 		maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
 		charaBulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
-		life = CHARACTER_DEFINE.LIFE[useCharaIndex];
+		life = 3;
 	}
 
 	void Update() {
