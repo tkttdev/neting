@@ -63,12 +63,13 @@ public class EnemySpawner : MonoBehaviour {
 			enemyPrefabs [spawnerInfo.enemyId [0]] = Resources.Load (ENEMY_DEFINE.PATH [spawnerInfo.enemyId [0]]) as GameObject;
 			enemyPrefabs [spawnerInfo.enemyId [0]].GetComponent<Enemy> ().SetId (spawnerInfo.enemyId [0]);
         }
-        Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
+        GameObject spawnEnemy = Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
+		spawnEnemy.transform.name = "Enemy" + spawnerInfo.allSpawnEnemyNum.ToString ();
 
         spawnerInfo.enemyId.RemoveAt(0);
         spawnerInfo.spawnTime.RemoveAt(0);
         spawnerInfo.spawnPos.RemoveAt(0);
-        spawnerInfo.allSpawnEnemyNum++;
+		spawnerInfo.allSpawnEnemyNum++;
     }
 }
 

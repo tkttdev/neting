@@ -11,11 +11,16 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		public int useCharaIndex = 0;
 		public int money = 0;
 		public bool[] hasChara = new bool[10];
+		public bool[] isClearStage = new bool[20];
 
 		public UserData() {
 			hasChara[0] = true;
 			for(int i = 1; i < 10; i++){
 				hasChara[i] = false;
+			}
+
+			for(int i = 0; i < 20; i++){
+				isClearStage[i] = false;
 			}
 		}
 	}

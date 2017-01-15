@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class StageSelectController : MonoBehaviour {
 	
 	[SerializeField] private Text moneyText;
-    [SerializeField] private GameObject stageButtonRoot;
-    private bool isTouch = false;
-    private float frickDist = 0.0f;
-    private float unitX;
-    private int displayStagePanelIndex = 0;
-    private int stagePanelNum = 2;
+    [SerializeField] private GameObject[] stageButtonRoot;
 
-    private Vector3 lastPos;
-    private bool isMove = false;
-    private int purposePanelIndex = 0;
+	//0~10 => 0, 11~20 => 1
+	private int showStageIndex = 0;
+	private int minStageIndex = 0;
+	private int maxStageIndex = 1;
+	private int purposeStageIndex = 0;
+
+	private float unitX;
 
 	// Use this for initialization
 	void Start () {
-        unitX = new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(-Screen.width / 2, 0, 0)).x, 0, 0).x;
 		#if UNITY_EDITOR
 		if(GameObject.Find("Systems") == null){
 			GameObject obj = Resources.Load("Prefabs/Systems") as GameObject;
@@ -27,47 +26,33 @@ public class StageSelectController : MonoBehaviour {
 		#endif
 
 		moneyText.text = string.Format ("Money : {0}", UserDataManager.I.GetMoney ().ToString ());
+		unitX = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0)).x * 2.0f;
 	}
-    float buttonRootX = 0;
-    int nearbyStagePanelIndex = 0;
-    // Update is called once per frame
+
     void Update () {
-        
-        if (Input.GetMouseButtonDown(0)) {
-            isMove = false;
-            lastPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        } else if (Input.GetMouseButton(0)) {
-            frickDist = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - lastPos.x;
-            if (!(displayStagePanelIndex == 0 && frickDist > 0.0f) && !(displayStagePanelIndex == stagePanelNum && frickDist < 0.0f)) {
-                stageButtonRoot.transform.position += new Vector3(frickDist, 0, 0);
-                lastPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            }
-        } else if (Input.GetMouseButtonUp(0)) {
-            isMove = true;
-            buttonRootX = stageButtonRoot.transform.position.x;
-            nearbyStagePanelIndex = (int)((buttonRootX + unitX / 2.0f) / unitX);
-            if(nearbyStagePanelIndex > 1) {
-                nearbyStagePanelIndex = 1;
-            }
-        }
+		if (Input.GetMouseButtonDown (0) && !EventSystem.current.IsPointerOverGameObject ()) {
+			if (Input.mousePosition.x < Screen.width / 2.0f) {
+				purposeStageIndex = showStageIndex - 1;
+			} else {
+				purposeStageIndex = showStageIndex + 1;
+			}
 
-        if (isMove) {
-            int direction;
-            if(stageButtonRoot.transform.position.x > nearbyStagePanelIndex * unitX) {
-                direction = -1;
-            }else {
-                direction = 1;
-            }
+			purposeStageIndex = Mathf.Clamp (purposeStageIndex, minStageIndex, maxStageIndex);
+			if (purposeStageIndex != showStageIndex) {
+				StartButtonAnimation (showStageIndex - purposeStageIndex);
+				showStageIndex = purposeStageIndex;
+			}
+		}
+	}
 
-            stageButtonRoot.transform.position += new Vector3(3.0f * Time.deltaTime * direction, 0, 0);
+	private void StartButtonAnimation(int _dir){
+		for (int i = 0; i < stageButtonRoot.Length; i++) {
+			iTween.MoveBy (stageButtonRoot [i].gameObject, iTween.Hash ("x", _dir * unitX, "time", 1.5f));
+		}
+	}
 
-            if(stageButtonRoot.transform.position.x >= nearbyStagePanelIndex*unitX - 0.2f && stageButtonRoot.transform.position.x <= nearbyStagePanelIndex * unitX + 0.2f) {
-                displayStagePanelIndex = nearbyStagePanelIndex;
-                stageButtonRoot.transform.position = new Vector3(nearbyStagePanelIndex * unitX, 0, 0);
-                isMove = false;
-            }
-            
-        }
+	private void EndButtonAnimation(){
+		
 	}
 
 	public void StageSelectButton(int stageLevel){
