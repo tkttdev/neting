@@ -112,7 +112,7 @@ public class MoveObjectBase : MonoBehaviour {
 		} else if (_other.tag == "LeftCorner" && !isInCorner) {
 			isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD) {
+			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
 			} else {
 				moveDir = MoveDir.FORWARD;
@@ -120,7 +120,7 @@ public class MoveObjectBase : MonoBehaviour {
 		} else if (_other.tag == "RightCorner" && !isInCorner) {
 			isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD) {
+			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
 			} else {
 				moveDir = MoveDir.FORWARD;

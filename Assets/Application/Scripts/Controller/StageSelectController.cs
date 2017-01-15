@@ -16,6 +16,8 @@ public class StageSelectController : MonoBehaviour {
 
 	private float unitX;
 
+	[SerializeField] private GameObject[] coverPanel;
+
 	// Use this for initialization
 	void Start () {
 		#if UNITY_EDITOR
@@ -39,20 +41,31 @@ public class StageSelectController : MonoBehaviour {
 
 			purposeStageIndex = Mathf.Clamp (purposeStageIndex, minStageIndex, maxStageIndex);
 			if (purposeStageIndex != showStageIndex) {
-				StartButtonAnimation (showStageIndex - purposeStageIndex);
+				StartCoroutine (ButtonMoveAnimation (showStageIndex - purposeStageIndex));
 				showStageIndex = purposeStageIndex;
 			}
 		}
 	}
 
-	private void StartButtonAnimation(int _dir){
-		for (int i = 0; i < stageButtonRoot.Length; i++) {
-			iTween.MoveBy (stageButtonRoot [i].gameObject, iTween.Hash ("x", _dir * unitX, "time", 1.5f));
+	private IEnumerator ButtonMoveAnimation(int _dir){
+		for (int i = 0; i < coverPanel.Length; i++) {
+			coverPanel [i].SetActive (true);
 		}
-	}
-
-	private void EndButtonAnimation(){
-		
+		for (int i = 0; i < stageButtonRoot.Length; i++) {
+			iTween.ScaleTo (stageButtonRoot [i].gameObject, iTween.Hash ("x", 0.7f, "y", 0.7f, "time", 0.25f));
+		}
+		yield return new WaitForSeconds(0.2f);
+		for (int i = 0; i < stageButtonRoot.Length; i++) {
+			iTween.MoveBy (stageButtonRoot [i].gameObject, iTween.Hash ("x", _dir * unitX, "time", 0.65f));
+		}
+		yield return new WaitForSeconds (0.5f);
+		for (int i = 0; i < stageButtonRoot.Length; i++) {
+			iTween.ScaleTo (stageButtonRoot [i].gameObject, iTween.Hash ("x", 1.0f, "y", 1.0f, "time", 0.25f));
+		}
+		for (int i = 0; i < coverPanel.Length; i++) {
+			coverPanel [i].SetActive (false);
+		}
+		yield break;
 	}
 
 	public void StageSelectButton(int stageLevel){
