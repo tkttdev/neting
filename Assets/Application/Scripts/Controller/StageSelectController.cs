@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 public class StageSelectController : MonoBehaviour {
 	
 	[SerializeField] private Text moneyText;
-    [SerializeField] private GameObject[] stageButtonRoot;
+    [SerializeField] private GameObject[] buttonRoot;
+	[SerializeField] private GameObject[] stageButtonRoot;
 
 
 	//0~10 => 0, 11~20 => 1
@@ -34,36 +35,28 @@ public class StageSelectController : MonoBehaviour {
 		unitX = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0)).x * 2.0f;
 	}
 
-    void Update () {
-		if (Input.GetMouseButtonDown (0) && !EventSystem.current.IsPointerOverGameObject ()) {
-			if (Input.mousePosition.x < Screen.width / 2.0f) {
-				purposeStageIndex = showStageIndex - 1;
-			} else {
-				purposeStageIndex = showStageIndex + 1;
-			}
-
-			purposeStageIndex = Mathf.Clamp (purposeStageIndex, minStageIndex, maxStageIndex);
-			if (purposeStageIndex != showStageIndex) {
-				StartCoroutine (ButtonMoveAnimation (showStageIndex - purposeStageIndex));
-				showStageIndex = purposeStageIndex;
-			}
-		}
+	/// <summary>
+	/// left : dir => 1, right : dir => -1
+	/// </summary>
+	/// <param name="_dir">Dir.</param>
+	public void MoveStageButton(int _dir){
+		StartCoroutine (ButtonMoveAnimation (_dir));
 	}
 
 	private IEnumerator ButtonMoveAnimation(int _dir){
 		for (int i = 0; i < coverPanel.Length; i++) {
 			coverPanel [i].SetActive (true);
 		}
-		for (int i = 0; i < stageButtonRoot.Length; i++) {
-			iTween.ScaleTo (stageButtonRoot [i].gameObject, iTween.Hash ("x", 0.7f, "y", 0.7f, "time", 0.25f));
+		for (int i = 0; i < buttonRoot.Length; i++) {
+			iTween.ScaleTo (buttonRoot [i].gameObject, iTween.Hash ("x", 0.7f, "y", 0.7f, "time", 0.25f));
 		}
 		yield return new WaitForSeconds(0.2f);
 		for (int i = 0; i < stageButtonRoot.Length; i++) {
 			iTween.MoveBy (stageButtonRoot [i].gameObject, iTween.Hash ("x", _dir * unitX, "time", 0.65f));
 		}
 		yield return new WaitForSeconds (0.5f);
-		for (int i = 0; i < stageButtonRoot.Length; i++) {
-			iTween.ScaleTo (stageButtonRoot [i].gameObject, iTween.Hash ("x", 1.0f, "y", 1.0f, "time", 0.25f));
+		for (int i = 0; i < buttonRoot.Length; i++) {
+			iTween.ScaleTo (buttonRoot [i].gameObject, iTween.Hash ("x", 1.0f, "y", 1.0f, "time", 0.25f));
 		}
 		yield return new WaitForSeconds (0.25f);
 		for (int i = 0; i < coverPanel.Length; i++) {
