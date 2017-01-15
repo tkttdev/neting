@@ -10,25 +10,25 @@ public class BlinkLine : MonoBehaviour {
 	private List<GameObject> stayMoveObject = new List<GameObject>();
 	private bool isExist = true;
 
+	void Update(){
+		for (int i = 0; i < stayMoveObject.Count; i++) {
+			if (stayMoveObject [i] == null) {
+				stayMoveObject.RemoveAt (i);
+			}
+			CheckBlink ();
+		}
+	}
+
 	private void OnTriggerEnter2D(Collider2D _other){
 		stayMoveObject.Add (_other.gameObject);
 	}
 
-	void Update(){
-		List<GameObject> removeTarget = new List<GameObject> ();
-		foreach (GameObject obj in stayMoveObject) {
-			if(GameObject.Find(obj.transform.name) == null){
-				removeTarget.Add (obj);
-			}
-		}
-
-		foreach (GameObject obj in removeTarget) {
-			stayMoveObject.Remove (obj);
-		}
-	}
-
 	private void OnTriggerExit2D(Collider2D _other){
 		stayMoveObject.Remove (_other.gameObject);
+		CheckBlink ();
+	}
+
+	private void CheckBlink(){
 		if (stayMoveObject.Count == 0) {
 			if (isExist) {
 				for (int i = 0; i < targetLine.Length; i++) {
