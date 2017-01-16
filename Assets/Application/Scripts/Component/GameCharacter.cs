@@ -17,7 +17,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private int bulletStock = 0;
 	private int maxBulletStock = 0;
 	private GameObject charaBulletPrefab;
-	private int life = 0;
+	private int life = 3;
 	[SerializeField] private bool isDemo = false;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
 	private bool[] beAbleSpawn = new bool[5];
@@ -26,6 +26,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	protected override void Initialize() {
 		base.Initialize();
 		bulletThresholdX  = Screen.width / 5.0f;
+		lifeText.text = life.ToString ();
 		#if UNITY_EDITOR
 		if (GameObject.Find("Systems") == null) {
 			GameObject obj = Resources.Load("Prefabs/Systems") as GameObject;
@@ -53,17 +54,15 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
 		maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
 		charaBulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
-		life = 3;
 	}
 
 	void Update() {
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			countText.text = string.Format ("{0:f3}", intervalCount);
-			lifeText.text = life.ToString ();
 			if (bulletStock < maxBulletStock && intervalCount == 0) {
 				intervalCount = bulletInterval;
 			}
-
+		
 			if (intervalCount > 0.0f) {
 				intervalCount -= Time.deltaTime;
 				if (intervalCount <= 0.0f) {
@@ -113,6 +112,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 
 	public void TakeDamage(int _damage){
 		life -= _damage;
+		lifeText.text = life.ToString ();
 		if (life <= 0) {
 			GameManager.I.SetEnd ();
 		}
