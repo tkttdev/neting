@@ -2,9 +2,12 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CharacterStoreController : MonoBehaviour {
+public class CharacterStoreController : SingletonBehaviour<CharacterStoreController> {
 
 	[SerializeField] private Image[] selectCharacterBackground;
+	[SerializeField] private GameObject statusPanel;
+	[SerializeField] private Sprite[] characterStatus;
+	[SerializeField] private Image showStatusImage;
 
 	// Use this for initialization
 	void Start () {
@@ -17,14 +20,21 @@ public class CharacterStoreController : MonoBehaviour {
 		selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
 	}
 
-	public void CharacterSelectButton(int _charaIndex) {
-		if (UserDataManager.I.IsPermitUseCharacter (_charaIndex)) {
-			selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.white;
-			selectCharacterBackground [_charaIndex].color = Color.red;
-			UserDataManager.I.SetUseCharacterIndex (_charaIndex);
-			UserDataManager.I.SaveData ();
-		}
+	public void CharacterSelectButton(int _charaId) {
+		selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.white;
+		UserDataManager.I.SetUseCharacterIndex (_charaId);	
+		selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
+		UserDataManager.I.SaveData ();
+	}
 
+	public void ShowCharacterStatus(int _charaId){
+		Debug.Log ("Show");
+		showStatusImage.sprite = characterStatus [_charaId];
+		statusPanel.SetActive (true);
+	}
+
+	public void HideCharacterStatus(){
+		statusPanel.SetActive (false);
 	}
 
 	public void ReturnButton() {

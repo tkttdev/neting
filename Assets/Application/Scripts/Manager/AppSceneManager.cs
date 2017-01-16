@@ -40,9 +40,9 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 		yield break;
 	}
 
-	private void OnLevelWasLoaded( int level ){
+	//private void OnLevelWasLoaded( int level ){
 		//SceneManager.sceneLoaded ();
-		eventSystem = GameObject.FindObjectOfType<EventSystem> ();
-		fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, 0.0f);
-	}
+		//eventSystem = GameObject.FindObjectOfType<EventSystem> ();
+		//fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, 0.0f);
+	//}
 }
