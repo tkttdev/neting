@@ -13,7 +13,7 @@ public class CharacterStoreButton : MonoBehaviour {
 	}
 
 	private void LongPressed(){
-		CharacterStoreController.I.ShowCharacterStatus (charaId);
+		CharacterStoreController.I.ShowCharacterStatusPanel (charaId);
 	}
 
 	private void Pressed(){

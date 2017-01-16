@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class TitleController : MonoBehaviour {
 
 	[SerializeField] private Image background;
-	[SerializeField] private Text tapText;
+	[SerializeField] private Image tapText;
 
 	private float backgroundBlinkTime = 0.4f;
 

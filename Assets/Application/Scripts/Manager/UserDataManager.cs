@@ -16,7 +16,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		public UserData() {
 			hasChara[0] = true;
 			for(int i = 1; i < 10; i++){
-				hasChara[i] = true;
+				hasChara[i] = false;
 			}
 
 			for(int i = 0; i < 20; i++){
@@ -33,6 +33,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 		dataPath = Application.persistentDataPath + "/savedata.txt";
 
+		Debug.Log (dataPath);
 
 		userData = new UserData ();
 		if (File.Exists (dataPath)) {
@@ -48,14 +49,22 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
     public void SetUseCharacterIndex(int _characterIndex) {
         userData.useCharaIndex = _characterIndex;
+		SaveData ();
     }
+
+	public void GetCharacter(int _characterIndex){
+		userData.hasChara [_characterIndex] = true;
+		SaveData ();
+	}
 
 	public void AddMoney(int _money){
 		userData.money += _money;
+		SaveData ();
 	}
 
 	public void ReduceMoney(int _money){
 		userData.money -= _money;
+		SaveData ();
 	}
 
 	public bool IsPermitUseCharacter(int _characterIndex){
