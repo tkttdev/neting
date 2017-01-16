@@ -5,12 +5,15 @@ using UnityEngine.UI;
 public class CharacterStoreController : SingletonBehaviour<CharacterStoreController> {
 
 	[SerializeField] private Image[] characterBackground;
+	[SerializeField] private GameObject[] characterKey;
+
 	[SerializeField] private GameObject statusPanel;
 	[SerializeField] private Sprite[] characterStatus;
 	[SerializeField] private Image showStatusImage;
 
 	[SerializeField] private GameObject purchasePanel;
 	[SerializeField] private Image showPurchaseStatusImage;
+	[SerializeField] private Text purchaseMoneyText;
 	[SerializeField] private Button purchaseButton;
 
 	[SerializeField] private GameObject purchaseInfoPanel;
@@ -29,12 +32,16 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
-		PaintCharacterBackground ();
+		DesignCharacterButton ();
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
 	}
 
-	private void PaintCharacterBackground(){
+	private void DesignCharacterButton(){
 		for (int i = 0; i < CHARACTER_DEFINE.characterVarietyNum; i++) {
+			if (UserDataManager.I.IsPermitUseCharacter (i)) {
+				characterKey [i].SetActive (false);
+			}
+
 			if (i == UserDataManager.I.GetUseCharacterIndex ()) {
 				characterBackground [i].color = new Color (60f / 255f, 0, 255f / 255f);
 			} else if (UserDataManager.I.IsPermitUseCharacter (i)) {
@@ -53,7 +60,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		} else {
 			ShowPurchasePanel (_charaId);
 		}
-		PaintCharacterBackground ();
+		DesignCharacterButton ();
 	}
 
 	private void ShowPurchasePanel(int _charaId){
@@ -64,6 +71,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			willPurchaseCharaId = _charaId;
 		}
 		showPurchaseStatusImage.sprite = characterStatus [_charaId];
+		purchaseMoneyText.text = CHARACTER_DEFINE.MONEY [_charaId].ToString ();
 		purchasePanel.SetActive (true);
 	}
 
@@ -82,7 +90,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		UserDataManager.I.GetCharacter (willPurchaseCharaId);
 		HidePurchasePanel ();
 		ShowPurchaseInforPanel ();
-		PaintCharacterBackground ();
+		DesignCharacterButton ();
 	}
 
 	public void HidePurchasePanel(){
