@@ -28,7 +28,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			GameObject stage = Resources.Load ("Prefabs/Stage/Stage" + StageLevelManager.I.GetStageLevel ().ToString ()) as GameObject;
 			Instantiate (stage);
 		}
-        gameStatus = GameStatus.PLAY;
+		UIManager.I.CountStart (3);
 	}
 
     public void SetWait() {
@@ -71,4 +71,5 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			SetEnd ();
 		}
 	}
+
 }

@@ -47,7 +47,7 @@ public class StageClearDialog : DialogBase {
 		AppSceneManager.I.GoScene(GameSceneType.GAME_SCENE);
 	}
 
-	public void TitleButton() {
+	public void MenuButton() {
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
 	}
 }
