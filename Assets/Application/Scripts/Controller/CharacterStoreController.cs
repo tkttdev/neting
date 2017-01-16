@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CharacterStoreController : SingletonBehaviour<CharacterStoreController> {
 
-	[SerializeField] private Image[] selectCharacterBackground;
+	[SerializeField] private Image[] characterBackground;
 	[SerializeField] private GameObject statusPanel;
 	[SerializeField] private Sprite[] characterStatus;
 	[SerializeField] private Image showStatusImage;
@@ -29,18 +29,31 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
-		selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
+		PaintCharacterBackground ();
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
+	}
+
+	private void PaintCharacterBackground(){
+		for (int i = 0; i < CHARACTER_DEFINE.characterVarietyNum; i++) {
+			if (i == UserDataManager.I.GetUseCharacterIndex ()) {
+				characterBackground [i].color = new Color (60f / 255f, 0, 255f / 255f);
+			} else if (UserDataManager.I.IsPermitUseCharacter (i)) {
+				characterBackground [i].color = Color.white;
+			} else {
+				characterBackground [i].color = new Color (70.0f / 255.0f, 70.0f / 255.0f, 70.0f / 255.0f);
+			}
+		}
 	}
 
 	public void CharacterSelectButton(int _charaId) {
 		if (UserDataManager.I.IsPermitUseCharacter (_charaId)) {
-			selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.white;
+			characterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.white;
 			UserDataManager.I.SetUseCharacterIndex (_charaId);	
-			selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
+			characterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
 		} else {
 			ShowPurchasePanel (_charaId);
 		}
+		PaintCharacterBackground ();
 	}
 
 	private void ShowPurchasePanel(int _charaId){
@@ -69,6 +82,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		UserDataManager.I.GetCharacter (willPurchaseCharaId);
 		HidePurchasePanel ();
 		ShowPurchaseInforPanel ();
+		PaintCharacterBackground ();
 	}
 
 	public void HidePurchasePanel(){
