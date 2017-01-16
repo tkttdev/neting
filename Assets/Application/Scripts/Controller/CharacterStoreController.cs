@@ -15,6 +15,9 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	[SerializeField] private GameObject purchaseInfoPanel;
 	[SerializeField] private Text purchaseInfoText;
+	[SerializeField] private Image purchaseInfoCharacterImage;
+
+	[SerializeField] private Text moneyText;
 
 	private int willPurchaseCharaId = 0;
 
@@ -27,6 +30,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		}
 		#endif
 		selectCharacterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
+		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
 	}
 
 	public void CharacterSelectButton(int _charaId) {
@@ -61,6 +65,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	public void PurchaseButton(){
 		UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [willPurchaseCharaId]);
+		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
 		UserDataManager.I.GetCharacter (willPurchaseCharaId);
 		HidePurchasePanel ();
 		ShowPurchaseInforPanel ();
@@ -71,7 +76,8 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	}
 
 	public void ShowPurchaseInforPanel(){
-		purchaseInfoText.text = "<color=#FF0FF0>" + CHARACTER_DEFINE.NAME [willPurchaseCharaId] + "</color>\nを手に入れた";
+		purchaseInfoCharacterImage.sprite = Resources.Load<Sprite> (CHARACTER_DEFINE.IMAGE_RESOURCES_PATH [willPurchaseCharaId]);
+		purchaseInfoText.text = CHARACTER_DEFINE.NAME [willPurchaseCharaId];
 		purchaseInfoPanel.SetActive (true);
 	}
 

@@ -30,8 +30,8 @@ public class StageSelectController : MonoBehaviour {
 		}
 		#endif
 
-		characterImage.sprite = Resources.Load<Sprite> ("Images/Chara/" + UserDataManager.I.GetUseCharacterIndex ().ToString ());
-		moneyText.text = string.Format ("Money : {0}", UserDataManager.I.GetMoney ().ToString ());
+		characterImage.sprite = Resources.Load<Sprite> (CHARACTER_DEFINE.IMAGE_RESOURCES_PATH [UserDataManager.I.GetUseCharacterIndex ()]);
+		moneyText.text = string.Format ("{0}", UserDataManager.I.GetMoney ().ToString ());
 		unitX = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0)).x * 2.0f;
 	}
 

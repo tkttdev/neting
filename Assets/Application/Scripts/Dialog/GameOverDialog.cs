@@ -11,10 +11,6 @@ public class GameOverDialog : DialogBase {
 
 	// Use this for initialization
 	protected override void Start() {
-		returnButton = gameObject.transform.FindChild("ReturnButton").gameObject;
-		titleButton = gameObject.transform.FindChild("TitleButton").gameObject;
-		panel = gameObject.transform.FindChild("Panel").gameObject;
-
 		base.Start();
 		Hide();
 	}
@@ -46,11 +42,11 @@ public class GameOverDialog : DialogBase {
 		panel.SetActive(true);
 	}
 
-	public void ReturnButton() {
+	public void RetryButton() {
 		AppSceneManager.I.GoScene(GameSceneType.GAME_SCENE);
 	}
 
-	public void TitleButton() {
+	public void MenuButton() {
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
 	}
 }

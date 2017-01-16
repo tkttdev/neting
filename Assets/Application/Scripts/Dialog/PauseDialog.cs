@@ -9,8 +9,6 @@ public class PauseDialog : DialogBase {
 
 	// Use this for initialization
 	protected override void Start() {
-		panel = gameObject.transform.FindChild("Panel").gameObject;
-
 		base.Start();
 		Hide();
 	}

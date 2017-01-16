@@ -11,10 +11,6 @@ public class StageClearDialog : DialogBase {
 
 	// Use this for initialization
 	protected override void Start() {
-		nextButton = gameObject.transform.FindChild("NextButton").gameObject;
-		titleButton = gameObject.transform.FindChild("TitleButton").gameObject;
-		panel = gameObject.transform.FindChild("Panel").gameObject;
-
 		base.Start();
 		Hide();
 	}

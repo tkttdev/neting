@@ -5,12 +5,12 @@ using UnityEngine.UI;
 public class TitleController : MonoBehaviour {
 
 	[SerializeField] private Image background;
-	[SerializeField] private Image tapText;
+	[SerializeField] private Text tapText;
 
 	private float backgroundBlinkTime = 0.4f;
 
 	void Start(){
-		iTween.ScaleTo (tapText.gameObject, iTween.Hash ("x", 1.2f, "y", 1.2f, "easeType", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong, "time", 1.65f));
+		iTween.ScaleTo (tapText.gameObject, iTween.Hash ("x", 1.0f, "y", 1.0f, "easeType", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong, "time", 1.65f));
 	}
 
 	void Update(){

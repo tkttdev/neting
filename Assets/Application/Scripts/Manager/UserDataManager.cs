@@ -9,7 +9,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 	public class UserData {
 		public int useCharaIndex = 0;
-		public int money = 0;
+		public int money = 200;
 		public bool[] hasChara = new bool[10];
 		public bool[] isClearStage = new bool[20];
 
