@@ -33,7 +33,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 		#if UNITY_EDITOR
 		dataPath = Application.dataPath + "/Application/savedata.txt";
-		#elif
+		#else
 		dataPath = Application.persistentDataPath + "/savedata.txt";
 		#endif
 
