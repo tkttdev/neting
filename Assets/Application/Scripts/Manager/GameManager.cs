@@ -48,7 +48,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			return;
 		}
         gameStatus = GameStatus.END;
-		AdsManager.I.EnableWatchAds ();
+		//AdsManager.I.EnableWatchAds ();
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
 		UserDataManager.I.SaveData ();
 		if (GameCharacter.I.GetLife() <= 0) {
