@@ -28,7 +28,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		countText.text = "<size=120>GO!</size>";
 		yield return new WaitForSeconds (0.7f);
 		countPanel.SetActive (false);
-		GameManager.I.SetPlay ();
+		GameManager.I.SetStatuPlay ();
 		yield break;
 	}
 }

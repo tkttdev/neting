@@ -31,23 +31,24 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 		UIManager.I.CountStart (3);
 	}
 
-    public void SetWait() {
+    public void SetStatusWait() {
         gameStatus = GameStatus.WAIT;
     }
 
-    public void SetPlay() {
+	public void SetStatuPlay() {
         gameStatus = GameStatus.PLAY;
     }
 
-    public void SetPause() {
+	public void SetStatuPause() {
         gameStatus = GameStatus.PAUSE;
     }
 
-    public void SetEnd() {
+	public void SetStatuEnd() {
 		if (isDemo) {
 			return;
 		}
         gameStatus = GameStatus.END;
+		AdsManager.I.EnableWatchAds ();
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
 		UserDataManager.I.SaveData ();
 		if (GameCharacter.I.GetLife() <= 0) {
@@ -68,7 +69,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 	public void OnRecieveInfo(){
 		allDeadEnemyNum++;
 		if (allDeadEnemyNum == allEnemyNum) {
-			SetEnd ();
+			SetStatuEnd ();
 		}
 	}
 

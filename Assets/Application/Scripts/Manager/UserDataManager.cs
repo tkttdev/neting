@@ -9,7 +9,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 	public class UserData {
 		public int useCharaIndex = 0;
-		public int money = 200;
+		public int money = 200000;
 		public bool[] hasChara = new bool[10];
 		public bool[] isClearStage = new bool[20];
 
@@ -31,7 +31,11 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
     protected override void Initialize() {
         base.Initialize();
 
+		#if UNITY_EDITOR
+		dataPath = Application.dataPath + "/Application/savedata.txt";
+		#elif
 		dataPath = Application.persistentDataPath + "/savedata.txt";
+		#endif
 
 		Debug.Log (dataPath);
 

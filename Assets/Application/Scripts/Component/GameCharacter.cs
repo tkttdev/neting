@@ -114,7 +114,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		life -= _damage;
 		lifeText.text = life.ToString ();
 		if (life <= 0) {
-			GameManager.I.SetEnd ();
+			GameManager.I.SetStatuEnd ();
 		}
 	}
 
