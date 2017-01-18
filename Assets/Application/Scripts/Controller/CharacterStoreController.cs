@@ -32,6 +32,8 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
+
+		SoundManager.I.SoundBGM (BGM.CHARACTER_STORE_BGM);
 		DesignCharacterButton ();
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
 	}

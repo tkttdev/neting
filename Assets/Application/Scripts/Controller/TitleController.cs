@@ -10,6 +10,7 @@ public class TitleController : MonoBehaviour {
 	private float backgroundBlinkTime = 0.4f;
 
 	void Start(){
+		SoundManager.I.SoundBGM (BGM.TITLE_BGM);
 		iTween.ScaleTo (tapText.gameObject, iTween.Hash ("x", 1.0f, "y", 1.0f, "easeType", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong, "time", 1.65f));
 	}
 

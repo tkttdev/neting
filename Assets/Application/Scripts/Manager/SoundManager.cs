@@ -7,13 +7,18 @@ public enum SE : int {
 }
 
 public enum BGM : int {
-
+	TITLE_BGM = 0,
+	MENU_BGM = 1,
+	CHARACTER_STORE_BGM = 2,
+	STAGE_EASY = 3,
+	STAGE_NORMAL = 4,
+	STAGE_HARD = 5,
 }
 
 public class SoundManager : SingletonBehaviour<SoundManager> {
 
 	//0:bgm 1:se
-	public AudioSource[] audioSource;
+	private AudioSource[] audioSource;
 
 	[SerializeField] private AudioClip[] seAudioClip;
 	[SerializeField] private AudioClip[] bgmAudioClip;
