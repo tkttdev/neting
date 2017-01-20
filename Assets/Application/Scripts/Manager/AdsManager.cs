@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.Advertisements;
+using UnityEngine.Advertisements;
 
 public class AdsManager : SingletonBehaviour<AdsManager> {
 
-	/*private bool beAbleWatch = true;
+	private bool beAbleWatch = true;
 	private const string ADS_KEY = "ableWatchAdsKey";
 
 	protected override void Initialize (){
@@ -45,5 +45,5 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 
 	public bool GetAdsInfo(){
 		return (beAbleWatch = (PlayerPrefs.GetInt (ADS_KEY, 1) == 1));
-	}*/
+	}
 }

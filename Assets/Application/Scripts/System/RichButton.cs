@@ -3,12 +3,11 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections;
-using System;
 
-public class ButtonExtention : Button{
-	[HideInInspector]public float longPressSec = 1.0f;
-	[HideInInspector]public bool isUsedLongPress = false;
-	[HideInInspector]public UnityEvent onLongPress = new UnityEvent();
+public class RichButton : Button{
+	[HideInInspector] public bool isUsedLongPress = false;
+	[HideInInspector] public float longPressSec = 1.0f;
+	[HideInInspector] public UnityEvent onLongPress = new UnityEvent();
 
 	private float pressingSeconds    = 0.0f;
 	private bool isPressing          = false;
