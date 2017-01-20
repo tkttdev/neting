@@ -17,7 +17,7 @@ public class RichButtonEditor : Editor {
 
 	void OnEnable(){
 		//初回は何故かnullが返ってくるので回避用のコード
-		longProp = serializedObject.FindProperty ("__dammy__");
+		//longProp = serializedObject.FindProperty ("__dammy__");
 
 		longProp = serializedObject.FindProperty ("onLongPress");
 		useLongProp = serializedObject.FindProperty ("isUsedLongPress");
@@ -35,6 +35,11 @@ public class RichButtonEditor : Editor {
 		EditorGUI.BeginChangeCheck ();
 		richButton.longPressSec = EditorGUILayout.FloatField ("Long Press Sec", richButton.longPressSec);
 
+		if(isWarning){
+			string warning = "LongPressSecは" + minLongPressSec.ToString () + "以上" + maxLongPressSec.ToString () + "以下の範囲で設定してください．";
+			EditorGUILayout.HelpBox (warning, MessageType.Warning);
+		}
+
 		EditorGUILayout.PropertyField(longProp);
 		serializedObject.ApplyModifiedProperties();
 
@@ -46,11 +51,6 @@ public class RichButtonEditor : Editor {
 			} else {
 				isWarning = false;
 			}
-		}
-
-		if(isWarning){
-			string warning = "LongPressSecは" + minLongPressSec.ToString () + "以上" + maxLongPressSec.ToString () + "以下の範囲で設定してください．";
-			EditorGUILayout.HelpBox (warning, MessageType.Warning);
 		}
 	}
 

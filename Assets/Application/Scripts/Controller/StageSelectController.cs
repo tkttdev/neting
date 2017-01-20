@@ -37,6 +37,10 @@ public class StageSelectController : MonoBehaviour {
 		unitX = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0)).x * 2.0f;
 	}
 
+	void Update(){
+		moneyText.text = string.Format ("{0}", UserDataManager.I.GetMoney ().ToString ());
+	}
+
 	/// <summary>
 	/// left : dir => 1, right : dir => -1
 	/// </summary>
