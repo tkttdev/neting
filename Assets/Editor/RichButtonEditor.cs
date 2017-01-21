@@ -14,6 +14,7 @@ public class RichButtonEditor : Editor {
 
 	private SerializedProperty longProp;
 	private SerializedProperty useLongProp;
+	private SerializedProperty longSecProp;
 
 	void OnEnable(){
 		//初回は何故かnullが返ってくるので回避用のコード
@@ -21,6 +22,7 @@ public class RichButtonEditor : Editor {
 
 		longProp = serializedObject.FindProperty ("onLongPress");
 		useLongProp = serializedObject.FindProperty ("isUsedLongPress");
+		longSecProp = serializedObject.FindProperty ("longPressSec");
 	}
 
 	public override void OnInspectorGUI(){
@@ -33,7 +35,8 @@ public class RichButtonEditor : Editor {
 		GUI.enabled = richButton.isUsedLongPress;
 
 		EditorGUI.BeginChangeCheck ();
-		richButton.longPressSec = EditorGUILayout.FloatField ("Long Press Sec", richButton.longPressSec);
+		EditorGUILayout.PropertyField (longSecProp);
+		serializedObject.ApplyModifiedProperties();
 
 		if(isWarning){
 			string warning = "LongPressSecは" + minLongPressSec.ToString () + "以上" + maxLongPressSec.ToString () + "以下の範囲で設定してください．";
