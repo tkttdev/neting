@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class EnemySpawner : MonoBehaviour {
 
     [SerializeField] private Transform[] spawnerPos;
-    [SerializeField] private TextAsset spawnerInfoText;
+    [SerializeField] private TextAsset[] spawnerInfoText;
     private SpawnerInfo spawnerInfo = new SpawnerInfo();
     private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 
@@ -26,7 +26,7 @@ public class EnemySpawner : MonoBehaviour {
 
     private void ParseSpawnerInfoText() {
         //spawnerInfoText.csv => enemyID,spawnerTime,spawnerPos
-        StringReader sr = new StringReader(spawnerInfoText.text);
+        StringReader sr = new StringReader(spawnerInfoText[0].text);
         while(sr.Peek() > -1) {
             string line = sr.ReadLine();
             string[] values = line.Split(',');

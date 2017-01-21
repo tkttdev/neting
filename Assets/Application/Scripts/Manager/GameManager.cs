@@ -11,7 +11,6 @@ public enum GameStatus : int {
 
 public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 
-	[SerializeField] protected bool isDemo = false;
     protected GameStatus gameStatus = GameStatus.WAIT;
 	public int allDeadEnemyNum;
 	public int allEnemyNum;
@@ -24,11 +23,6 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
-
-		if (!isDemo) {
-			GameObject stage = Resources.Load ("Prefabs/Stage/Stage" + StageLevelManager.I.GetStageLevel ().ToString ()) as GameObject;
-			Instantiate (stage);
-		}
 
 		if (StageLevelManager.I.GetStageLevel () < 8) {
 			SoundManager.I.SoundBGM (BGM.STAGE_EASY);
@@ -54,7 +48,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
     }
 
 	public void SetStatuEnd() {
-		if (isDemo) {
+		if (StageManager.I.isDemo) {
 			return;
 		}
         gameStatus = GameStatus.END;

@@ -17,9 +17,6 @@ public class RichButtonEditor : Editor {
 	private SerializedProperty longSecProp;
 
 	void OnEnable(){
-		//初回は何故かnullが返ってくるので回避用のコード
-		//longProp = serializedObject.FindProperty ("__dammy__");
-
 		longProp = serializedObject.FindProperty ("onLongPress");
 		useLongProp = serializedObject.FindProperty ("isUsedLongPress");
 		longSecProp = serializedObject.FindProperty ("longPressSec");
