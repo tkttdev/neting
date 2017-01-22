@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.EventSystems;
 
-public class EnemySpawner : MonoBehaviour {
+public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
 
     [SerializeField] private Transform[] spawnerPos;
     [SerializeField] private TextAsset[] spawnerInfoText;
@@ -14,14 +14,13 @@ public class EnemySpawner : MonoBehaviour {
     private float playTime = 0.0f;
     private int allEnemyNum = 0;
 
+	private int maxWave = 0;
+	private int waveNum = 0;
+
 	// Use this for initialization
 	void Start () {
 		ParseSpawnerInfoText();
         playTime = 0.0f;
-		ExecuteEvents.Execute<IRecieveMessage>(
-			target: GameManager.I.gameObject, // 呼び出す対象のオブジェクト
-			eventData: null,  // イベントデータ（モジュール等の情報）
-			functor: (recieveTarget,y)=>recieveTarget.OnRecieveInfo(allEnemyNum));
 	}
 
     private void ParseSpawnerInfoText() {

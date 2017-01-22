@@ -10,11 +10,12 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 
 	protected override void Initialize (){
 		base.Initialize ();
-		GetAdsInfo ();
+		beAbleWatch = (PlayerPrefs.GetInt (ADS_KEY, 1) == 1);
 	}
 
 	public void ShowRewardedAd(){
 		if (Advertisement.IsReady ("rewardedVideo")) {
+			beAbleWatch = false;
 			var options = new ShowOptions { resultCallback = HandleShowResult };
 			Advertisement.Show ("rewardedVideo", options);
 		}
@@ -34,7 +35,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 		}
 	}
 
-	public void EnableWatchAds(){
+	public void EnableWatch(){
 		beAbleWatch = true;
 		SaveAdsInfo ();
 	}
@@ -43,7 +44,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 		PlayerPrefs.SetInt (ADS_KEY, beAbleWatch ? 1 : 0);
 	}
 
-	public bool GetAdsInfo(){
+	public bool IsAbleWatch(){
 		return (beAbleWatch = (PlayerPrefs.GetInt (ADS_KEY, 1) == 1));
 	}
 }

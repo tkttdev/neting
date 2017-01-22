@@ -75,9 +75,9 @@ public class Enemy : MoveObjectBase {
 
 	private void DestroyOwn(){
 		ExecuteEvents.Execute<IRecieveMessage>(
-			target: GameManager.I.gameObject, // 呼び出す対象のオブジェクト
+			target: StageManager.I.gameObject, // 呼び出す対象のオブジェクト
 			eventData: null,  // イベントデータ（モジュール等の情報）
-			functor: (recieveTarget,y)=>recieveTarget.OnRecieveInfo());
+			functor: (recieveTarget,y)=>recieveTarget.DeadEnemy());
 		Destroy (gameObject);
 	}
 }

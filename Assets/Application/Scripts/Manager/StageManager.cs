@@ -1,16 +1,169 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using UnityEngine.EventSystems;
 
-public class StageManager : SingletonBehaviour<StageManager> {
+public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
-	public bool isDemo = false;
+	[SerializeField] private Transform[] enemySpawnPos;
+	[SerializeField] private Transform[] itemSpawnPos;
+	[SerializeField] private TextAsset enemySpawnInfoText;
+	[SerializeField] private TextAsset itemSpawnInfoText; 
+	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
+	private GameObject[] itemPrefabs = new GameObject[10];
 
-	protected override void Initialize (){
-		base.Initialize ();
-		if (!isDemo) {
-			GameObject stage = Resources.Load ("Prefabs/Stage/Stage" + StageLevelManager.I.GetStageLevel ().ToString ()) as GameObject;
-			Instantiate (stage);
+	private EnemySpawnInfo enemySpawnInfo = new EnemySpawnInfo();
+	private ItemSpawnInfo itemSpawnInfo = new ItemSpawnInfo();
+
+	private int destroyEnemyNumInWave = 0;
+
+	private int maxWave = 0;
+	private int waveNum = 0;
+
+	private float waveStartTime = 0.0f;
+
+	// Use this for initialization
+	void Start () {
+		ParseEnemySpawnInfoText ();
+		ParseItemSpawnInfoText ();
+	}
+
+	private void ParseEnemySpawnInfoText() {
+		//EnemySpawnInfo.csv => enemyID,spawnTime,spawnPos
+		StringReader sr = new StringReader(enemySpawnInfoText.text);
+		List<int> id = new List<int> ();
+		List<float> spawnTime = new List<float> ();
+		List<int> spawnPos = new List<int> ();
+
+		while(sr.Peek() > -1) {
+			string line = sr.ReadLine();
+			string[] values = line.Split(',');
+			if (values.Length == 1) {
+				if (int.Parse (values [0]) != 0) {
+					enemySpawnInfo.id.Add (new List<int> (id));
+					enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
+					enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
+					enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
+				}
+				id.Clear ();
+				spawnTime.Clear ();
+				spawnPos.Clear ();
+			} else {
+				id.Add (int.Parse (values [0]));
+				spawnTime.Add (float.Parse (values [1]));
+				spawnPos.Add (int.Parse (values [2]));
+			}
+		}
+	}
+
+	private void ParseItemSpawnInfoText(){
+		if (itemSpawnInfoText == null) {
+			return;
+		}
+		//ItemSpawnInfo.csv => itenID,spawnTime,destroyTime,spawnPos
+		StringReader sr = new StringReader(itemSpawnInfoText.text);
+		List<int> id = new List<int> ();
+		List<float> spawnTime = new List<float> ();
+		List<float> destroyTime = new List<float> ();
+		List<int> spawnPos = new List<int> ();
+
+		while(sr.Peek() > -1) {
+			string line = sr.ReadLine();
+			string[] values = line.Split(',');
+			if (values.Length == 1) {
+				if (int.Parse (values [0]) != 0) {
+					itemSpawnInfo.id.Add (new List<int> (id));
+					itemSpawnInfo.spawnTime.Add (new List<float> (spawnTime));
+					itemSpawnInfo.destroyTime.Add (new List<float> (destroyTime));
+					itemSpawnInfo.spawnPos.Add (new List<int> (spawnPos));
+
+				}
+				id.Clear ();
+				spawnTime.Clear ();
+				destroyTime.Clear ();
+				spawnPos.Clear ();
+			} else {
+				id.Add (int.Parse (values [0]));
+				spawnTime.Add (float.Parse (values [1]));
+				destroyTime.Add (float.Parse (values [2]));
+				spawnPos.Add (int.Parse (values [3]));
+			}
+		}
+	}
+
+	public void StartWave(){
+		waveStartTime = Time.timeSinceLevelLoad;
+	}
+
+	// Update is called once per frame
+	void Update() {
+		/*if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
+			CheckSpawn();
+		}*/
+
+		CheckSpawn();
+	}
+
+	private void CheckSpawn() {
+		/*if (enemySpawnPos.allSpawnEnemyNum == allEnemyNum) {
+			return;
+		}*/
+
+		if (enemySpawnInfo.id[0].Count == 0) {
+			return;
+		}
+
+		while (Time.timeSinceLevelLoad - waveStartTime > enemySpawnInfo.spawnTime[waveNum][0]) {
+			SpawnEnemy();
+			if (enemySpawnInfo.id[0].Count == 0) {
+				return;
+			}
+		}
+	}
+
+	private void SpawnEnemy() {
+		if (enemyPrefabs[enemySpawnInfo.id[waveNum][0]] == null) {
+			enemyPrefabs [enemySpawnInfo.id[waveNum][0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[waveNum][0]]) as GameObject;
+			enemyPrefabs [enemySpawnInfo.id[waveNum][0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[waveNum][0]);
+		}
+		Instantiate(enemyPrefabs[enemySpawnInfo.id[waveNum][0]], enemySpawnPos[enemySpawnInfo.id[waveNum][0]].position, Quaternion.identity);
+
+		enemySpawnInfo.RemoveFirstElement (waveNum);
+
+	}
+
+	public void DeadEnemy(){
+		destroyEnemyNumInWave++;
+		if (enemySpawnInfo.allWaveEnemyNum [waveNum] == destroyEnemyNumInWave) {
+			Debug.Log ("END WAVE");
+		}
+	}
+
+	private class EnemySpawnInfo{
+		public List<List<int>> id = new List<List<int>>();
+		public List<List<float>> spawnTime = new List<List<float>> ();
+		public List<List<int>> spawnPos = new List<List<int>>();
+		public List<int> allWaveEnemyNum = new List<int> ();
+
+		public void RemoveFirstElement(int _waveNum){
+			id [_waveNum].RemoveAt (0);
+			spawnTime [_waveNum].RemoveAt (0);
+			spawnPos [_waveNum].RemoveAt (0);
+		}
+	}
+
+	private class ItemSpawnInfo{
+		public List<List<int>> id = new List<List<int>>();
+		public List<List<float>> spawnTime = new List<List<float>> ();
+		public List<List<float>> destroyTime = new List<List<float>> ();
+		public List<List<int>> spawnPos = new List<List<int>>();
+
+		public void RemoveFirstElement(int _waveNum){
+			id [_waveNum].RemoveAt (0);
+			spawnTime [_waveNum].RemoveAt (0);
+			destroyTime [_waveNum].RemoveAt (0);
+			spawnPos [_waveNum].RemoveAt (0);
 		}
 	}
 }

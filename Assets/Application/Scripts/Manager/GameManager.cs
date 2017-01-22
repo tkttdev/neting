@@ -12,8 +12,7 @@ public enum GameStatus : int {
 public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 
     protected GameStatus gameStatus = GameStatus.WAIT;
-	public int allDeadEnemyNum;
-	public int allEnemyNum;
+	public bool isDemo = false;
 
 	protected override void Initialize (){
 		base.Initialize ();
@@ -32,6 +31,11 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			SoundManager.I.SoundBGM (BGM.STAGE_HARD);
 		}
 
+		if (!isDemo) {
+			GameObject stage = Resources.Load ("Prefabs/Stage/Stage" + StageLevelManager.I.GetStageLevel ().ToString ()) as GameObject;
+			Instantiate (stage);
+		}
+
 		UIManager.I.CountStart (3);
 	}
 
@@ -48,11 +52,11 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
     }
 
 	public void SetStatuEnd() {
-		if (StageManager.I.isDemo) {
+		if (isDemo) {
 			return;
 		}
         gameStatus = GameStatus.END;
-		//AdsManager.I.EnableWatchAds ();
+		AdsManager.I.EnableWatch ();
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
 		UserDataManager.I.SaveData ();
 		if (GameCharacter.I.GetLife() <= 0) {
@@ -66,15 +70,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
         return (_checkStatus == gameStatus);
     }
 
-	public void OnRecieveInfo(int _allEnemyNum){
-		allEnemyNum = _allEnemyNum;
+	public void DeadEnemy(){
+	
 	}
-
-	public void OnRecieveInfo(){
-		allDeadEnemyNum++;
-		if (allDeadEnemyNum == allEnemyNum) {
-			SetStatuEnd ();
-		}
-	}
-
 }
