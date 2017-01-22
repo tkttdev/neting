@@ -18,6 +18,7 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
 	private int destroyEnemyNumInWave = 0;
 
+	private int maxWaveNum = 0;
 	private int waveNum = -1;
 
 	private float waveStartTime = 0.0f;
@@ -26,7 +27,7 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 	private int duplicateEnemyNum = 0;
 
 	// Use this for initialization
-	void Start () {
+	protected override void Initialize () {
 		ParseEnemySpawnInfoText ();
 		ParseItemSpawnInfoText ();
 	}
@@ -60,6 +61,7 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 				spawnPos.Add (int.Parse (values [2]));
 			}
 		}
+		maxWaveNum = enemySpawnInfo.id.Count;
 	}
 
 	private void ParseItemSpawnInfoText(){
@@ -100,8 +102,12 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 	public void StartNextWave(){
 		waveNum++;
 		destroyEnemyNumInWave = 0;
+		UIManager.I.WaveStart (waveNum+1, maxWaveNum);
 		Debug.Log ("Start wave " + waveNum.ToString ());
 		Debug.Log ("ALL ENEMY NUM " + enemySpawnInfo.allWaveEnemyNum [waveNum]);
+	}
+
+	public void StartSpawn(){
 		waveStartTime = Time.timeSinceLevelLoad;
 		wavePlayTime = Time.timeSinceLevelLoad;
 	}
@@ -144,7 +150,8 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 			destroyEnemyNumInWave = 0;
 			Debug.Log ("END WAVE");
 			if (waveNum < enemySpawnInfo.id.Count - 1) {
-				UIManager.I.WaveStartCount ();
+				GameManager.I.SetStatusWait ();
+				StartNextWave ();
 			} else {
 				GameManager.I.SetStatuEnd ();
 			}

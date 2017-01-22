@@ -20,7 +20,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		}
 	}
 
-	public void CountStart(int _countTime){
+	/*public void CountStart(int _countTime){
 		StartCoroutine (WaveStartCorutine ());
 		///StartCoroutine (CountCorutine (_countTime));
 	}
@@ -39,17 +39,18 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		StageManager.I.StartNextWave ();
 		GameManager.I.SetStatuPlay ();
 		yield break;
+	}*/
+
+	public void WaveStart(int _wave, int _maxWave){
+		StartCoroutine (WaveStartCorutine (_wave, _maxWave));
 	}
 
-	public void WaveStartCount(){
-		StartCoroutine (WaveStartCorutine ());
-	}
-
-	private IEnumerator WaveStartCorutine(){
+	private IEnumerator WaveStartCorutine(int _wave, int _maxWave){
 		waveText.enabled = true;
+		waveText.text = string.Format ("WAVE{0}/{1}\nSTART", _wave, _maxWave);
 		yield return new WaitForSeconds (1.0f);
 		waveText.enabled = false;
-		StageManager.I.StartNextWave ();
+		StageManager.I.StartSpawn ();
 		if (!GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			GameManager.I.SetStatuPlay ();
 		}

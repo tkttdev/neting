@@ -36,7 +36,7 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			Instantiate (stage);
 		}
 
-		UIManager.I.CountStart (3);
+		StageManager.I.StartNextWave ();
 	}
 
     public void SetStatusWait() {
