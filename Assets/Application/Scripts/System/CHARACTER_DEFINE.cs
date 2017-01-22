@@ -36,7 +36,18 @@ public static class CHARACTER_DEFINE {
 		"Images/Chara/Zeta",
 		"Images/Chara/Eta",
 		"Images/Chara/Theta",
-		"Images/Chara/IOTA",
-		"Images/Chara/KAPPA"});
+		"Images/Chara/Iota",
+		"Images/Chara/Kappa"});
+	
+	public static readonly ReadOnlyCollection<string> FACE_IMAGE_RESOURCES_PATH  = Array.AsReadOnly(new string[]{ "Images/Chara/FaceAlpha",
+		"Images/Chara/FaceBeta",
+		"Images/Chara/FaceGamma",
+		"Images/Chara/FaceDelta",
+		"Images/Chara/FaceEpsilon",
+		"Images/Chara/FaceZeta",
+		"Images/Chara/FaceEta",
+		"Images/Chara/FaceTheta",
+		"Images/Chara/FaceIota",
+		"Images/Chara/FaceKappa"});
 }
 

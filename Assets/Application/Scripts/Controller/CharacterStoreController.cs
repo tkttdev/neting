@@ -88,6 +88,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	public void PurchaseButton(){
 		UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [willPurchaseCharaId]);
+		SoundManager.I.SoundSE (SE.PURCHASE);
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
 		UserDataManager.I.GetCharacter (willPurchaseCharaId);
 		HidePurchasePanel ();

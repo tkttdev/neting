@@ -9,9 +9,6 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	[SerializeField] private int fullTime = 2;
 	private float intervalCount = 0;
 	private int entryX = 0;
-	[SerializeField] private Text countText;
-	[SerializeField] private Text stockText;
-	[SerializeField] private Text lifeText;
 	private int useCharaIndex = 0;
 	private float bulletInterval = 2;
 	private float bulletChargeTime = 0.0f;
@@ -27,7 +24,6 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	protected override void Initialize() {
 		base.Initialize();
 		bulletThresholdX  = Screen.width / 5.0f;
-		lifeText.text = life.ToString ();
 		#if UNITY_EDITOR
 		if (GameObject.Find("Systems") == null) {
 			GameObject obj = Resources.Load("Prefabs/Systems") as GameObject;
@@ -59,7 +55,6 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 
 	void Update() {
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
-			countText.text = string.Format ("{0:f3}", intervalCount);
 			if (bulletStock < maxBulletStock && intervalCount == 0) {
 				intervalCount = bulletInterval;
 			}
@@ -72,7 +67,6 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 				}
 			}
 
-			stockText.text = bulletStock.ToString ();
 			if (bulletStock != 0 && Input.GetMouseButtonDown (0)) {
 				float inputX = Input.mousePosition.x;
 				if (inputX < bulletThresholdX) {
@@ -102,19 +96,21 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 					}
 				}
 			}
+			UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		}
 
 	}
 
 	private void Shoot() {
 		bulletStock--;
+		UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		Instantiate(charaBulletPrefab, new Vector3((float)entryX, -4.0f, 0.0f), Quaternion.Euler(0, 0, 0));
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 
 	public void TakeDamage(int _damage){
 		life -= _damage;
-		lifeText.text = life.ToString ();
+		UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		if (life <= 0) {
 			GameManager.I.SetStatuEnd ();
 		}

@@ -8,6 +8,7 @@ public enum SE : int {
 	SHOOT = 2,
 	DEAD = 3,
 	DAMAGE = 4,
+	HIT = 5,
 }
 
 public enum BGM : int {

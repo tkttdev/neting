@@ -47,8 +47,10 @@ public class Enemy : MoveObjectBase {
 			SoundManager.I.SoundSE (SE.DEAD);
 			Instantiate (enemyDeadEffect, gameObject.transform.position, Quaternion.identity);
 			DeadEnemy ();
+		} else {
+			SoundManager.I.SoundSE (SE.HIT);
+			StartCoroutine (DamageRendering ());
 		}
-		StartCoroutine (DamageRendering ());
     }
 
 	public void SetId(int _id){

@@ -25,6 +25,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 		switch (result){
 		case ShowResult.Finished:
 			UserDataManager.I.AddMoney (1000);
+			SoundManager.I.SoundSE (SE.PURCHASE);
 			beAbleWatch = false;
 			SaveAdsInfo ();
 			break;
