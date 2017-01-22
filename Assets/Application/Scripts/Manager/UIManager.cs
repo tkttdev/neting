@@ -11,10 +11,12 @@ public class UIManager : SingletonBehaviour<UIManager> {
 
 	[SerializeField] private GameObject countPanel;
 	[SerializeField] private Text countText;
+	[SerializeField] private Text waveText;
 
 
 	public void CountStart(int _countTime){
-		StartCoroutine (CountCorutine (_countTime));
+		StartCoroutine (WaveStartCorutine ());
+		///StartCoroutine (CountCorutine (_countTime));
 	}
 
 	private IEnumerator CountCorutine(int _countTime){
@@ -38,7 +40,13 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	}
 
 	private IEnumerator WaveStartCorutine(){
+		waveText.enabled = true;
 		yield return new WaitForSeconds (1.0f);
+		waveText.enabled = false;
 		StageManager.I.StartNextWave ();
+		if (!GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			GameManager.I.SetStatuPlay ();
+		}
+		yield break;
 	}
 }
