@@ -14,6 +14,8 @@ public class Enemy : MoveObjectBase {
 
 	private EnemyEffectBase[] enemyEffect;
 
+	[SerializeField] private GameObject enemyDeadEffect;
+
 	protected override void Initialize (){
 		base.Initialize ();
 		SetMoveToPlayer ();
@@ -42,6 +44,7 @@ public class Enemy : MoveObjectBase {
         hp -= _damage;
 		if (hp <= 0) {
 			GetItemManager.I.AddEarnMoney (money);
+			Instantiate (enemyDeadEffect, gameObject.transform.position, Quaternion.identity);
 			DeadEnemy ();
 		}
     }
