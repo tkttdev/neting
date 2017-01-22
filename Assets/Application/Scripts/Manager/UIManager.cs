@@ -28,7 +28,17 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		countText.text = "<size=120>GO!</size>";
 		yield return new WaitForSeconds (0.7f);
 		countPanel.SetActive (false);
+		StageManager.I.StartNextWave ();
 		GameManager.I.SetStatuPlay ();
 		yield break;
+	}
+
+	public void WaveStartCount(){
+		StartCoroutine (WaveStartCorutine ());
+	}
+
+	private IEnumerator WaveStartCorutine(){
+		yield return new WaitForSeconds (1.0f);
+		StageManager.I.StartNextWave ();
 	}
 }

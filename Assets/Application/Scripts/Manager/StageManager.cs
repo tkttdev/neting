@@ -19,9 +19,10 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 	private int destroyEnemyNumInWave = 0;
 
 	private int maxWave = 0;
-	private int waveNum = 0;
+	private int waveNum = -1;
 
 	private float waveStartTime = 0.0f;
+	private float wavePlayTime = 0.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -40,12 +41,11 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 			string line = sr.ReadLine();
 			string[] values = line.Split(',');
 			if (values.Length == 1) {
-				if (int.Parse (values [0]) != 0) {
-					enemySpawnInfo.id.Add (new List<int> (id));
-					enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
-					enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
-					enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
-				}
+				enemySpawnInfo.id.Add (new List<int> (id));
+				enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
+				enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
+				enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
+
 				id.Clear ();
 				spawnTime.Clear ();
 				spawnPos.Clear ();
@@ -92,31 +92,29 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 		}
 	}
 
-	public void StartWave(){
+	public void StartNextWave(){
+		waveNum++;
+		Debug.Log ("Start wave " + waveNum.ToString ());
 		waveStartTime = Time.timeSinceLevelLoad;
+		wavePlayTime = Time.timeSinceLevelLoad;
 	}
 
 	// Update is called once per frame
 	void Update() {
-		/*if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
-			CheckSpawn();
-		}*/
-
-		CheckSpawn();
+		if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
+			wavePlayTime += Time.deltaTime;
+			CheckSpawnEnemy();
+		}
 	}
 
-	private void CheckSpawn() {
-		/*if (enemySpawnPos.allSpawnEnemyNum == allEnemyNum) {
-			return;
-		}*/
-
-		if (enemySpawnInfo.id[0].Count == 0) {
+	private void CheckSpawnEnemy() {
+		if (enemySpawnInfo.id[waveNum].Count == 0) {
 			return;
 		}
 
-		while (Time.timeSinceLevelLoad - waveStartTime > enemySpawnInfo.spawnTime[waveNum][0]) {
+		while (wavePlayTime - waveStartTime > enemySpawnInfo.spawnTime[waveNum][0]) {
 			SpawnEnemy();
-			if (enemySpawnInfo.id[0].Count == 0) {
+			if (enemySpawnInfo.id[waveNum].Count == 0) {
 				return;
 			}
 		}
@@ -136,7 +134,13 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 	public void DeadEnemy(){
 		destroyEnemyNumInWave++;
 		if (enemySpawnInfo.allWaveEnemyNum [waveNum] == destroyEnemyNumInWave) {
+			destroyEnemyNumInWave = 0;
 			Debug.Log ("END WAVE");
+			if (waveNum < enemySpawnInfo.id.Count - 1) {
+				UIManager.I.WaveStartCount ();
+			} else {
+				GameManager.I.SetStatuEnd ();
+			}
 		}
 	}
 
