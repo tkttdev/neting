@@ -125,7 +125,7 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[waveNum][0]]) as GameObject;
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[waveNum][0]);
 		}
-		Instantiate(enemyPrefabs[enemySpawnInfo.id[waveNum][0]], enemySpawnPos[enemySpawnInfo.id[waveNum][0]].position, Quaternion.identity);
+		Instantiate(enemyPrefabs[enemySpawnInfo.id[waveNum][0]], enemySpawnPos[enemySpawnInfo.spawnPos[waveNum][0]].position, Quaternion.identity);
 
 		enemySpawnInfo.RemoveFirstElement (waveNum);
 
