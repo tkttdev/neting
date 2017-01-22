@@ -18,11 +18,12 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
 	private int destroyEnemyNumInWave = 0;
 
-	private int maxWave = 0;
 	private int waveNum = -1;
 
 	private float waveStartTime = 0.0f;
 	private float wavePlayTime = 0.0f;
+
+	private int duplicateEnemyNum = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -44,12 +45,16 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 				enemySpawnInfo.id.Add (new List<int> (id));
 				enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
 				enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
-				enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
-
+				enemySpawnInfo.allWaveEnemyNum.Add (id.Count + duplicateEnemyNum);
+	
 				id.Clear ();
 				spawnTime.Clear ();
 				spawnPos.Clear ();
+				duplicateEnemyNum = 0;
 			} else {
+				if (int.Parse (values [0]) == 5) {
+					duplicateEnemyNum++;
+				}
 				id.Add (int.Parse (values [0]));
 				spawnTime.Add (float.Parse (values [1]));
 				spawnPos.Add (int.Parse (values [2]));

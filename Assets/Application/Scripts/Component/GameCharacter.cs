@@ -14,6 +14,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	[SerializeField] private Text lifeText;
 	private int useCharaIndex = 0;
 	private float bulletInterval = 2;
+	private float bulletChargeTime = 0.0f;
 	private int bulletStock = 0;
 	private int maxBulletStock = 0;
 	private GameObject charaBulletPrefab;
@@ -108,6 +109,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private void Shoot() {
 		bulletStock--;
 		Instantiate(charaBulletPrefab, new Vector3((float)entryX, -4.0f, 0.0f), Quaternion.Euler(0, 0, 0));
+		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 
 	public void TakeDamage(int _damage){
@@ -120,5 +122,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 
 	public int GetLife(){
 		return life;
+	}
+
+	public float bulletRate{
+		get { return (bulletInterval - intervalCount) / bulletInterval; }
 	}
 }

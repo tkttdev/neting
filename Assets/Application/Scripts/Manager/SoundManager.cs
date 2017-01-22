@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum SE : int {
-
+	BUTTON = 0,
+	PURCHASE = 1,
+	SHOOT = 2,
+	DEAD = 3,
+	DAMAGE = 4,
 }
 
 public enum BGM : int {

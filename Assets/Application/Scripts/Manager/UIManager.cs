@@ -12,7 +12,13 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private GameObject countPanel;
 	[SerializeField] private Text countText;
 	[SerializeField] private Text waveText;
+	[SerializeField] private GameObject batteryGage;
 
+	void Update(){
+		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			batteryGage.transform.localScale = new Vector3 (GameCharacter.I.bulletRate, 1, 1);
+		}
+	}
 
 	public void CountStart(int _countTime){
 		StartCoroutine (WaveStartCorutine ());

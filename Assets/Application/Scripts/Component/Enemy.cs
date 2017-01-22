@@ -44,9 +44,11 @@ public class Enemy : MoveObjectBase {
         hp -= _damage;
 		if (hp <= 0) {
 			GetItemManager.I.AddEarnMoney (money);
+			SoundManager.I.SoundSE (SE.DEAD);
 			Instantiate (enemyDeadEffect, gameObject.transform.position, Quaternion.identity);
 			DeadEnemy ();
 		}
+		StartCoroutine (DamageRendering ());
     }
 
 	public void SetId(int _id){
@@ -82,5 +84,16 @@ public class Enemy : MoveObjectBase {
 			eventData: null,  // イベントデータ（モジュール等の情報）
 			functor: (recieveTarget,y)=>recieveTarget.DeadEnemy());
 		Destroy (gameObject);
+	}
+
+	private IEnumerator DamageRendering(){
+		if (gameObject.GetComponent<SpriteRenderer> ().enabled) {
+			gameObject.GetComponent<SpriteRenderer> ().enabled = false;
+		}
+		yield return new WaitForSeconds (0.15f);
+		if (!gameObject.GetComponent<SpriteRenderer> ().enabled) {
+			gameObject.GetComponent<SpriteRenderer> ().enabled = true;
+		}
+		yield break;
 	}
 }
