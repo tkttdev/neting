@@ -99,7 +99,9 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
 	public void StartNextWave(){
 		waveNum++;
+		destroyEnemyNumInWave = 0;
 		Debug.Log ("Start wave " + waveNum.ToString ());
+		Debug.Log ("ALL ENEMY NUM " + enemySpawnInfo.allWaveEnemyNum [waveNum]);
 		waveStartTime = Time.timeSinceLevelLoad;
 		wavePlayTime = Time.timeSinceLevelLoad;
 	}
