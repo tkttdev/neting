@@ -12,6 +12,8 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 	[SerializeField] private GameObject[] coverPanel;
 	[SerializeField] private Image characterImage;
 
+	[SerializeField] private GameObject getMoneyDialog;
+
 	//0~10 => 0, 11~20 => 1
 	private int showStageIndex = 0;
 	private int minStageIndex = 0;
@@ -37,12 +39,32 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 		moneyText.text = string.Format ("{0}", UserDataManager.I.GetMoney ().ToString ());
 	}
 
+	public void ShowGetMoneyDialog(){
+		for (int i = 0; i < coverPanel.Length; i++) {
+			coverPanel [i].SetActive (true);
+		}
+		getMoneyDialog.SetActive (true);
+	}
+
+	public void HideGetMoneyDialog(){
+		for (int i = 0; i < coverPanel.Length; i++) {
+			coverPanel [i].SetActive (false);
+		}
+		getMoneyDialog.SetActive (false);
+	}
+
 	/// <summary>
 	/// left : dir => 1, right : dir => -1
 	/// </summary>
 	/// <param name="_dir">Dir.</param>
 	public void MoveStageButton(int _dir){
 		StartCoroutine (ButtonMoveAnimation (_dir));
+	}
+
+	public void InactiveNotDialogComponent(){
+		for (int i = 0; i < coverPanel.Length; i++) {
+			coverPanel [i].SetActive (true);
+		}
 	}
 
 	private IEnumerator ButtonMoveAnimation(int _dir){

@@ -14,6 +14,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 	}
 
 	public void ShowRewardedAd(){
+		StageSelectUIManager.I.InactiveNotDialogComponent ();
 		if (Advertisement.IsReady ("rewardedVideo")) {
 			beAbleWatch = false;
 			var options = new ShowOptions { resultCallback = HandleShowResult };
@@ -26,6 +27,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 		case ShowResult.Finished:
 			UserDataManager.I.AddMoney (1000);
 			SoundManager.I.SoundSE (SE.PURCHASE);
+			StageSelectUIManager.I.ShowGetMoneyDialog ();
 			beAbleWatch = false;
 			SaveAdsInfo ();
 			break;
