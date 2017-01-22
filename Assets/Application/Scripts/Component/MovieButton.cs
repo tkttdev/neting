@@ -14,4 +14,10 @@ public class MovieButton : MonoBehaviour {
 			gameObject.SetActive (false);
 		}
 	}
+
+	void Update(){
+		if (!AdsManager.I.IsAbleWatch ()) {
+			gameObject.SetActive (false);
+		}
+	}
 }
