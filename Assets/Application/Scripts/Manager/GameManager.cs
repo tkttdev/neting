@@ -70,8 +70,13 @@ public class GameManager : SingletonBehaviour<GameManager> {
 		UserDataManager.I.SaveData ();
 		if (GameCharacter.I.GetLife() <= 0) {
 			UIManager.I.gameOverDialog.Show ();
+			SoundManager.I.StopBGM ();
+			SoundManager.I.SoundSE (SE.GAME_OVER);
 		} else {
+			UserDataManager.I.SetClearStage (StageLevelManager.I.GetStageLevel () - 1);
 			UIManager.I.stageClearDialog.Show ();
+			SoundManager.I.StopBGM ();
+			SoundManager.I.SoundSE (SE.CLEAR);
 		}
     }
 

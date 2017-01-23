@@ -75,6 +75,11 @@ public class Enemy : MoveObjectBase {
 			enemyEffect [i].OnTrriger2DEffect (_other, id);
 		}
 		if (_other.tag == "DamageZone") {
+			if (damage > 1) {
+				SoundManager.I.SoundSE (SE.DAMAGE2);
+			} else {
+				SoundManager.I.SoundSE (SE.DAMAGE1);
+			}
 			GameCharacter.I.TakeDamage (damage);
 			DestroyOwn ();
 		}

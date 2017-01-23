@@ -41,7 +41,7 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 		}
 		fadeSprite.enabled = true;
 		while (fadeSprite.color.a < 1.0f) {
-			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a + 0.1f, 0.0f, 1.0f));
+			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a + 0.2f, 0.0f, 1.0f));
 			yield return new WaitForSeconds (0.02f);
 		}
 		SceneManager.LoadScene(_gameSceneType);
@@ -54,7 +54,7 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 		}
 		fadeSprite.enabled = true;
 		while (fadeSprite.color.a > 0.0f) {
-			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a - 0.1f, 0.0f, 1.0f));
+			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a - 0.2f, 0.0f, 1.0f));
 			yield return new WaitForSeconds (0.02f);
 		}
 		if (eventSystem != null) {

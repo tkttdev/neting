@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum SE : int {
-	BUTTON = 0,
-	PURCHASE = 1,
-	SHOOT = 2,
-	DEAD = 3,
-	DAMAGE = 4,
-	HIT = 5,
+	BUTTON0 = 0,
+	BUTTON1 = 1,
+	BUTTON2 = 2,
+	PURCHASE = 3,
+	SHOOT = 4,
+	DEAD = 5,
+	DAMAGE1 = 6,
+	DAMAGE2 = 7,
+	HIT = 8,
+	GAME_OVER = 9,
+	CLEAR = 10,
+	WARP = 11,
 }
 
 public enum BGM : int {
@@ -40,5 +46,13 @@ public class SoundManager : SingletonBehaviour<SoundManager> {
 
 	public void SoundSE(SE seType){
 		audioSource [1].PlayOneShot (seAudioClip[(int)seType]);
+	}
+
+	public void StopBGM(){
+		audioSource [0].Stop ();
+	}
+
+	public void StopSE(){
+		audioSource [1].Stop ();
 	}
 }

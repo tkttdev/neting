@@ -56,6 +56,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	public void CharacterSelectButton(int _charaId) {
 		if (UserDataManager.I.IsPermitUseCharacter (_charaId)) {
+			SoundManager.I.SoundSE (SE.BUTTON2);
 			characterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.white;
 			UserDataManager.I.SetUseCharacterIndex (_charaId);	
 			characterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
@@ -111,6 +112,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	}
 
 	public void ReturnButton() {
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
 	}
 }

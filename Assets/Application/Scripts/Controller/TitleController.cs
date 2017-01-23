@@ -19,10 +19,12 @@ public class TitleController : MonoBehaviour {
 	}
 
 	public void MenuButton(){
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene (GameSceneType.MENU_SCENE);
 	}
 
 	public void CreditButton(){
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene (GameSceneType.CREDIT_SCENE);
 	}
 

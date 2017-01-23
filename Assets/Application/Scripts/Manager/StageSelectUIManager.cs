@@ -8,6 +8,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 	[SerializeField] private Text moneyText;
 	[SerializeField] private GameObject[] buttonRoot;
 	[SerializeField] private GameObject[] stageButtonRoot;
+	[SerializeField] private Image[] stageButtonImage;
 
 	[SerializeField] private GameObject[] coverPanel;
 	[SerializeField] private Image characterImage;
@@ -33,6 +34,11 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 		unitX = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0)).x * 2.0f;
 		moneyText.text = string.Format ("{0}", UserDataManager.I.GetMoney ().ToString ());
 		characterImage.sprite = Resources.Load<Sprite> (CHARACTER_DEFINE.IMAGE_RESOURCES_PATH [UserDataManager.I.GetUseCharacterIndex ()]);
+		for (int i = 0; i < stageButtonImage.Length; i++) {
+			if (UserDataManager.I.IsClearStage (i)) {
+				stageButtonImage [i].sprite = Resources.Load<Sprite> ("Images/Circle/stageicon2");
+			}
+		}
 	}
 
 	void Update(){
@@ -58,6 +64,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 	/// </summary>
 	/// <param name="_dir">Dir.</param>
 	public void MoveStageButton(int _dir){
+		SoundManager.I.SoundSE (SE.BUTTON1);
 		StartCoroutine (ButtonMoveAnimation (_dir));
 	}
 

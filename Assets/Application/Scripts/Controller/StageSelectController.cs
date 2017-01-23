@@ -23,10 +23,12 @@ public class StageSelectController : MonoBehaviour {
 			stageLevel = 1;
 		}
 		StageLevelManager.I.SetStageLevel (stageLevel);
+		SoundManager.I.SoundSE (SE.BUTTON0);
 		AppSceneManager.I.GoScene(GameSceneType.GAME_SCENE);
 	}
 
 	public void CharacterButton() {
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene(GameSceneType.CHARACTER_STORE);
 	}
 }

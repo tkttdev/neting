@@ -23,9 +23,9 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected enum EffectMode : int {
-		LOW_SPEED = 5,
+		LOW_SPEED = 3,
 		NORMAL = 10,
-		HIGH_SPEED = 15,
+		HIGH_SPEED = 13,
 	}
 
 	public MoveDir moveDir = MoveDir.FORWARD;
@@ -162,6 +162,7 @@ public class MoveObjectBase : MonoBehaviour {
 				afterWarp = false;
 				return;
 			}
+			SoundManager.I.SoundSE (SE.WARP);
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
 		}

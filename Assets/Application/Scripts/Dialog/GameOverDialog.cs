@@ -44,11 +44,13 @@ public class GameOverDialog : DialogBase {
 
 	public void RetryButton() {
 		UIManager.I.gameOverDialog.Hide ();
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene(GameSceneType.GAME_SCENE);
 	}
 
 	public void MenuButton() {
 		UIManager.I.gameOverDialog.Hide ();
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
 	}
 }

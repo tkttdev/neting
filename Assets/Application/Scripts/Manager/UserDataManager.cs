@@ -9,7 +9,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 	public class UserData {
 		public int useCharaIndex = 0;
-		public int money = 200000;
+		public int money = 0;
 		public bool[] hasChara = new bool[10];
 		public bool[] isClearStage = new bool[20];
 
@@ -71,6 +71,14 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 	public bool IsPermitUseCharacter(int _characterIndex){
 		return userData.hasChara [_characterIndex];
+	}
+
+	public bool IsClearStage(int _stageIndex){
+		return userData.isClearStage [_stageIndex];
+	}
+
+	public void SetClearStage(int _stageIndex){
+		userData.isClearStage [_stageIndex] = true;
 	}
 
 	public int GetMoney(){
