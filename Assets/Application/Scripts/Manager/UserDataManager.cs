@@ -37,8 +37,6 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		dataPath = Application.persistentDataPath + "/savedata.txt";
 		#endif
 
-		Debug.Log (dataPath);
-
 		userData = new UserData ();
 		if (File.Exists (dataPath)) {
 			LoadData ();

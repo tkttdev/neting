@@ -28,7 +28,9 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 	}
 
 	public void GoScene(GameSceneType _gameSceneType = GameSceneType.TITLE_SCENE) {
-		//SceneManager.LoadScene ((int)_gameSceneType);
+		if (isFade) {
+			return;
+		}
 		StartCoroutine (FadeOutGoScene ((int)_gameSceneType));
     }
 
@@ -39,7 +41,7 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 		}
 		fadeSprite.enabled = true;
 		while (fadeSprite.color.a < 1.0f) {
-			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a + 0.2f, 0.0f, 1.0f));
+			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a + 0.1f, 0.0f, 1.0f));
 			yield return new WaitForSeconds (0.02f);
 		}
 		SceneManager.LoadScene(_gameSceneType);
@@ -47,9 +49,12 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 	}
 
 	private IEnumerator FadeInScene(){
+		if (canvas == null) {
+			yield break;
+		}
 		fadeSprite.enabled = true;
 		while (fadeSprite.color.a > 0.0f) {
-			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a - 0.2f, 0.0f, 1.0f));
+			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a - 0.1f, 0.0f, 1.0f));
 			yield return new WaitForSeconds (0.02f);
 		}
 		if (eventSystem != null) {
@@ -61,8 +66,10 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 	}
 
 	private void FindEventSystem(Scene scenename,LoadSceneMode SceneMode){
-		canvas.worldCamera = Camera.main;
-		eventSystem = GameObject.Find ("EventSystem").GetComponent<EventSystem> ();
-		StartCoroutine (FadeInScene ());
+		if (I != null && this == I) {
+			eventSystem = GameObject.Find ("EventSystem").GetComponent<EventSystem> ();
+			canvas.worldCamera = Camera.main;
+			StartCoroutine (FadeInScene ());
+		}
 	}
 }
