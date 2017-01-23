@@ -15,34 +15,50 @@ public enum GameSceneType : int {
 
 public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 
-	[SerializeField] private SpriteRenderer fadeSprite;
+	[SerializeField] private Image fadeSprite;
+	[SerializeField] private Canvas canvas;
 	private EventSystem eventSystem;
 
 	protected override void Initialize (){
 		base.Initialize ();
 		DontDestroyOnLoad (this);
+		SceneManager.sceneLoaded += FindEventSystem;
 	}
 
 	public void GoScene(GameSceneType _gameSceneType = GameSceneType.TITLE_SCENE) {
-		SceneManager.LoadScene ((int)_gameSceneType);
-		//StartCoroutine (FadeGoScene ((int)_gameSceneType));
+		//SceneManager.LoadScene ((int)_gameSceneType);
+		StartCoroutine (FadeOutGoScene ((int)_gameSceneType));
     }
 
-	private IEnumerator FadeGoScene(int _gameSceneType){
+	private IEnumerator FadeOutGoScene(int _gameSceneType){
 		if (eventSystem != null) {
 			eventSystem.enabled = false;
 		}
+		fadeSprite.enabled = true;
 		while (fadeSprite.color.a < 1.0f) {
-			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a + 0.05f, 0.0f, 1.0f));
+			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a + 0.2f, 0.0f, 1.0f));
 			yield return new WaitForSeconds (0.02f);
 		}
 		SceneManager.LoadScene(_gameSceneType);
 		yield break;
 	}
 
-	//private void OnLevelWasLoaded( int level ){
-		//SceneManager.sceneLoaded ();
-		//eventSystem = GameObject.FindObjectOfType<EventSystem> ();
-		//fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, 0.0f);
-	//}
+	private IEnumerator FadeInScene(){
+		fadeSprite.enabled = true;
+		while (fadeSprite.color.a > 0.0f) {
+			fadeSprite.color = new Color (fadeSprite.color.r, fadeSprite.color.g, fadeSprite.color.b, Mathf.Clamp (fadeSprite.color.a - 0.2f, 0.0f, 1.0f));
+			yield return new WaitForSeconds (0.02f);
+		}
+		if (eventSystem != null) {
+			eventSystem.enabled = true;
+		}
+		fadeSprite.enabled = false;
+		yield break;
+	}
+
+	private void FindEventSystem(Scene scenename,LoadSceneMode SceneMode){
+		canvas.worldCamera = Camera.main;
+		eventSystem = GameObject.Find ("EventSystem").GetComponent<EventSystem> ();
+		StartCoroutine (FadeInScene ());
+	}
 }

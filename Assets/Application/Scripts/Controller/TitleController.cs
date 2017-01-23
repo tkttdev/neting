@@ -29,4 +29,12 @@ public class TitleController : MonoBehaviour {
 	private void BackgroundEffect(){
 		background.color = new Color (background.color.r, background.color.g, background.color.b, Mathf.PingPong (Time.time * backgroundBlinkTime, 0.7f) + 0.3f);
 	}
+
+	private IEnumerator GoMenu(){
+		
+	}
+
+	private IEnumerator GoCredit(){
+
+	}
 }

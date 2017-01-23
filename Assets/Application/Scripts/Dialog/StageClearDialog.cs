@@ -43,11 +43,13 @@ public class StageClearDialog : DialogBase {
 	}
 
 	public void NextButton() {
+		UIManager.I.stageClearDialog.Hide ();
 		StageLevelManager.I.SetStageLevel(StageLevelManager.I.GetStageLevel()+1);
 		AppSceneManager.I.GoScene(GameSceneType.GAME_SCENE);
 	}
 
 	public void MenuButton() {
+		UIManager.I.stageClearDialog.Hide ();
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
 	}
 }

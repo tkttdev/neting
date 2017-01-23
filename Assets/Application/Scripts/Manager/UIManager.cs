@@ -33,7 +33,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		for (int i = 0; i < life.Length; i++) {
 			life [i].SetActive (false);
 		}
-		if (_life != 0) {
+		if (_life > 0) {
 			life [_life - 1].SetActive (true);
 		}
 		for (int i = 0; i < bullet.Length; i++) {
