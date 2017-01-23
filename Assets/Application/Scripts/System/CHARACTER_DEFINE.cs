@@ -18,16 +18,16 @@ public static class CHARACTER_DEFINE {
     public static readonly ReadOnlyCollection<int>    MAX_BULLET_STOCK    = Array.AsReadOnly(new int[]    {    3,    2,    5,    3,    1,    2,    4,    5,    3,    1 });
     public static readonly ReadOnlyCollection<float>  BULLET_INTERVAL     = Array.AsReadOnly(new float[]  { 2.0f, 1.5f, 2.0f, 2.5f, 1.0f, 2.0f, 1.5f, 2.0f, 2.5f, 0.5f });
     public static readonly ReadOnlyCollection<int>    BULLET_DAMAGE       = Array.AsReadOnly(new int[]    {    1,    1,    1,    2,    1,    2,    1,    2,    3,    1 });
-    public static readonly ReadOnlyCollection<string> BULLET_PREFAB_PATH  = Array.AsReadOnly(new string[] { "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet",
-                                                                                                            "Prefabs/Bullet/CharacterBullet"});
+    public static readonly ReadOnlyCollection<string> BULLET_PREFAB_PATH  = Array.AsReadOnly(new string[] { "Prefabs/Bullet/CharacterBullet0",
+                                                                                                            "Prefabs/Bullet/CharacterBullet1",
+                                                                                                            "Prefabs/Bullet/CharacterBullet2",
+                                                                                                            "Prefabs/Bullet/CharacterBullet3",
+                                                                                                            "Prefabs/Bullet/CharacterBullet4",
+                                                                                                            "Prefabs/Bullet/CharacterBullet5",
+                                                                                                            "Prefabs/Bullet/CharacterBullet6",
+                                                                                                            "Prefabs/Bullet/CharacterBullet7",
+                                                                                                            "Prefabs/Bullet/CharacterBullet8",
+                                                                                                            "Prefabs/Bullet/CharacterBullet9"});
 	public static readonly ReadOnlyCollection<string> IMAGE_RESOURCES_PATH  = Array.AsReadOnly(new string[]{ "Images/Chara/Alpha",
 		"Images/Chara/Beta",
 		"Images/Chara/Gamma",
