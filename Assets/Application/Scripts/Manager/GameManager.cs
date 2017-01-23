@@ -9,7 +9,7 @@ public enum GameStatus : int {
     END = 3,
 }
 
-public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
+public class GameManager : SingletonBehaviour<GameManager> {
 
     protected GameStatus gameStatus = GameStatus.WAIT;
 	public bool isDemo = false;
@@ -36,7 +36,16 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
 			Instantiate (stage);
 		}
 
+		StartCoroutine (WaitSceneLoad ());
+
+	}
+
+	private IEnumerator WaitSceneLoad(){
+		while (AppSceneManager.I.isFade) {
+			yield return null;
+		}
 		StageManager.I.StartNextWave ();
+		yield break;
 	}
 
     public void SetStatusWait() {
@@ -69,8 +78,4 @@ public class GameManager : SingletonBehaviour<GameManager>, IRecieveMessage {
     public bool CheckGameStatus(GameStatus _checkStatus) {
         return (_checkStatus == gameStatus);
     }
-
-	public void DeadEnemy(){
-	
-	}
 }

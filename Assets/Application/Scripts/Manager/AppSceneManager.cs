@@ -19,6 +19,8 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 	[SerializeField] private Canvas canvas;
 	private EventSystem eventSystem;
 
+	public bool isFade = false;
+
 	protected override void Initialize (){
 		base.Initialize ();
 		DontDestroyOnLoad (this);
@@ -31,6 +33,7 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
     }
 
 	private IEnumerator FadeOutGoScene(int _gameSceneType){
+		isFade = true;
 		if (eventSystem != null) {
 			eventSystem.enabled = false;
 		}
@@ -53,6 +56,7 @@ public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
 			eventSystem.enabled = true;
 		}
 		fadeSprite.enabled = false;
+		isFade = false;
 		yield break;
 	}
 

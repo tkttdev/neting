@@ -17,6 +17,8 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private GameObject[] bullet;
 	[SerializeField] private Image characterFace;
 
+	[SerializeField] private WavePanel wavePanel;
+
 	protected override void Initialize (){
 		base.Initialize ();
 		Debug.Log (CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH [UserDataManager.I.GetUseCharacterIndex ()]);
@@ -71,10 +73,10 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	}
 
 	private IEnumerator WaveStartCorutine(int _wave, int _maxWave){
-		waveText.enabled = true;
-		waveText.text = string.Format ("WAVE{0}/{1}\nSTART", _wave, _maxWave);
-		yield return new WaitForSeconds (1.0f);
-		waveText.enabled = false;
+		wavePanel.gameObject.SetActive (true);
+		wavePanel.Show (_wave,_maxWave);
+		yield return new WaitForSeconds (2.3f);
+		wavePanel.Hide ();
 		StageManager.I.StartSpawn ();
 		if (!GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			GameManager.I.SetStatuPlay ();
