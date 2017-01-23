@@ -67,7 +67,6 @@ public class GameManager : SingletonBehaviour<GameManager> {
         gameStatus = GameStatus.END;
 		AdsManager.I.EnableWatch ();
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
-		UserDataManager.I.SaveData ();
 		if (GameCharacter.I.GetLife() <= 0) {
 			UIManager.I.gameOverDialog.Show ();
 			SoundManager.I.StopBGM ();
@@ -78,6 +77,7 @@ public class GameManager : SingletonBehaviour<GameManager> {
 			SoundManager.I.StopBGM ();
 			SoundManager.I.SoundSE (SE.CLEAR);
 		}
+		UserDataManager.I.SaveData ();
     }
 
     public bool CheckGameStatus(GameStatus _checkStatus) {

@@ -8,6 +8,7 @@ public class StageClearDialog : DialogBase {
 	[SerializeField]private GameObject nextButton;
 	[SerializeField]private GameObject titleButton;
 	[SerializeField]private GameObject panel;
+	[SerializeField]private Text coinText;
 
 	// Use this for initialization
 	protected override void Start() {
@@ -15,13 +16,9 @@ public class StageClearDialog : DialogBase {
 		Hide();
 	}
 
-	// Update is called once per frame
-	void Update() {
-		
-	}
-
 	public override void Show() {
 		base.Show();
+		coinText.text = GetItemManager.I.GetEarnMoney ().ToString ();
 		SetComponentsActive();
 	}
 

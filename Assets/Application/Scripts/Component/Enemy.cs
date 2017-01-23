@@ -82,6 +82,8 @@ public class Enemy : MoveObjectBase {
 			}
 			GameCharacter.I.TakeDamage (damage);
 			DestroyOwn ();
+		} else if (_other.tag == "BugDestroyZone") {
+			DestroyOwn ();
 		}
 	}
 

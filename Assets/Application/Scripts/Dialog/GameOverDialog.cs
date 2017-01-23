@@ -8,6 +8,7 @@ public class GameOverDialog : DialogBase {
 	[SerializeField]private GameObject returnButton;
 	[SerializeField]private GameObject titleButton;
 	[SerializeField]private GameObject panel;
+	[SerializeField]private Text coinText;
 
 	// Use this for initialization
 	protected override void Start() {
@@ -22,6 +23,7 @@ public class GameOverDialog : DialogBase {
 
 	public override void Show() {
 		base.Show();
+		coinText.text = GetItemManager.I.GetEarnMoney ().ToString ();
 		SetComponentsActive();
 	}
 
