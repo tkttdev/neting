@@ -9,5 +9,6 @@ public class Warp : MonoBehaviour {
 
 	void Start(){
 		warpPos = warpPurposeObject.transform.position;
+		iTween.RotateAdd(this.gameObject, iTween.Hash("loopType", iTween.LoopType.loop, "easeType",iTween.EaseType.linear, "z", -360, "time", 3));
 	}
 }
