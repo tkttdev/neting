@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CreditController : MonoBehaviour {
 
+	[SerializeField]private GameObject tapText;
+
 	void Start(){
 		#if UNITY_EDITOR
 		if (GameObject.Find("Systems") == null) {
@@ -11,6 +13,8 @@ public class CreditController : MonoBehaviour {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
+		SoundManager.I.SoundBGM (BGM.CREDIT);
+		iTween.ScaleTo (tapText, iTween.Hash ("x", 1.0f, "y", 1.0f, "easeType", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
 	}
 
 	public void TitleButton(){

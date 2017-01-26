@@ -21,9 +21,10 @@ public enum BGM : int {
 	TITLE_BGM = 0,
 	MENU_BGM = 1,
 	CHARACTER_STORE_BGM = 2,
-	STAGE_EASY = 3,
-	STAGE_NORMAL = 4,
-	STAGE_HARD = 5,
+	CREDIT = 3,
+	STAGE_EASY = 4,
+	STAGE_NORMAL = 5,
+	STAGE_HARD = 6,
 }
 
 public class SoundManager : SingletonBehaviour<SoundManager> {
