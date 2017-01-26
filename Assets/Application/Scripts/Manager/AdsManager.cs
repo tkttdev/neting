@@ -14,7 +14,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 	}
 
 	public void ShowRewardedAd(){
-		StageSelectUIManager.I.InactiveNotDialogComponent ();
+		//StageSelectUIManager.I.InactiveNotDialogComponent ();
 		if (Advertisement.IsReady ("rewardedVideo")) {
 			beAbleWatch = false;
 			var options = new ShowOptions { resultCallback = HandleShowResult };
@@ -36,6 +36,7 @@ public class AdsManager : SingletonBehaviour<AdsManager> {
 		case ShowResult.Failed:
 			break;
 		}
+
 	}
 
 	public void EnableWatch(){
