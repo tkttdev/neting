@@ -10,7 +10,7 @@ public class Enemy : MoveObjectBase {
 	private int money;
     public float spawnTime;
 
-	public bool firstColliderAfterCopy = false;
+	public bool isCopy = false;
 
 	private EnemyEffectBase[] enemyEffect;
 
@@ -91,7 +91,7 @@ public class Enemy : MoveObjectBase {
 		ExecuteEvents.Execute<IRecieveMessage>(
 			target: StageManager.I.gameObject, // 呼び出す対象のオブジェクト
 			eventData: null,  // イベントデータ（モジュール等の情報）
-			functor: (recieveTarget,y)=>recieveTarget.DeadEnemy());
+			functor: (recieveTarget,y)=>recieveTarget.DeadEnemy(id, isCopy));
 		Destroy (gameObject);
 	}
 

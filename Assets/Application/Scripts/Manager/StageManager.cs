@@ -144,8 +144,12 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
 	}
 
-	public void DeadEnemy(){
-		destroyEnemyNumInWave++;
+	public void DeadEnemy(int _id, bool _isCopy){
+		if (_id == 5 && !_isCopy) {
+			destroyEnemyNumInWave += 2;
+		} else {
+			destroyEnemyNumInWave++;
+		}
 		if (enemySpawnInfo.allWaveEnemyNum [waveNum] == destroyEnemyNumInWave) {
 			destroyEnemyNumInWave = 0;
 			Debug.Log ("END WAVE");
