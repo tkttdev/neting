@@ -27,22 +27,18 @@ public class RichButtonEditor : Editor {
 		base.OnInspectorGUI();
 
 		EditorGUILayout.PropertyField (useLongProp);
-		serializedObject.ApplyModifiedProperties();
 
 		GUI.enabled = richButton.isUsedLongPress;
 
 		EditorGUI.BeginChangeCheck ();
 		EditorGUILayout.PropertyField (longSecProp);
+		EditorGUILayout.PropertyField(longProp);
 		serializedObject.ApplyModifiedProperties();
 
 		if(isWarning){
 			string warning = "LongPressSecは" + minLongPressSec.ToString () + "以上" + maxLongPressSec.ToString () + "以下の範囲で設定してください．";
 			EditorGUILayout.HelpBox (warning, MessageType.Warning);
 		}
-
-		EditorGUILayout.PropertyField(longProp);
-		serializedObject.ApplyModifiedProperties();
-
 
 		if (EditorGUI.EndChangeCheck ()) {
 			if (richButton.longPressSec < minLongPressSec || richButton.longPressSec > maxLongPressSec) {
