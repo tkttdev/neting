@@ -6,7 +6,7 @@ public class MoveObjectBase : MonoBehaviour {
 
 	// player to enemy : 1 enemy to player : -1
 	protected int moveDesMode = 1;
-	[Range(2.0f,20.0f)]
+	[Range(1.0f,20.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
 
 	public enum MoveDir : int {
