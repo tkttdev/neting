@@ -96,7 +96,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		byte[] eData = File.ReadAllBytes (dataPath);
 		byte[] dData = DecodeData (eData);
 		string jData = Encoding.ASCII.GetString (dData);
-		userData = JsonUtility.FromJson<UserData>(jData);
+		JsonUtility.FromJsonOverwrite (jData, userData);
 	}
 
 	private byte[] EncryptData(byte[] data){
