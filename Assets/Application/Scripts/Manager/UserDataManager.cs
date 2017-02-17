@@ -96,7 +96,19 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		byte[] eData = File.ReadAllBytes (dataPath);
 		byte[] dData = DecodeData (eData);
 		string jData = Encoding.ASCII.GetString (dData);
-		JsonUtility.FromJsonOverwrite (jData, userData);
+		userData = JsonUtility.FromJson<UserData> (jData);
+		UserData tmpUserData = new UserData ();
+		if (userData.isClearStage.Length != tmpUserData.isClearStage.Length) {
+			for (int i = 0; i < userData.isClearStage.Length; i++) {
+				tmpUserData.isClearStage [i] = userData.isClearStage [i];
+			}
+			userData = tmpUserData;
+		} else if (userData.hasChara.Length != tmpUserData.hasChara.Length) {
+			for (int i = 0; i < userData.hasChara.Length; i++) {
+				tmpUserData.hasChara [i] = userData.hasChara [i];
+			}
+			userData = tmpUserData;
+		}
 	}
 
 	private byte[] EncryptData(byte[] data){
