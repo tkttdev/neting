@@ -51,6 +51,8 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
 		maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
 		charaBulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
+		bulletStock = maxBulletStock;
+		intervalCount = bulletInterval;
 	}
 
 	void Update() {
@@ -104,7 +106,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private void Shoot() {
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		Instantiate(charaBulletPrefab, new Vector3((float)entryX, -4.0f, 0.0f), Quaternion.Euler(0, 0, 0));
+		Instantiate(charaBulletPrefab, new Vector3((float)entryX, -3.8f, 0.0f), Quaternion.Euler(0, 0, 0));
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 

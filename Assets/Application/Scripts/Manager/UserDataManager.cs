@@ -97,6 +97,10 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		byte[] dData = DecodeData (eData);
 		string jData = Encoding.ASCII.GetString (dData);
 		userData = JsonUtility.FromJson<UserData> (jData);
+		CheckUpdateUserData ();
+	}
+
+	private void CheckUpdateUserData(){
 		UserData tmpUserData = new UserData ();
 		if (userData.isClearStage.Length != tmpUserData.isClearStage.Length) {
 			for (int i = 0; i < userData.isClearStage.Length; i++) {

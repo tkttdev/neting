@@ -14,8 +14,11 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private GameObject batteryGage;
 
 	[SerializeField] private GameObject[] life;
-	[SerializeField] private GameObject[] bullet;
+	[SerializeField] private Image[] bullet;
 	[SerializeField] private Image characterFace;
+
+	[SerializeField] private Sprite chargeBulletSprite;
+	[SerializeField] private Sprite emptyBulletSprite;
 
 	[SerializeField] private WavePanel wavePanel;
 
@@ -23,6 +26,9 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		base.Initialize ();
 		Debug.Log (CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH [UserDataManager.I.GetUseCharacterIndex ()]);
 		characterFace.GetComponent<Image> ().sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH[UserDataManager.I.GetUseCharacterIndex()]);
+		for (int i = CHARACTER_DEFINE.MAX_BULLET_STOCK [UserDataManager.I.GetUseCharacterIndex ()]; i < 5; i++) {
+			bullet [i].enabled = false;
+		}
 	}
 
 	void Update(){
@@ -40,9 +46,9 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		}
 		for (int i = 0; i < bullet.Length; i++) {
 			if (i < _bulletStock) {
-				bullet [i].SetActive (true);
+				bullet [i].GetComponent<Image> ().sprite = chargeBulletSprite;
 			} else {
-				bullet [i].SetActive (false);
+				bullet [i].GetComponent<Image> ().sprite = emptyBulletSprite;
 			}
 		}
 	}
