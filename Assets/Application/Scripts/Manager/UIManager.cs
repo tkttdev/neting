@@ -53,26 +53,13 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		}
 	}
 
-	/*public void CountStart(int _countTime){
-		StartCoroutine (WaveStartCorutine ());
-		///StartCoroutine (CountCorutine (_countTime));
-	}
-
-	private IEnumerator CountCorutine(int _countTime){
-		int limitTime = _countTime;
-		countPanel.SetActive (true);
-		for (int i = 0; i < limitTime; i++) {
-			countText.text = _countTime.ToString ();
-			_countTime--;
-			yield return new WaitForSeconds (1.0f);
+	public void PauseButton(){
+		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			GameManager.I.SetStatuPause ();
+		} else {
+			GameManager.I.SetStatuPlay ();
 		}
-		countText.text = "<size=120>GO!</size>";
-		yield return new WaitForSeconds (0.7f);
-		countPanel.SetActive (false);
-		StageManager.I.StartNextWave ();
-		GameManager.I.SetStatuPlay ();
-		yield break;
-	}*/
+	}
 
 	public void WaveStart(int _wave, int _maxWave){
 		StartCoroutine (WaveStartCorutine (_wave, _maxWave));
