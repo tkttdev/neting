@@ -35,7 +35,7 @@ public class StageTest : GameManager {
 		notFirstTest = false;
 
         for (int i = 0; i < CHARACTER_DEFINE.characterVarietyNum; i++) {
-            charaLife[i] = CHARACTER_DEFINE.LIFE[i];
+            //charaLife[i] = CHARACTER_DEFINE.LIFE[i];
             charaBulletInterval[i] = CHARACTER_DEFINE.BULLET_INTERVAL[i];
             charaMaxBulletStock[i] = CHARACTER_DEFINE.MAX_BULLET_STOCK[i];
             charaBulletDamage[i] = CHARACTER_DEFINE.BULLET_DAMAGE[i];
@@ -45,7 +45,7 @@ public class StageTest : GameManager {
 
     private void TestCharaInit() {
         for (int i = 0; i < CHARACTER_DEFINE.characterVarietyNum; i++) {
-            testCharaLife[i] = charaLife[i];
+            //testCharaLife[i] = charaLife[i];
             testCharaBulletInterval[i] = 0.0f;
             testCharaBulletStock[i] = 0;
         }
