@@ -23,9 +23,9 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected enum EffectMode : int {
-		LOW_SPEED = 3,
+		LOW_SPEED = 5,
 		NORMAL = 10,
-		HIGH_SPEED = 13,
+		HIGH_SPEED = 15,
 	}
 
 	public MoveDir moveDir = MoveDir.FORWARD;
