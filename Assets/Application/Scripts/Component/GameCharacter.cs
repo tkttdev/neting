@@ -23,7 +23,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 
 	protected override void Initialize() {
 		base.Initialize();
-		bulletThresholdX  = Screen.width / 5.0f;
+		//bulletThresholdX  = Screen.width / 5.0f;
+		bulletThresholdX = 74.2f;
+		Debug.Log (Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 10)));
 		#if UNITY_EDITOR
 		if (GameObject.Find("Systems") == null) {
 			GameObject obj = Resources.Load("Prefabs/Systems") as GameObject;
