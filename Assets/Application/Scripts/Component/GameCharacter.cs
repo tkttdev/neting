@@ -72,44 +72,18 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 				}
 			}
 
-			if (bulletStock != 0 && Input.GetMouseButtonDown (0)) {
-				float inputX = Input.mousePosition.x;
-				if (inputX < bulletThresholdX) {
-					if (beAbleSpawn [0]) {
-						entryX = -2;
-						Shoot ();
-					}
-				} else if (inputX < bulletThresholdX * 2.0f) {
-					if (beAbleSpawn [1]) {
-						entryX = -1;
-						Shoot ();
-					}
-				} else if (inputX < bulletThresholdX * 3.0f) {
-					if (beAbleSpawn [2]) {
-						entryX = 0;
-						Shoot ();
-					}
-				} else if (inputX < bulletThresholdX * 4.0f) {
-					if (beAbleSpawn [3]) {
-						entryX = 1;
-						Shoot ();
-					}
-				} else if (beAbleSpawn [4]) {
-					if (beAbleSpawn [4]) {
-						entryX = 2;
-						Shoot ();
-					}
-				}
-			}
 			UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		}
 
 	}
 
-	private void Shoot() {
+	public void Shoot(int _entryX) {
+		if (bulletStock == 0 || !beAbleSpawn [_entryX + 2]) {
+			return;
+		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		Instantiate(charaBulletPrefab, new Vector3((float)entryX, -3.8f, 0.0f), Quaternion.Euler(0, 0, 0));
+		Instantiate(charaBulletPrefab, new Vector3((float)_entryX, -3.8f, 0.0f), Quaternion.Euler(0, 0, 0));
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 
