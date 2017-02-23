@@ -34,6 +34,9 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 		unitX = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0)).x * 2.0f;
 		moneyText.text = string.Format ("{0}", UserDataManager.I.GetMoney ().ToString ());
 		characterImage.sprite = Resources.Load<Sprite> (CHARACTER_DEFINE.IMAGE_RESOURCES_PATH [UserDataManager.I.GetUseCharacterIndex ()]);
+		for (int i = 0; i < stageButtonRoot.Length; i++) {
+			stageButtonRoot [i].transform.localPosition = new Vector3 (i * unitX, 0, 0);
+		}
 		for (int i = 0; i < stageButtonImage.Length; i++) {
 			if (UserDataManager.I.IsClearStage (i)) {
 				stageButtonImage [i].sprite = Resources.Load<Sprite> ("Images/Circle/stageicon2");
