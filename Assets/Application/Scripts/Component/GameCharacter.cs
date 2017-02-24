@@ -78,7 +78,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	public void Shoot(int _entryX) {
-		if (bulletStock == 0 || !beAbleSpawn [_entryX + 2]) {
+		if (bulletStock == 0 || !beAbleSpawn [_entryX + 2] || !GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
 			return;
 		}
 		bulletStock--;
