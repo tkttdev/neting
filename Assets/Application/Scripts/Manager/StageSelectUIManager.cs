@@ -56,6 +56,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 	}
 
 	public void HideGetMoneyDialog(){
+		SoundManager.I.SoundSE (SE.BUTTON2);
 		for (int i = 0; i < coverPanel.Length; i++) {
 			coverPanel [i].SetActive (false);
 		}

@@ -61,6 +61,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			UserDataManager.I.SetUseCharacterIndex (_charaId);	
 			characterBackground [UserDataManager.I.GetUseCharacterIndex ()].color = Color.red;
 		} else {
+			SoundManager.I.SoundSE (SE.BUTTON2);
 			ShowPurchasePanel (_charaId);
 		}
 		DesignCharacterButton ();
@@ -97,7 +98,12 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		DesignCharacterButton ();
 	}
 
-	public void HidePurchasePanel(){
+	public void CancelButton(){
+		SoundManager.I.SoundSE (SE.BUTTON2);
+		HidePurchasePanel ();
+	}
+
+	private void HidePurchasePanel(){
 		purchasePanel.SetActive (false);
 	}
 
@@ -107,7 +113,12 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		purchaseInfoPanel.SetActive (true);
 	}
 
-	public void HidePurchaseInfoPanel(){
+	public void OkButton(){
+		SoundManager.I.SoundSE (SE.BUTTON2);
+		HidePurchaseInfoPanel ();
+	}
+
+	private void HidePurchaseInfoPanel(){
 		purchaseInfoPanel.SetActive (false);
 	}
 
