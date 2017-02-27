@@ -16,7 +16,6 @@ public class StageClearDialog : DialogBase {
 	protected override void Start() {
 		base.Start();
 		Hide ();
-		Show ();
 	}
 
 	public override void Show() {
