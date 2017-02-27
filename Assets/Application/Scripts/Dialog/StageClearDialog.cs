@@ -16,6 +16,7 @@ public class StageClearDialog : DialogBase {
 	protected override void Start() {
 		base.Start();
 		Hide ();
+		Show ();
 	}
 
 	public override void Show() {
@@ -48,9 +49,13 @@ public class StageClearDialog : DialogBase {
 	}
 
 	private void SetComponentsActive() {
-		nextButton.SetActive(true);
-		titleButton.SetActive(true);
-		panel.SetActive(true);
+		titleButton.SetActive (true);
+		panel.SetActive (true);
+		if (StageLevelManager.I.GetStageLevel () != 20) {
+			nextButton.SetActive (true);
+		} else {
+			titleButton.transform.localPosition = new Vector3 (0, titleButton.transform.localPosition.y, titleButton.transform.localPosition.z);
+		}
 	}
 
 	public void NextButton() {
