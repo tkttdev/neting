@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.EventSystems;
 
-public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
+public class StageManager : SingletonBehaviour<StageManager> {
 
 	[SerializeField] private Transform[] enemySpawnPos;
 	[SerializeField] private Transform[] itemSpawnPos;
@@ -23,8 +23,6 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
 	private float waveStartTime = 0.0f;
 	private float wavePlayTime = 0.0f;
-
-	private int duplicateEnemyNum = 0;
 
 	// Use this for initialization
 	protected override void Initialize () {
@@ -46,16 +44,12 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 				enemySpawnInfo.id.Add (new List<int> (id));
 				enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
 				enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
-				enemySpawnInfo.allWaveEnemyNum.Add (id.Count + duplicateEnemyNum);
+				enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
 	
 				id.Clear ();
 				spawnTime.Clear ();
 				spawnPos.Clear ();
-				duplicateEnemyNum = 0;
 			} else {
-				if (int.Parse (values [0]) == 5) {
-					duplicateEnemyNum++;
-				}
 				id.Add (int.Parse (values [0]));
 				spawnTime.Add (float.Parse (values [1]));
 				spawnPos.Add (int.Parse (values [2]));
@@ -144,12 +138,8 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 
 	}
 
-	public void DeadEnemy(int _id, bool _isCopy){
-		if (_id == 5 && !_isCopy) {
-			destroyEnemyNumInWave += 2;
-		} else {
-			destroyEnemyNumInWave++;
-		}
+	public void DeadEnemy(){
+		destroyEnemyNumInWave++;
 		if (enemySpawnInfo.allWaveEnemyNum [waveNum] == destroyEnemyNumInWave) {
 			destroyEnemyNumInWave = 0;
 			Debug.Log ("END WAVE");
@@ -162,6 +152,10 @@ public class StageManager : SingletonBehaviour<StageManager>, IRecieveMessage {
 				}
 			}
 		}
+	}
+
+	public void CopyEnemy(){
+		enemySpawnInfo.allWaveEnemyNum [waveNum]++;
 	}
 
 	private class EnemySpawnInfo{

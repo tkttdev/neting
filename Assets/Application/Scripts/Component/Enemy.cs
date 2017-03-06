@@ -10,7 +10,7 @@ public class Enemy : MoveObjectBase {
 	private int money;
     public float spawnTime;
 
-	public bool isCopy = false;
+	public int copyEnemyNum = 0;
 
 	private EnemyEffectBase[] enemyEffect;
 
@@ -71,9 +71,11 @@ public class Enemy : MoveObjectBase {
 
 	protected override void OnTriggerEnter2D (Collider2D _other){
 		base.OnTriggerEnter2D (_other);
+
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].OnTrriger2DEffect (_other, id);
 		}
+		
 		if (_other.tag == "DamageZone") {
 			if (damage > 1) {
 				SoundManager.I.SoundSE (SE.DAMAGE2);
@@ -88,10 +90,7 @@ public class Enemy : MoveObjectBase {
 	}
 
 	private void DestroyOwn(){
-		ExecuteEvents.Execute<IRecieveMessage>(
-			target: StageManager.I.gameObject, // 呼び出す対象のオブジェクト
-			eventData: null,  // イベントデータ（モジュール等の情報）
-			functor: (recieveTarget,y)=>recieveTarget.DeadEnemy(id, isCopy));
+		StageManager.I.DeadEnemy ();
 		Destroy (gameObject);
 	}
 
