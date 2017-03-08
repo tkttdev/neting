@@ -4,7 +4,7 @@ using System;
 public static class ENEMY_DEFINE {
 
     public const int enemyVarietyNum = 10;
-    public static readonly ReadOnlyCollection<int> HP = Array.AsReadOnly(new int[]	   { 1, 1, 1, 1, 1, 1, 1, 2, 1, 3 });
+    public static readonly ReadOnlyCollection<float> HP = Array.AsReadOnly(new float[] { 1, 1, 1, 1, 1, 1, 1, 2, 1, 3 });
     public static readonly ReadOnlyCollection<int> DAMAGE = Array.AsReadOnly(new int[] { 1, 1, 1, 3, 1, 1, 1, 1, 1, 1 });
 	public static readonly ReadOnlyCollection<int> MONEY = Array.AsReadOnly(new int[]  { 10, 20, 30, 40, 50, 60, 50, 80, 70, 100 });
 	public static readonly ReadOnlyCollection<string> PATH = Array.AsReadOnly(new string[] {  "Prefabs/Enemy/Enemy0",

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class Enemy : MoveObjectBase {
 	
 	[SerializeField]private int id;
-	private int hp;
+	private float hp;
 	private int damage;
 	private int money;
     public float spawnTime;
@@ -42,6 +42,9 @@ public class Enemy : MoveObjectBase {
 
     public void TakeDamage(int _damage) {
         hp -= _damage;
+		for (int i = 0; i < enemyEffect.Length; i++) {
+			enemyEffect [i].DamageEffect (_damage);
+		}
 		if (hp <= 0) {
 			GetItemManager.I.AddEarnMoney (money);
 			SoundManager.I.SoundSE (SE.DEAD);
@@ -52,6 +55,13 @@ public class Enemy : MoveObjectBase {
 			StartCoroutine (DamageRendering ());
 		}
     }
+
+	public void RecoveryHP(float _recoveryPoint){
+		hp += _recoveryPoint;
+		if (hp > ENEMY_DEFINE.HP [id]) {
+			hp = ENEMY_DEFINE.HP [id];
+		}
+	}
 
 	public void SetId(int _id){
 		id = _id;
@@ -89,7 +99,7 @@ public class Enemy : MoveObjectBase {
 		}
 	}
 
-	private void DestroyOwn(){
+	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
 		Destroy (gameObject);
 	}

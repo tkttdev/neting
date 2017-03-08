@@ -11,7 +11,7 @@ public class StageTest : GameManager {
     private List<float> enemySpawnTime = new List<float>();
     private List<float> enemyArriveTime = new List<float>();
     private List<int> enemyId = new List<int>();
-    private List<int> enemyHP = new List<int>();
+    private List<float> enemyHP = new List<float>();
     private List<int> enemyDamage = new List<int>();
     private int testStageIndex = 0;
     private float spendGameTime = 0.0f;
@@ -84,13 +84,13 @@ public class StageTest : GameManager {
 			List<int> testEnemyId = new List<int>(enemyId);
             List<float> testEnemySpawnTime = new List<float>(enemySpawnTime);
             List<float> testEnemyArriveTime = new List<float>(enemyArriveTime);
-            List<int> testEnemyHP = new List<int>(enemyHP);
+            List<float> testEnemyHP = new List<float>(enemyHP);
             List<int> testEnemyDamage = new List<int>(enemyDamage);
 
 			//テスト結果用リスト
 			List<float> testArriveEnemySpawnTime = new List<float>();
 			List<int> testArriveEnemyId = new List<int> ();
-			List<int> testArriveEnemyHP = new List<int> ();
+			List<float> testArriveEnemyHP = new List<float> ();
 
 			List<float> testDeadEnemySpawnTime = new List<float> ();
 			List<int> testDeadEnemyId = new List<int> ();
@@ -178,7 +178,7 @@ public class StageTest : GameManager {
 		}
     }
 
-	private void SaveResult(int _charaId, int[] _testCharaLife, List<float> _testArriveEnemySpawnTime, List<int> _testArriveEnemyId, List<int> _testArriveEnemyHP, List<float> _testDeadEnemySpawnTime, List<int> _testDeadEnemyId, List<float> _expectedUserMarginTime) {
+	private void SaveResult(int _charaId, int[] _testCharaLife, List<float> _testArriveEnemySpawnTime, List<int> _testArriveEnemyId, List<float> _testArriveEnemyHP, List<float> _testDeadEnemySpawnTime, List<int> _testDeadEnemyId, List<float> _expectedUserMarginTime) {
         StreamWriter sw = new StreamWriter(Application.dataPath + "/Test/test_result.txt", notFirstTest);
 
 		if(!notFirstTest){
