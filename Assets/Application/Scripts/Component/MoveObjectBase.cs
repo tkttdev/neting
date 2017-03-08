@@ -192,6 +192,10 @@ public class MoveObjectBase : MonoBehaviour {
 			} else {
 				moveDir = MoveDir.FORWARD;
 			}
+		} else if (_other.tag == "ForwardCorner" && !isInCorner) { 
+			isInCorner = true;
+			gameObject.transform.position = _other.transform.position;
+			moveDir = MoveDir.FORWARD;
 		} else if (_other.tag == "Warp") {
 			if (afterWarp) {
 				afterWarp = false;
@@ -205,7 +209,7 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "UpLeftCorner" || _other.tag == "UpRightCorner" || _other.tag == "DownLeftCorner" || _other.tag == "DownRightCorner");
+		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "UpLeftCorner" || _other.tag == "UpRightCorner" || _other.tag == "DownLeftCorner" || _other.tag == "DownRightCorner" || _other.tag == "ForwardCorner");
 		bool isTunnel = (_other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel" || _other.tag == "LeftPlayerTunnel" || _other.tag == "RightPlayerTunnel");
 		if (isCorner || isTunnel) {
 			isInCorner = false;

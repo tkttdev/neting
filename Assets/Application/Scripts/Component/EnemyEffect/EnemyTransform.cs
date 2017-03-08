@@ -13,7 +13,7 @@ public class EnemyTransform : EnemyEffectBase {
 
 	private MoveObjectBase.MoveDir moveDir;
 
-	public override void DamageEffect (int _damage){
+	public override void DamageEffect (float _damage){
 		if (timing == Timing.DAMAGE) {
 			moveDir = gameObject.GetComponent<Enemy> ().moveDir;
 			TransformEnemy ();

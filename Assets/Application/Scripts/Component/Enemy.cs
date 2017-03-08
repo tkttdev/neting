@@ -40,16 +40,13 @@ public class Enemy : MoveObjectBase {
 		DestroyOwn ();
 	}
 
-    public void TakeDamage(int _damage) {
+    public void TakeDamage(float _damage) {
         hp -= _damage;
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].DamageEffect (_damage);
 		}
 		if (hp <= 0) {
-			GetItemManager.I.AddEarnMoney (money);
-			SoundManager.I.SoundSE (SE.DEAD);
-			Instantiate (enemyDeadEffect, gameObject.transform.position, Quaternion.identity);
-			DeadEnemy ();
+			CheckDead ();
 		} else {
 			SoundManager.I.SoundSE (SE.HIT);
 			StartCoroutine (DamageRendering ());
@@ -61,6 +58,13 @@ public class Enemy : MoveObjectBase {
 		if (hp > ENEMY_DEFINE.HP [id]) {
 			hp = ENEMY_DEFINE.HP [id];
 		}
+	}
+
+	public void CheckDead(){
+		GetItemManager.I.AddEarnMoney (money);
+		SoundManager.I.SoundSE (SE.DEAD);
+		Instantiate (enemyDeadEffect, gameObject.transform.position, Quaternion.identity);
+		DeadEnemy ();
 	}
 
 	public void SetId(int _id){
