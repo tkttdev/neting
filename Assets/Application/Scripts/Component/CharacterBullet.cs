@@ -6,7 +6,7 @@ public class CharacterBullet : MoveObjectBase {
 
     private int damage;
 
-    protected override void Initialize() {
+	protected override void Initialize() {
 		base.Initialize ();
 		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
         SetMoveToEnemy();
@@ -22,9 +22,15 @@ public class CharacterBullet : MoveObjectBase {
         base.OnTriggerEnter2D(_other);
 		if (_other.tag == "Enemy") {
 			_other.gameObject.GetComponent<Enemy> ().TakeDamage (damage);
-			Destroy (gameObject);
+			DestroyOwn ();
 		} else if (_other.tag == "DestroyZone") {
-			Destroy (gameObject);
+			DestroyOwn ();
 		}
     }
+
+	private void DestroyOwn(){
+		isInCorner = false;
+		base.Initialize ();
+		gameObject.SetActive (false);
+	}
 }
