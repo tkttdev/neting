@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class StageLevelManager : SingletonBehaviour<StageLevelManager> {
-	private int stageLevel = 1;
+	[SerializeField] private int stageLevel = 1;
 
 	protected override void Initialize (){
 		base.Initialize ();
