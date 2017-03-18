@@ -12,7 +12,7 @@ public class BlinkLine : MonoBehaviour {
 
 	void Update(){
 		for (int i = 0; i < stayMoveObject.Count; i++) {
-			if (stayMoveObject [i].activeInHierarchy) {
+			if (!stayMoveObject [i].activeInHierarchy) {
 				stayMoveObject.RemoveAt (i);
 			}
 			CheckBlink ();
