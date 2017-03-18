@@ -3,10 +3,10 @@ using System;
 
 public static class ENEMY_DEFINE {
 
-    public const int enemyVarietyNum = 10;
-    public static readonly ReadOnlyCollection<float> HP = Array.AsReadOnly(new float[] { 1, 1, 1, 1, 1, 1, 1, 2, 1, 3 });
-    public static readonly ReadOnlyCollection<int> DAMAGE = Array.AsReadOnly(new int[] { 1, 1, 1, 3, 1, 1, 1, 1, 1, 1 });
-	public static readonly ReadOnlyCollection<int> MONEY = Array.AsReadOnly(new int[]  { 10, 20, 30, 40, 50, 60, 50, 80, 70, 100 });
+    public const int enemyVarietyNum = 14;
+    public static readonly ReadOnlyCollection<float> HP = Array.AsReadOnly(new float[] { 1, 1, 1, 1, 1, 1, 1, 2, 1, 3, 1, 9, 1000, 3 });
+    public static readonly ReadOnlyCollection<int> DAMAGE = Array.AsReadOnly(new int[] { 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
+	public static readonly ReadOnlyCollection<int> MONEY = Array.AsReadOnly(new int[]  { 10, 20, 30, 40, 50, 60, 50, 80, 70, 100, 0, 0, 40, 60 });
 	public static readonly ReadOnlyCollection<string> PATH = Array.AsReadOnly(new string[] {  "Prefabs/Enemy/Enemy0",
                                                                                               "Prefabs/Enemy/Enemy1",
                                                                                               "Prefabs/Enemy/Enemy2",
@@ -16,5 +16,9 @@ public static class ENEMY_DEFINE {
                                                                                               "Prefabs/Enemy/Enemy6",
                                                                                               "Prefabs/Enemy/Enemy7",
                                                                                               "Prefabs/Enemy/Enemy8",
-                                                                                              "Prefabs/Enemy/Enemy9"});
+                                                                                              "Prefabs/Enemy/Enemy9",
+                                                                                              "Prefabs/Enemy/Enemy10",
+																							  "Prefabs/Enemy/Enemy11",
+																							  "Prefabs/Enemy/Enemy12",
+																							  "Prefabs/Enemy/Enemy13"});
 }
