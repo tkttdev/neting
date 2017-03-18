@@ -11,14 +11,14 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 	}
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "Warp");
+		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel");
 		if (isFirstCopy && isCorner) {
 			MoveObjectBase.MoveDir originalMoveDir = gameObject.GetComponent<Enemy>().moveDir;
 			MoveObjectBase.MoveDir copyMoveDir;
 
-			if (_other.tag == "LeftCorner" && originalMoveDir == MoveObjectBase.MoveDir.FORWARD) {
+			if ((_other.tag == "LeftCorner" || _other.tag == "LeftEnemyTunnel") && originalMoveDir == MoveObjectBase.MoveDir.FORWARD) {
 				copyMoveDir = MoveObjectBase.MoveDir.LEFT;
-			} else if (_other.tag == "RightCorner" && originalMoveDir == MoveObjectBase.MoveDir.FORWARD) {
+			} else if ((_other.tag == "RightCorner" || _other.tag == "RightEnemyTunnel") && originalMoveDir == MoveObjectBase.MoveDir.FORWARD) {
 				copyMoveDir = MoveObjectBase.MoveDir.RIGHT;
 			} else {
 				copyMoveDir = MoveObjectBase.MoveDir.FORWARD;
