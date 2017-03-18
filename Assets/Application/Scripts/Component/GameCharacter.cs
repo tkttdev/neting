@@ -30,6 +30,11 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	private void LoadSpawnPos(){
+		#if UNITY_EDITOR
+		if(GameManager.I.isDemo){
+			StageLevelManager.I.SetStageLevel(GameManager.I.demoLevel);
+		}
+		#endif
 		StringReader sr = new StringReader(bulletSpawnerInfo.text);
 		for (int i = 0; i < StageLevelManager.I.GetStageLevel () - 1; i++) {
 			sr.ReadLine ();
