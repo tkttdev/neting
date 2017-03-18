@@ -114,6 +114,9 @@ public class Enemy : MoveObjectBase {
 		StageManager.I.DeadEnemy ();
 		isInCorner = false;
 		Initialize ();
+		for (int i = 0; i < enemyEffect.Length; i++) {
+			enemyEffect [i].Initialize ();
+		}
 		gameObject.SetActive (false);
 	}
 
