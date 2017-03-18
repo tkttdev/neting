@@ -14,7 +14,6 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private int life = 3;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
 	private bool[] beAbleSpawn = new bool[5];
-	private ObjectPool bulletPool = new ObjectPool();
 	private GameObject bulletPrefab;
 
 	protected override void Initialize() {
@@ -76,7 +75,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		bulletPool.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f));
+		ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f));
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 

@@ -12,7 +12,6 @@ public class StageManager : SingletonBehaviour<StageManager> {
 	[SerializeField] private TextAsset itemSpawnInfoText; 
 	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 	private GameObject[] itemPrefabs = new GameObject[10];
-	private Dictionary<int, ObjectPool> enemyPools = new Dictionary<int, ObjectPool>();
 
 	private EnemySpawnInfo enemySpawnInfo = new EnemySpawnInfo();
 	private ItemSpawnInfo itemSpawnInfo = new ItemSpawnInfo();
@@ -133,17 +132,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[waveNum][0]]) as GameObject;
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[waveNum][0]);
 		}
-
-		/*
-		int key = enemyPrefabs [enemySpawnInfo.id [waveNum] [0]].GetInstanceID ();
-
-		if(!enemyPools.ContainsKey(key)){
-			enemyPools.Add (key, new ObjectPool());
-		}
-
-		enemyPools [key].Instantiate (enemyPrefabs [enemySpawnInfo.id [waveNum] [0]], enemySpawnPos [enemySpawnInfo.spawnPos [waveNum] [0]].position);*/
-
-		Instantiate (enemyPrefabs [enemySpawnInfo.id [waveNum] [0]], enemySpawnPos [enemySpawnInfo.spawnPos [waveNum] [0]].position, Quaternion.identity);
+		ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id [waveNum] [0]], enemySpawnPos [enemySpawnInfo.spawnPos [waveNum] [0]].position);
 
 		enemySpawnInfo.RemoveFirstElement (waveNum);
 

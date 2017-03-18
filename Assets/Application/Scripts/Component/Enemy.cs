@@ -47,22 +47,24 @@ public class Enemy : MoveObjectBase {
 		hp -= _reducePoint;
 	}
 
-    public void TakeDamage(float _damage) {
-        hp -= _damage;
-		for (int i = 0; i < enemyEffect.Length; i++) {
-			enemyEffect [i].DamageEffect (_damage);
-		}
-		CheckDead ();
-
-		SoundManager.I.SoundSE (SE.HIT);
-		StartCoroutine (DamageRendering ());
-
-    }
-
 	public void RecoveryHP(float _recoveryPoint){
 		hp += _recoveryPoint;
 		if (hp > ENEMY_DEFINE.HP [id]) {
 			hp = ENEMY_DEFINE.HP [id];
+		}
+	}
+
+	public void TakeDamage(float _damage) {
+		hp -= _damage;
+		for (int i = 0; i < enemyEffect.Length; i++) {
+			enemyEffect [i].DamageEffect (_damage);
+		}
+
+		CheckDead ();
+
+		if (gameObject.activeInHierarchy) {
+			SoundManager.I.SoundSE (SE.HIT);
+			StartCoroutine (DamageRendering ());
 		}
 	}
 
@@ -110,9 +112,9 @@ public class Enemy : MoveObjectBase {
 
 	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
-		/*isInCorner = false;
-		Initialize ();*/
-		Destroy (gameObject);
+		isInCorner = false;
+		Initialize ();
+		gameObject.SetActive (false);
 	}
 
 	private IEnumerator DamageRendering(){
