@@ -11,7 +11,7 @@ public class EnemyRandomSpawnOnCorner : EnemyEffectBase {
 	[SerializeField] private int[] candidateId;
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "Warp");
+		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel");
 		if (isFirstCopy && isCorner) {
 			MoveObjectBase.MoveDir originalMoveDir = gameObject.GetComponent<Enemy>().moveDir;
 			MoveObjectBase.MoveDir copyMoveDir;
