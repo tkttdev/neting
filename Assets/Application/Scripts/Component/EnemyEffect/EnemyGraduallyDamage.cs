@@ -6,7 +6,7 @@ public class EnemyGraduallyDamage : EnemyEffectBase {
 	[SerializeField] private float damageParsec = 0.3f;
 
 	public override void MoveEffect (){
-		gameObject.GetComponent<Enemy> ().TakeDamage (damageParsec * Time.deltaTime);
+		gameObject.GetComponent<Enemy> ().ReduceHP (damageParsec * Time.deltaTime);
 		gameObject.GetComponent<Enemy> ().CheckDead ();
 	}
 }
