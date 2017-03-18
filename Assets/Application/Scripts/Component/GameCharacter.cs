@@ -85,6 +85,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	public void TakeDamage(int _damage){
+		#if UNITY_EDITOR
+		if(GameManager.I.isDemo) return;
+		#endif
 		life -= _damage;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		if (life <= 0) {

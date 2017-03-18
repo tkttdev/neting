@@ -143,6 +143,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 		if (enemySpawnInfo.allWaveEnemyNum [waveNum] == destroyEnemyNumInWave) {
 			destroyEnemyNumInWave = 0;
 			Debug.Log ("END WAVE");
+
 			if (GameCharacter.I.GetLife () > 0) {
 				if (waveNum < maxWaveNum - 1) {
 					GameManager.I.SetStatusWait ();
