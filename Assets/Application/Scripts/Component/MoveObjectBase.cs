@@ -34,8 +34,8 @@ public class MoveObjectBase : MonoBehaviour {
 	protected MoveMode moveMode = MoveMode.NORMAL;
 	protected EffectMode effectMode = EffectMode.NORMAL;
 
-	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
-	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
+	//[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
+	//[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
 
 	[HideInInspector] public bool isInCorner = false;
 
@@ -51,8 +51,8 @@ public class MoveObjectBase : MonoBehaviour {
 	/// To use initialize this function.
 	/// </summary>
 	protected virtual void Initialize(){
-		moveDir = initMoveDir;
-		moveMode = initMoveMode;
+		moveDir = MoveDir.FORWARD;
+		moveMode = MoveMode.NORMAL;
 		tag = gameObject.tag;
 	}
 
