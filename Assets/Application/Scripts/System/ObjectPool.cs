@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour {
 
-	private List<GameObject> pool = new List<GameObject>();
+	private List<GameObject> pool;
 
 	public GameObject Instantiate(GameObject _gameObjectPrefab, Vector3 _position){
 		for (int i = 0; i < pool.Count; i++) {

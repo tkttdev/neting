@@ -11,10 +11,11 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private float bulletInterval = 2;
 	private int bulletStock = 0;
 	private int maxBulletStock = 0;
-	private BulletController bulletController;
 	private int life = 3;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
 	private bool[] beAbleSpawn = new bool[5];
+	private ObjectPool bulletPool = new ObjectPool();
+	private GameObject bulletPrefab;
 
 	protected override void Initialize() {
 		base.Initialize();
@@ -44,7 +45,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
 		bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
 		maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
-		bulletController = new BulletController (CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]);
+		bulletPrefab = Resources.Load (CHARACTER_DEFINE.BULLET_PREFAB_PATH [useCharaIndex]) as GameObject;
 		bulletStock = maxBulletStock;
 		intervalCount = 0;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
@@ -75,7 +76,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		bulletController.Shoot (new Vector3 ((float)_entryX, -3.8f, 0.0f));
+		bulletPool.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f));
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 

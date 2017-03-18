@@ -105,7 +105,9 @@ public class Enemy : MoveObjectBase {
 
 	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
-		Destroy (gameObject);
+		/*isInCorner = false;
+		Initialize ();*/
+		gameObject.SetActive (false);
 	}
 
 	private IEnumerator DamageRendering(){
