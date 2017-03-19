@@ -28,6 +28,7 @@ public class Enemy : MoveObjectBase {
 		damage = ENEMY_DEFINE.DAMAGE [id];
 		money = ENEMY_DEFINE.MONEY [id];
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
+		gameObject.GetComponent<SpriteRenderer> ().enabled = true;
 		UpdateHPBar ();
 	}
 
