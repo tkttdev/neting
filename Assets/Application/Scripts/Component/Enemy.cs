@@ -32,8 +32,8 @@ public class Enemy : MoveObjectBase {
 		UpdateHPBar ();
 	}
 
-	protected override void Update (){
-		base.Update ();
+	protected override void FixedUpdate (){
+		base.FixedUpdate ();
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].MoveEffect ();
 		}
@@ -126,7 +126,7 @@ public class Enemy : MoveObjectBase {
 
 	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
-		isInCorner = false;
+		//isInCorner = false;
 		Initialize ();
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].Initialize ();

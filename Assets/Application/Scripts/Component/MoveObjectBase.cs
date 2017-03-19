@@ -6,7 +6,7 @@ public class MoveObjectBase : MonoBehaviour {
 
 	// player to enemy : 1 enemy to player : -1
 	protected int moveDesMode = 1;
-	[Range(1.0f,20.0f)]
+	[Range(1.0f,12.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
 
 	protected string tag;
@@ -37,6 +37,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
 
+	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
 
 	/// <summary>
@@ -80,23 +81,23 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 	}
 
-	protected virtual void Update(){
+	protected virtual void FixedUpdate(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			switch (moveDir) {
 			case MoveDir.FORWARD:
-				gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+				gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
 				break;
 			case MoveDir.LEFT:
-				gameObject.transform.position += new Vector3 (-moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
+				gameObject.transform.position += new Vector3 (-moveSpeed * (int)effectMode * 0.1f * Time.fixedDeltaTime, 0, 0);
 				break;
 			case MoveDir.RIGHT:
-				gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.deltaTime, 0, 0);
+				gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.fixedDeltaTime, 0, 0);
 				break;
 			case MoveDir.UP:
-				gameObject.transform.position += new Vector3 (0, (int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+				gameObject.transform.position += new Vector3 (0, (int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
 				break;
 			case MoveDir.DOWN:
-				gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.deltaTime, 0);
+				gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
 				break;
 			}
 		}
@@ -114,7 +115,7 @@ public class MoveObjectBase : MonoBehaviour {
 		if (moveMode == MoveMode.IGNORE) {
 			return;
 		} else if (_other.tag == "LeftCorner" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -122,7 +123,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "RightCorner" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
@@ -130,7 +131,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "UpLeftCorner" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.RIGHT) {
 				moveDir = MoveDir.UP;	
@@ -138,7 +139,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.LEFT; 
 			}
 		} else if (_other.tag == "UpRightCorner" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.LEFT) {
 				moveDir = MoveDir.UP;	
@@ -146,7 +147,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.RIGHT; 
 			}
 		} else if (_other.tag == "DownLeftCorner" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.RIGHT) {
 				moveDir = MoveDir.DOWN;	
@@ -154,7 +155,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.LEFT; 
 			}
 		} else if (_other.tag == "DownRightCorner" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.LEFT) {
 				moveDir = MoveDir.DOWN;	
@@ -162,7 +163,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.RIGHT; 
 			}
 		} else if (_other.tag == "LeftEnemyTunnel" && tag == "Enemy" && !isInCorner) { 
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -170,7 +171,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "RightEnemyTunnel" && tag == "Enemy" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
@@ -178,7 +179,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "LeftPlayerTunnel" && tag == "PlayerBullet" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -186,7 +187,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "RightPlayerTunnel" && tag == "PlayerBullet" && !isInCorner) {
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
@@ -194,7 +195,7 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "ForwardCorner" && !isInCorner) { 
-			isInCorner = true;
+			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			moveDir = MoveDir.FORWARD;
 		} else if (_other.tag == "Warp") {
