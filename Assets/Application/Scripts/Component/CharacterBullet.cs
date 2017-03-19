@@ -12,8 +12,8 @@ public class CharacterBullet : MoveObjectBase {
         SetMoveToEnemy();
     }
 
-    protected override void Update() {
-        base.Update();
+    protected override void FixedUpdate() {
+        base.FixedUpdate();
 		float scale = Mathf.PingPong (Time.time*2.0f, 1.0f) + 3.0f;
 		gameObject.transform.localScale = new Vector3 (scale, scale, scale);
     }
@@ -29,7 +29,7 @@ public class CharacterBullet : MoveObjectBase {
     }
 
 	private void DestroyOwn(){
-		isInCorner = false;
+		//isInCorner = false;
 		base.Initialize ();
 		gameObject.SetActive (false);
 	}
