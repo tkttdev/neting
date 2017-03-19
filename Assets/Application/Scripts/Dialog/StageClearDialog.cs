@@ -50,7 +50,7 @@ public class StageClearDialog : DialogBase {
 	private void SetComponentsActive() {
 		titleButton.SetActive (true);
 		panel.SetActive (true);
-		if (StageLevelManager.I.GetStageLevel () != 20) {
+		if (StageLevelManager.I.GetStageLevel () != 30) {
 			nextButton.SetActive (true);
 		} else {
 			titleButton.transform.localPosition = new Vector3 (0, titleButton.transform.localPosition.y, titleButton.transform.localPosition.z);
