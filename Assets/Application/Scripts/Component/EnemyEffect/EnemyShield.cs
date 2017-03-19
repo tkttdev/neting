@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class EnemyShield : EnemyEffectBase {
 
-	[SerializeField] private int ProtectTimes = 1;
+	[SerializeField] private int protectTimes = 1;
+	private int maxProtectTimes = 1; 
 	[SerializeField] private SpriteRenderer shieldSprite;
 
+	void Start(){
+		maxProtectTimes = protectTimes;
+	}
+
+	public override void Initialize (){
+		protectTimes = maxProtectTimes;
+	}
+
 	public override void DamageEffect (float _damage){
-		if (ProtectTimes > 0) {
-			ProtectTimes--;
+		if (protectTimes > 0) {
+			protectTimes--;
 			gameObject.GetComponent<Enemy> ().RecoveryHP (_damage);
-		} else {
-			if (shieldSprite != null) {
+			if (protectTimes <= 0) {
 				shieldSprite.enabled = false;
 			}
-		}
+		} 
 	}
 }
