@@ -11,6 +11,7 @@ public class Enemy : MoveObjectBase {
 	private int money;
     public float spawnTime;
 	[SerializeField]private SpriteRenderer hpBar;
+	private Vector2 hpBarInitLocalScale;
 
 	public int copyEnemyNum = 0;
 
@@ -27,6 +28,7 @@ public class Enemy : MoveObjectBase {
 		damage = ENEMY_DEFINE.DAMAGE [id];
 		money = ENEMY_DEFINE.MONEY [id];
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
+		UpdateHPBar ();
 	}
 
 	protected override void Update (){
