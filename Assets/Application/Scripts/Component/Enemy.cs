@@ -6,9 +6,11 @@ public class Enemy : MoveObjectBase {
 	
 	[SerializeField]private int id;
 	private float hp;
+	private float maxHP;
 	private int damage;
 	private int money;
     public float spawnTime;
+	[SerializeField]private SpriteRenderer hpBar;
 
 	public int copyEnemyNum = 0;
 
@@ -21,6 +23,7 @@ public class Enemy : MoveObjectBase {
 		SetMoveToPlayer ();
         spawnTime = Time.timeSinceLevelLoad;
 		hp = ENEMY_DEFINE.HP [id];
+		maxHP = hp;
 		damage = ENEMY_DEFINE.DAMAGE [id];
 		money = ENEMY_DEFINE.MONEY [id];
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
@@ -43,8 +46,15 @@ public class Enemy : MoveObjectBase {
 		DestroyOwn ();
 	}
 
+	private void UpdateHPBar(){
+		if (hpBar == null) return;
+		float hpRate = Mathf.Clamp (hp / maxHP, 0.0f, 1.0f);
+		hpBar.transform.localScale = new Vector3 (hpRate, hpBar.transform.localScale.y);
+	}
+
 	public void ReduceHP(float _reducePoint){
 		hp -= _reducePoint;
+		UpdateHPBar ();
 	}
 
 	public void RecoveryHP(float _recoveryPoint){
@@ -52,6 +62,7 @@ public class Enemy : MoveObjectBase {
 		if (hp > ENEMY_DEFINE.HP [id]) {
 			hp = ENEMY_DEFINE.HP [id];
 		}
+		UpdateHPBar ();
 	}
 
 	public void TakeDamage(float _damage) {
@@ -59,7 +70,7 @@ public class Enemy : MoveObjectBase {
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].DamageEffect (_damage);
 		}
-
+		UpdateHPBar ();
 		CheckDead ();
 
 		if (gameObject.activeInHierarchy) {
