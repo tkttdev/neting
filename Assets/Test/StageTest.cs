@@ -227,7 +227,7 @@ public class StageTest : GameManager {
     private void OnTriggerEnter2D(Collider2D other) {
         //敵情報の登録
 		enemyId.Add(other.GetComponent<Enemy>().GetId());
-        enemySpawnTime.Add(other.GetComponent<Enemy>().spawnTime - stageStartTime);
+        //enemySpawnTime.Add(other.GetComponent<Enemy>().spawnTime - stageStartTime);
         enemyArriveTime.Add(spendGameTime);
 		enemyHP.Add(ENEMY_DEFINE.HP[other.GetComponent<Enemy>().GetId()]);
 		enemyDamage.Add(ENEMY_DEFINE.DAMAGE[other.GetComponent<Enemy>().GetId()]);

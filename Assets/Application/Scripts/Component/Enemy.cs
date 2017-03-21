@@ -9,7 +9,6 @@ public class Enemy : MoveObjectBase {
 	private float maxHP;
 	private int damage;
 	private int money;
-    public float spawnTime;
 	[SerializeField]private SpriteRenderer hpBar;
 	private Vector2 hpBarInitLocalScale;
 
@@ -22,12 +21,15 @@ public class Enemy : MoveObjectBase {
 	protected override void Initialize (){
 		base.Initialize ();
 		SetMoveToPlayer ();
-        spawnTime = Time.timeSinceLevelLoad;
 		hp = ENEMY_DEFINE.HP [id];
 		maxHP = hp;
 		damage = ENEMY_DEFINE.DAMAGE [id];
 		money = ENEMY_DEFINE.MONEY [id];
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
+	}
+
+	private void InitializeOnDead(){
+		hp = maxHP;
 		gameObject.GetComponent<SpriteRenderer> ().enabled = true;
 		UpdateHPBar ();
 	}
@@ -127,7 +129,7 @@ public class Enemy : MoveObjectBase {
 	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
 		//isInCorner = false;
-		Initialize ();
+		InitializeOnDead ();
 		for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].Initialize ();
 		}
