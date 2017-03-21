@@ -29,6 +29,7 @@ public class Enemy : MoveObjectBase {
 	}
 
 	private void InitializeOnDead(){
+		base.Initialize ();
 		hp = maxHP;
 		gameObject.GetComponent<SpriteRenderer> ().enabled = true;
 		UpdateHPBar ();
@@ -130,9 +131,9 @@ public class Enemy : MoveObjectBase {
 		StageManager.I.DeadEnemy ();
 		//isInCorner = false;
 		InitializeOnDead ();
-		for (int i = 0; i < enemyEffect.Length; i++) {
+		/*for (int i = 0; i < enemyEffect.Length; i++) {
 			enemyEffect [i].Initialize ();
-		}
+		}*/
 		gameObject.SetActive (false);
 	}
 

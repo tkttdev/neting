@@ -6,10 +6,6 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 	[HideInInspector] public bool isFirstCopy = true;
 	[SerializeField] private bool isOnlyOnceCopy = true;
 
-	public override void Initialize (){
-		isFirstCopy = true;
-	}
-
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
 		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel");
 		if (isFirstCopy && isCorner) {
@@ -32,5 +28,9 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 			isFirstCopy = !isOnlyOnceCopy;
 			gameObject.GetComponent<Enemy> ().isInCorner = false;
 		}
+	}
+
+	void Disabled (){
+		isFirstCopy = true;
 	}
 }

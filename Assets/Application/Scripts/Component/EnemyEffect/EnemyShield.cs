@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class EnemyShield : EnemyEffectBase {
 
-	[SerializeField] private int protectTimes = 1;
-	private int maxProtectTimes = 1; 
+	private int protectTimes = 1;
+	[SerializeField] private int initProtectTimes = 1; 
 	[SerializeField] private SpriteRenderer shieldSprite;
 
 	void Start(){
-		maxProtectTimes = protectTimes;
+		protectTimes = initProtectTimes;
 	}
 
-	public override void Initialize (){
-		protectTimes = maxProtectTimes;
+	void Disabled(){
+		protectTimes = initProtectTimes;
+		shieldSprite.enabled = true;
 	}
 
 	public override void DamageEffect (float _damage){
