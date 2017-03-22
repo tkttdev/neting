@@ -129,12 +129,8 @@ public class Enemy : MoveObjectBase {
 
 	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
-		//isInCorner = false;
 		InitializeOnDead ();
-		/*for (int i = 0; i < enemyEffect.Length; i++) {
-			enemyEffect [i].Initialize ();
-		}*/
-		gameObject.SetActive (false);
+		ObjectPool.I.Release (gameObject);
 	}
 
 	private IEnumerator DamageRendering(){
