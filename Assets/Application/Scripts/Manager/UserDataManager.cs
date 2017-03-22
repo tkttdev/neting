@@ -80,7 +80,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 	}
 
 	public bool IsPermitUseCharacter(int _characterIndex){
-		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return;
+		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return false;
 		return userData.hasChara [_characterIndex];
 	}
 
