@@ -7,6 +7,10 @@ using System.Security.Cryptography;
 
 public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
+	private const int MAX_MONEY = 99999;
+	private UserData userData;
+	private string dataPath;
+
 	public class UserData {
 		public int useCharaIndex = 0;
 		public int money = 0;
@@ -24,9 +28,6 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 			}
 		}
 	}
-
-	private UserData userData;
-	private string dataPath;
 
     protected override void Initialize() {
         base.Initialize();
@@ -50,17 +51,26 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
     }
 
     public void SetUseCharacterIndex(int _characterIndex) {
+		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return;
         userData.useCharaIndex = _characterIndex;
 		SaveData ();
     }
 
 	public void GetCharacter(int _characterIndex){
+		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return;
 		userData.hasChara [_characterIndex] = true;
 		SaveData ();
 	}
 
+	public int GetMoney(){
+		return userData.money;
+	}
+
 	public void AddMoney(int _money){
 		userData.money += _money;
+		if (userData.money > MAX_MONEY) {
+			userData.money = MAX_MONEY;
+		}
 		SaveData ();
 	}
 
@@ -70,6 +80,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 	}
 
 	public bool IsPermitUseCharacter(int _characterIndex){
+		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return;
 		return userData.hasChara [_characterIndex];
 	}
 
@@ -79,10 +90,6 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 
 	public void SetClearStage(int _stageIndex){
 		userData.isClearStage [_stageIndex] = true;
-	}
-
-	public int GetMoney(){
-		return userData.money;
 	}
 
 	public void SaveData (){
