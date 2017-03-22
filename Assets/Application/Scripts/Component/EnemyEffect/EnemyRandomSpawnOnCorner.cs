@@ -10,7 +10,7 @@ public class EnemyRandomSpawnOnCorner : EnemyEffectBase {
 	[SerializeField] private bool isOnlyOnceCopy = true;
 	[SerializeField] private int[] candidateId;
 
-	public override void Initialize (){
+	void OnDisable(){
 		isFirstCopy = true;
 	}
 

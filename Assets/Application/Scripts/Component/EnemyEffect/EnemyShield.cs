@@ -12,7 +12,7 @@ public class EnemyShield : EnemyEffectBase {
 		protectTimes = initProtectTimes;
 	}
 
-	void Disabled(){
+	void OnDisable(){
 		protectTimes = initProtectTimes;
 		shieldSprite.enabled = true;
 	}

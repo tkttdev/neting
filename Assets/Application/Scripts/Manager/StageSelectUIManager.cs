@@ -17,9 +17,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 
 	//0~10 => 0, 11~20 => 1
 	private int showStageIndex = 0;
-	private int minStageIndex = 0;
-	private int maxStageIndex = 1;
-	private int purposeStageIndex = 0;
+	private string SHOW_STAGE_INDEX_KEY = "showStageIndexKey";
 
 	private float unitX;
 
@@ -41,6 +39,10 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 			if (UserDataManager.I.IsClearStage (i)) {
 				stageButtonImage [i].sprite = Resources.Load<Sprite> ("Images/Circle/stageicon2");
 			}
+		}
+		showStageIndex = PlayerPrefs.GetInt (SHOW_STAGE_INDEX_KEY, 0);
+		for (int i = 0; i < stageButtonRoot.Length; i++) {
+			stageButtonRoot [i].transform.position += new Vector3 (-showStageIndex * unitX, stageButtonRoot [i].transform.position.y);
 		}
 	}
 
@@ -68,6 +70,8 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 	/// </summary>
 	/// <param name="_dir">Dir.</param>
 	public void MoveStageButton(int _dir){
+		showStageIndex -= _dir;
+		PlayerPrefs.SetInt (SHOW_STAGE_INDEX_KEY, showStageIndex);
 		SoundManager.I.SoundSE (SE.BUTTON1);
 		StartCoroutine (ButtonMoveAnimation (_dir));
 	}

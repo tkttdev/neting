@@ -30,7 +30,7 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 		}
 	}
 
-	void Disabled (){
+	void OnDisable (){
 		isFirstCopy = true;
 	}
 }

@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class StageSelectController : MonoBehaviour {
 
-
 	// Use this for initialization
 	void Start () {
 		#if UNITY_EDITOR
