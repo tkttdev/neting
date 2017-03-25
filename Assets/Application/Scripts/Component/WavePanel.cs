@@ -25,7 +25,7 @@ public class WavePanel : MonoBehaviour {
 		yield return new WaitForSeconds (0.8f);
 		iTween.ScaleTo (gameObject, iTween.Hash ("y", 1, "time", 1));
 		yield return new WaitForSeconds (0.8f);
-		waveText.text = string.Format ("WAVE{0}/{1}\nSTART!", waveNum, maxWave);
+		waveText.text = string.Format ("Stage {0}\nWave {1}/{2}\nSTART!", StageLevelManager.I.GetStageLevel (), waveNum, maxWave);
 		yield break;
 	}
 }

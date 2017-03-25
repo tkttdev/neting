@@ -21,6 +21,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private Sprite emptyBulletSprite;
 
 	[SerializeField] private WavePanel wavePanel;
+	[SerializeField] private GameObject pausePanel;
 
 	protected override void Initialize (){
 		base.Initialize ();
@@ -56,8 +57,10 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	public void PauseButton(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			GameManager.I.SetStatuPause ();
+			pausePanel.SetActive (true);
 		} else {
 			GameManager.I.SetStatuPlay ();
+			pausePanel.SetActive (false);
 		}
 	}
 
