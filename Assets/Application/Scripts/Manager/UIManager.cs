@@ -75,7 +75,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	IEnumerator PauseAnimation(){
 		while (Camera.main.orthographicSize > 1.0f) {
 			Camera.main.orthographicSize -= 0.5f;
-			yield return new WaitForSeconds (0.020f);
+			yield return new WaitForSeconds (0.010f);
 		}
 		pausePanel.SetActive (true);
 		resumeButton.SetActive (true);
@@ -84,7 +84,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	IEnumerator ResumeAnimation(){
 		while (Camera.main.orthographicSize < 5.0f) {
 			Camera.main.orthographicSize += 0.5f;
-			yield return new WaitForSeconds (0.020f);
+			yield return new WaitForSeconds (0.010f);
 		}
 		pausePanel.SetActive (false);
 		pauseButton.SetActive (true);
