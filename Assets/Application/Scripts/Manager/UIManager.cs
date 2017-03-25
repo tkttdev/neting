@@ -22,6 +22,8 @@ public class UIManager : SingletonBehaviour<UIManager> {
 
 	[SerializeField] private WavePanel wavePanel;
 	[SerializeField] private GameObject pausePanel;
+	[SerializeField] private GameObject pauseButton;
+	[SerializeField] private GameObject resumeButton;
 
 	protected override void Initialize (){
 		base.Initialize ();
@@ -58,9 +60,18 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			GameManager.I.SetStatuPause ();
 			pausePanel.SetActive (true);
-		} else {
+			pauseButton.SetActive (false);
+			resumeButton.SetActive (true);
+		}
+
+	}
+
+	public void ResumeButton(){
+		if (GameManager.I.CheckGameStatus (GameStatus.PAUSE)) {
 			GameManager.I.SetStatuPlay ();
 			pausePanel.SetActive (false);
+			pauseButton.SetActive (true);
+			resumeButton.SetActive (false);
 		}
 	}
 
