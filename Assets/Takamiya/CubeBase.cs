@@ -4,21 +4,27 @@ using UnityEngine;
 
 public class CubeBase : MonoBehaviour {
 
-	private int pri_id = 1;
-	public int pub_id = 1;
+	void Start(){
+		A a = new A();
+		A b = (A)new B();
 
-	// Use this for initialization
-	void Start () {
-		pri_id = 2;
-		pub_id = 2;
+		//a.test ();
+		b.test ();
 
-		Instantiate (gameObject);
-
-		Debug.Log (pri_id);
+		//B b_ = b as B;
+		//b_.test ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public class A{
+		public virtual void test(){
+			Debug.Log ("This is a A");
+		}
+	}
+
+	public class B : A{
+		public override void test () {
+			base.test ();
+			Debug.Log("This is a B");
+		}
 	}
 }
