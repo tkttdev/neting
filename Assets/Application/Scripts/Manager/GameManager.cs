@@ -28,8 +28,10 @@ public class GameManager : SingletonBehaviour<GameManager> {
 			SoundManager.I.SoundBGM (BGM.STAGE_EASY);
 		} else if (StageLevelManager.I.GetStageLevel () < 15) {
 			SoundManager.I.SoundBGM (BGM.STAGE_NORMAL);
-		} else {
+		} else if (StageLevelManager.I.GetStageLevel () < 24) {
 			SoundManager.I.SoundBGM (BGM.STAGE_HARD);
+		} else {
+			SoundManager.I.SoundBGM (BGM.STAGE_VERY_HARD);
 		}
 
 		if (!isDemo) {

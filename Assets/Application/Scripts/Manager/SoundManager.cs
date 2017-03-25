@@ -25,6 +25,7 @@ public enum BGM : int {
 	STAGE_EASY = 4,
 	STAGE_NORMAL = 5,
 	STAGE_HARD = 6,
+	STAGE_VERY_HARD = 7,
 }
 
 public class SoundManager : SingletonBehaviour<SoundManager> {
