@@ -33,12 +33,15 @@ public class Enemy : MoveObjectBase {
 		hp = maxHP;
 		gameObject.GetComponent<SpriteRenderer> ().enabled = true;
 		UpdateHPBar ();
+		isInCorner = false;
 	}
 
 	protected override void FixedUpdate (){
 		base.FixedUpdate ();
-		for (int i = 0; i < enemyEffect.Length; i++) {
-			enemyEffect [i].MoveEffect ();
+		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			for (int i = 0; i < enemyEffect.Length; i++) {
+				enemyEffect [i].MoveEffect ();
+			}
 		}
 	}
 
