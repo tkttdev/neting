@@ -59,20 +59,36 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	public void PauseButton(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			GameManager.I.SetStatuPause ();
-			pausePanel.SetActive (true);
 			pauseButton.SetActive (false);
-			resumeButton.SetActive (true);
+			StartCoroutine (PauseAnimation ());
 		}
 
 	}
 
 	public void ResumeButton(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PAUSE)) {
-			GameManager.I.SetStatuPlay ();
-			pausePanel.SetActive (false);
-			pauseButton.SetActive (true);
 			resumeButton.SetActive (false);
+			StartCoroutine (ResumeAnimation ());
 		}
+	}
+
+	IEnumerator PauseAnimation(){
+		while (Camera.main.orthographicSize > 1.0f) {
+			Camera.main.orthographicSize -= 0.5f;
+			yield return new WaitForSeconds (0.020f);
+		}
+		pausePanel.SetActive (true);
+		resumeButton.SetActive (true);
+	}
+
+	IEnumerator ResumeAnimation(){
+		while (Camera.main.orthographicSize < 5.0f) {
+			Camera.main.orthographicSize += 0.5f;
+			yield return new WaitForSeconds (0.020f);
+		}
+		pausePanel.SetActive (false);
+		pauseButton.SetActive (true);
+		GameManager.I.SetStatuPlay ();
 	}
 
 	public void WaveStart(int _wave, int _maxWave){
