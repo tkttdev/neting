@@ -5,21 +5,19 @@ using UnityEngine.UI;
 
 public class PauseDialog : DialogBase {
 
-	[SerializeField]private GameObject panel;
+	[SerializeField] private GameObject restartButton;
+	[SerializeField] private GameObject exitButton;
+	[SerializeField] private GameObject panel;
+	[SerializeField] private Text pauseText;
 
-	// Use this for initialization
 	protected override void Start() {
 		base.Start();
-		Hide();
-	}
-
-	// Update is called once per frame
-	void Update() {
-
+		Hide ();
 	}
 
 	public override void Show() {
 		base.Show();
+		pauseText.text = string.Format ("Stage {0}\nPause", StageLevelManager.I.GetStageLevel ());
 		SetComponentsActive();
 	}
 
@@ -29,10 +27,22 @@ public class PauseDialog : DialogBase {
 	}
 
 	private void SetComponentsInactive() {
-		panel.SetActive(false);
+		exitButton.SetActive (false);
+		restartButton.SetActive (false);
+		panel.SetActive (false);
 	}
 
 	private void SetComponentsActive() {
-		panel.SetActive(true);
+		exitButton.SetActive (true);
+		restartButton.SetActive (true);
+		panel.SetActive (true);
+	}
+
+	public void RestartButton(){
+		AppSceneManager.I.GoScene (GameSceneType.GAME_SCENE);
+	}
+
+	public void ExitButton(){
+		AppSceneManager.I.GoScene (GameSceneType.MENU_SCENE);
 	}
 }

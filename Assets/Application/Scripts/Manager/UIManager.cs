@@ -77,16 +77,16 @@ public class UIManager : SingletonBehaviour<UIManager> {
 			Camera.main.orthographicSize -= 0.5f;
 			yield return new WaitForSeconds (0.010f);
 		}
-		pausePanel.SetActive (true);
 		resumeButton.SetActive (true);
+		pauseDialog.Show ();
 	}
 
 	IEnumerator ResumeAnimation(){
+		pauseDialog.Hide ();
 		while (Camera.main.orthographicSize < 5.0f) {
 			Camera.main.orthographicSize += 0.5f;
 			yield return new WaitForSeconds (0.010f);
 		}
-		pausePanel.SetActive (false);
 		pauseButton.SetActive (true);
 		GameManager.I.SetStatuPlay ();
 	}
