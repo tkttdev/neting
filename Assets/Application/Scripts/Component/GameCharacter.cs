@@ -88,11 +88,23 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		#if UNITY_EDITOR
 		if(GameManager.I.isDemo) return;
 		#endif
+		StartCoroutine(DamageRendering());
 		life -= _damage;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		if (life <= 0) {
 			GameManager.I.SetStatuEnd ();
 		}
+	}
+
+	private IEnumerator DamageRendering(){
+		for (int i = 0; i < 1; i++) {
+			iTween.MoveTo (Camera.main.gameObject, iTween.Hash ("x", 0.3f, "time", 0.05f, "easeType", iTween.EaseType.easeInExpo));
+			yield return new WaitForSeconds (0.05f);
+			iTween.MoveTo (Camera.main.gameObject, iTween.Hash ("x", -0.3f, "time", 0.1f, "easeType", iTween.EaseType.easeInExpo));
+			yield return new WaitForSeconds (0.1f);
+		}
+		iTween.MoveTo (Camera.main.gameObject, iTween.Hash ("x", 0f, "time", 0.05f, "easeType", iTween.EaseType.easeInExpo));
+		yield return new WaitForSeconds (0.05f);
 	}
 
 	public int GetLife(){
