@@ -8,6 +8,7 @@ public class MoveObjectBase : MonoBehaviour {
 	protected int moveDesMode = 1;
 	[Range(1.0f,12.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
+	public int lineLayer = 0;
 
 	protected string tag;
 

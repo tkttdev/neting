@@ -13,7 +13,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private int maxBulletStock = 0;
 	private int life = 3;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
-	private bool[] beAbleSpawn = new bool[5];
+	private int[] beAbleSpawn = new int[5];
 	private GameObject bulletPrefab;
 
 	protected override void Initialize() {
@@ -41,7 +41,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		}
 		string[] line = sr.ReadLine ().Split (',');
 		for (int i = 0; i < line.Length; i++) {
-			beAbleSpawn[i] = (line [i] == "1");
+			beAbleSpawn[i] =  int.Parse(line [i]);
 		}
 	}
 
@@ -75,12 +75,12 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	public void Shoot(int _entryX) {
-		if (bulletStock == 0 || !beAbleSpawn [_entryX + 2] || !GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
+		if (bulletStock == 0 || !(beAbleSpawn [_entryX + 2] > -1) || !GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
 			return;
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f));
+		ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ().lineLayer = beAbleSpawn[_entryX + 2];
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 

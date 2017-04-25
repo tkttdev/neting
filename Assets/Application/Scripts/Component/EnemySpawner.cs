@@ -32,6 +32,7 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
             spawnerInfo.enemyId.Add(int.Parse(values[0]));
             spawnerInfo.spawnTime.Add(float.Parse(values[1]));
             spawnerInfo.spawnPos.Add(int.Parse(values[2]));
+			spawnerInfo.lineLayer.Add (1);
         }
         allEnemyNum = spawnerInfo.enemyId.Count;
     }
@@ -62,12 +63,13 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
 			enemyPrefabs [spawnerInfo.enemyId [0]] = Resources.Load (ENEMY_DEFINE.PATH [spawnerInfo.enemyId [0]]) as GameObject;
 			enemyPrefabs [spawnerInfo.enemyId [0]].GetComponent<Enemy> ().SetId (spawnerInfo.enemyId [0]);
         }
-        GameObject spawnEnemy = Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position, Quaternion.identity);
-		spawnEnemy.transform.name = "Enemy" + spawnerInfo.allSpawnEnemyNum.ToString ();
+		ObjectPool.I.Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position).GetComponent<MoveObjectBase>().lineLayer = spawnerInfo.lineLayer[0];
+		//spawnEnemy.transform.name = "Enemy" + spawnerInfo.allSpawnEnemyNum.ToString ();
 
         spawnerInfo.enemyId.RemoveAt(0);
         spawnerInfo.spawnTime.RemoveAt(0);
         spawnerInfo.spawnPos.RemoveAt(0);
+		spawnerInfo.lineLayer.RemoveAt (0);
 		spawnerInfo.allSpawnEnemyNum++;
     }
 }
@@ -76,5 +78,6 @@ public class SpawnerInfo {
     public List<int> enemyId = new List<int>();
     public List<float> spawnTime = new List<float>();
     public List<int> spawnPos = new List<int>();
+	public List<int> lineLayer = new List<int>();
     public int allSpawnEnemyNum = 0;
 }
