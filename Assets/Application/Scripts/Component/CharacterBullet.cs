@@ -21,8 +21,10 @@ public class CharacterBullet : MoveObjectBase {
     protected override void OnTriggerEnter2D(Collider2D _other) {
         base.OnTriggerEnter2D(_other);
 		if (_other.tag == "Enemy") {
-			_other.gameObject.GetComponent<Enemy> ().TakeDamage (damage);
-			DestroyOwn ();
+			if (_other.GetComponent<MoveObjectBase> ().lineLayer == lineLayer) {
+				_other.gameObject.GetComponent<Enemy> ().TakeDamage (damage);
+				DestroyOwn ();
+			}
 		} else if (_other.tag == "DestroyZone") {
 			DestroyOwn ();
 		}
