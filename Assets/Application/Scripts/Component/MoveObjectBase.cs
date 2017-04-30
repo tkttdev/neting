@@ -4,20 +4,14 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MoveObjectBase : MonoBehaviour {
 
-	// player to enemy : 1 enemy to player : -1
-	protected int moveDesMode = 1;
-	[Range(1.0f,12.0f)]
-	[SerializeField] protected float moveSpeed = 3.0f;
-	public int lineLayer = 0;
-
-	protected string tag;
-
+	#region Define
 	public enum MoveDir : int {
 		FORWARD = 0,
 		LEFT = 1,
 		RIGHT = 2,
 		UP = 3,
 		DOWN = 4,
+		SLOPE = 5,
 	}
 
 	protected enum MoveMode : int {
@@ -30,16 +24,31 @@ public class MoveObjectBase : MonoBehaviour {
 		NORMAL = 10,
 		HIGH_SPEED = 15,
 	}
+	#endregion
 
+	#region PubliField
+	public int lineLayer = 0;
 	public MoveDir moveDir = MoveDir.FORWARD;
-	protected MoveMode moveMode = MoveMode.NORMAL;
-	protected EffectMode effectMode = EffectMode.NORMAL;
-
-	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
-	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
-
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
+	#endregion
+
+	#region ProtectedField
+	// player to enemy : 1 enemy to player : -1
+	protected int moveDesMode = 1;
+	protected bool afterWarp = false;
+	[Range(1.0f,12.0f)]
+	[SerializeField] protected float moveSpeed = 3.0f;
+	protected string tag;
+	protected MoveMode moveMode = MoveMode.NORMAL;
+	protected EffectMode effectMode = EffectMode.NORMAL;
+	#endregion
+
+	#region PrivateField
+	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
+	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
+	#endregion
+
 
 	/// <summary>
 	/// Don't use this function to initialize.
@@ -104,8 +113,6 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 	}
 
-	protected bool afterWarp = false;
-
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
 		if (_other.tag == "LowSpeedZone") {
 			effectMode = EffectMode.LOW_SPEED;
@@ -116,7 +123,6 @@ public class MoveObjectBase : MonoBehaviour {
 		if (moveMode == MoveMode.IGNORE) {
 			return;
 		} else if (_other.tag == "LeftCorner" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -124,7 +130,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "RightCorner" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
@@ -132,7 +137,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "UpLeftCorner" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.RIGHT) {
 				moveDir = MoveDir.UP;	
@@ -140,7 +144,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.LEFT; 
 			}
 		} else if (_other.tag == "UpRightCorner" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.LEFT) {
 				moveDir = MoveDir.UP;	
@@ -148,7 +151,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.RIGHT; 
 			}
 		} else if (_other.tag == "DownLeftCorner" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.RIGHT) {
 				moveDir = MoveDir.DOWN;	
@@ -156,7 +158,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.LEFT; 
 			}
 		} else if (_other.tag == "DownRightCorner" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.LEFT) {
 				moveDir = MoveDir.DOWN;	
@@ -164,7 +165,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.RIGHT; 
 			}
 		} else if (_other.tag == "LeftEnemyTunnel" && tag == "Enemy" && !isInCorner) { 
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -172,7 +172,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "RightEnemyTunnel" && tag == "Enemy" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
@@ -180,7 +179,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "LeftPlayerTunnel" && tag == "PlayerBullet" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -188,7 +186,6 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "RightPlayerTunnel" && tag == "PlayerBullet" && !isInCorner) {
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.RIGHT;
@@ -196,9 +193,9 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = MoveDir.FORWARD;
 			}
 		} else if (_other.tag == "ForwardCorner" && !isInCorner) { 
-			//isInCorner = true;
 			gameObject.transform.position = _other.transform.position;
 			moveDir = MoveDir.FORWARD;
+		} else if (_other.tag == "SlopeCorner" && !isInCorner) {
 		} else if (_other.tag == "Warp") {
 			if (afterWarp) {
 				afterWarp = false;
@@ -208,7 +205,6 @@ public class MoveObjectBase : MonoBehaviour {
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
 		}
-
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
@@ -222,6 +218,4 @@ public class MoveObjectBase : MonoBehaviour {
 			effectMode = EffectMode.NORMAL;
 		}
 	}
-
-
 }
