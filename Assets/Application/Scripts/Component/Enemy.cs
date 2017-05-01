@@ -37,11 +37,11 @@ public class Enemy : MoveObjectBase {
 
 	protected override void FixedUpdate (){
 		base.FixedUpdate ();
-		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+		/*if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			for (int i = 0; i < enemyEffect.Length; i++) {
 				enemyEffect [i].MoveEffect ();
 			}
-		}
+		}*/
 	}
 
 	private void DeadEnemy(){

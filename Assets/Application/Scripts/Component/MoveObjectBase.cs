@@ -6,12 +6,10 @@ public class MoveObjectBase : MonoBehaviour {
 
 	#region Define
 	public enum MoveDir : int {
-		FORWARD = 0,
-		LEFT = 1,
-		RIGHT = 2,
-		UP = 3,
-		DOWN = 4,
-		SLOPE = 5,
+		UP = 0,
+		RIGHT = 1,
+		DOWN = 2,
+		LEFT = 3,
 	}
 
 	protected enum MoveMode : int {
@@ -21,14 +19,14 @@ public class MoveObjectBase : MonoBehaviour {
 
 	protected enum EffectMode : int {
 		LOW_SPEED = 5,
-		NORMAL = 10,
+		NORMAL_SPEED = 10,
 		HIGH_SPEED = 15,
 	}
 	#endregion
 
 	#region PubliField
 	public int lineLayer = 0;
-	public MoveDir moveDir = MoveDir.FORWARD;
+	public MoveDir moveDir = MoveDir.UP;
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
 	#endregion
@@ -41,12 +39,14 @@ public class MoveObjectBase : MonoBehaviour {
 	[SerializeField] protected float moveSpeed = 3.0f;
 	protected string tag;
 	protected MoveMode moveMode = MoveMode.NORMAL;
-	protected EffectMode effectMode = EffectMode.NORMAL;
+	protected EffectMode effectMode = EffectMode.NORMAL_SPEED;
+	protected Vector2 slope = new Vector2(0.0f, -0.5f);
 	#endregion
 
 	#region PrivateField
-	[SerializeField] private MoveDir initMoveDir = MoveDir.FORWARD;
+	[SerializeField] private MoveDir initMoveDir = MoveDir.UP;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
+	[SerializeField] private CasheCornerData cornerCashe;
 	#endregion
 
 
@@ -64,7 +64,7 @@ public class MoveObjectBase : MonoBehaviour {
 	protected virtual void Initialize(){
 		moveDir = initMoveDir;
 		moveMode = initMoveMode;
-		effectMode = EffectMode.NORMAL;
+		effectMode = EffectMode.NORMAL_SPEED;
 		tag = gameObject.tag;
 	}
 
@@ -92,7 +92,8 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void FixedUpdate(){
-		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+		gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime;
+		/*if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			switch (moveDir) {
 			case MoveDir.FORWARD:
 				gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
@@ -110,7 +111,7 @@ public class MoveObjectBase : MonoBehaviour {
 				gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
 				break;
 			}
-		}
+		}*/
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
@@ -120,9 +121,35 @@ public class MoveObjectBase : MonoBehaviour {
 			effectMode = EffectMode.HIGH_SPEED;
 		}
 
-		if (moveMode == MoveMode.IGNORE) {
+		/*if (moveMode == MoveMode.IGNORE) {
 			return;
-		} else if (_other.tag == "LeftCorner" && !isInCorner) {
+		}*/
+			
+		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
+			int key = _other.GetInstanceID () * 10 + (int)moveDir;
+			if (cornerCashe.slopeData.ContainsKey (key)) {
+				slope = cornerCashe.slopeData [key];
+			} else {
+				Corner corner = _other.GetComponent<Corner> ();
+				slope = corner.ChangePurpose (ref moveDir);
+				cornerCashe.slopeData.Add (key, slope);
+				Debug.Log ("ADD");
+			}
+		} else if (_other.tag == "CurveCorner") {
+			int key = _other.GetInstanceID () * 10 + (int)moveDir;
+		}
+
+		if (_other.tag == "Warp") {
+			if (afterWarp) {
+				afterWarp = false;
+				return;
+			}
+			SoundManager.I.SoundSE (SE.WARP);
+			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
+			afterWarp = true;
+		}
+
+		/*else if (_other.tag == "LeftCorner" && !isInCorner) {
 			gameObject.transform.position = _other.transform.position;
 			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
 				moveDir = MoveDir.LEFT;
@@ -204,18 +231,23 @@ public class MoveObjectBase : MonoBehaviour {
 			SoundManager.I.SoundSE (SE.WARP);
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
-		}
+		}*/
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "UpLeftCorner" || _other.tag == "UpRightCorner" || _other.tag == "DownLeftCorner" || _other.tag == "DownRightCorner" || _other.tag == "ForwardCorner");
+		/*bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "UpLeftCorner" || _other.tag == "UpRightCorner" || _other.tag == "DownLeftCorner" || _other.tag == "DownRightCorner" || _other.tag == "ForwardCorner");
 		bool isTunnel = (_other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel" || _other.tag == "LeftPlayerTunnel" || _other.tag == "RightPlayerTunnel");
 		if (isCorner || isTunnel) {
+			isInCorner = false;
+		}*/
+		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || _other.tag == "CurveCorner");
+
+		if (isCorner) {
 			isInCorner = false;
 		}
 
 		if (_other.tag == "LowSpeedZone" || _other.tag == "HighSpeedZone") {
-			effectMode = EffectMode.NORMAL;
+			effectMode = EffectMode.NORMAL_SPEED;
 		}
 	}
 }
