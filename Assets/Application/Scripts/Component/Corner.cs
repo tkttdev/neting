@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Corner : MonoBehaviour {
+	public enum Direction : int {
+		UP = 0,
+		RIGHT = 1,
+		DOWN = 2,
+		LEFT = 3,
+	}
+	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeObject = new Transform[4];
 	public Vector2[] slope = new Vector2[4];
 	[SerializeField] private bool onlyEnemy;
@@ -20,27 +27,39 @@ public class Corner : MonoBehaviour {
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector2 ChangePurpose(ref MoveObjectBase.MoveDir moveDir){
-		if ((onlyEnemy && moveDir == MoveObjectBase.MoveDir.DOWN) || (onlyBullet && moveDir == MoveObjectBase.MoveDir.UP)) {
+	public Vector2 ChangePurpose(ref MoveObjectBase.MoveDir _moveDir, int _moveDesMode){
+		if ((_moveDir == MoveObjectBase.MoveDir.RIGHT || _moveDir == MoveObjectBase.MoveDir.LEFT) && tag != "PassCorner") {
+			if (_moveDesMode == 1) {
+				_moveDir = MoveObjectBase.MoveDir.UP;
+				return slope [0];
+			} else {
+				_moveDir = MoveObjectBase.MoveDir.DOWN;
+				return slope [2];
+			}
+		} 
+
+		if ((onlyEnemy && _moveDir == MoveObjectBase.MoveDir.DOWN) || (onlyBullet && _moveDir == MoveObjectBase.MoveDir.UP)) {
 			if (transform.tag == "RightCorner") {
-				moveDir = MoveObjectBase.MoveDir.RIGHT;
+				_moveDir = MoveObjectBase.MoveDir.RIGHT;
 				return slope [2];
 			} else {
-				moveDir = MoveObjectBase.MoveDir.LEFT;
+				_moveDir = MoveObjectBase.MoveDir.LEFT;
 				return slope [1];
 			}
 		} else if(onlyEnemy || onlyBullet) {
-			return slope [(int)moveDir];
+			return slope [(int)_moveDir];
 		}
 
 		if (transform.tag == "RightCorner") {
-			moveDir = MoveObjectBase.MoveDir.RIGHT;
+			if (_moveDir == MoveObjectBase.MoveDir.RIGHT) {
+			}
+			_moveDir = MoveObjectBase.MoveDir.RIGHT;
 			return slope [1];
 		} else if (transform.tag == "LeftCorner") {
-			moveDir = MoveObjectBase.MoveDir.LEFT;
+			_moveDir = MoveObjectBase.MoveDir.LEFT;
 			return slope [3];
 		} else if (transform.tag == "PassCorner") {
-			return slope [(int)moveDir];
+			return slope [(int)_moveDir];
 		}
 
 		Debug.Log ("Error Case Corner " + transform.name);

@@ -131,12 +131,13 @@ public class MoveObjectBase : MonoBehaviour {
 				slope = cornerCashe.slopeData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
-				slope = corner.ChangePurpose (ref moveDir);
+				slope = corner.ChangePurpose (ref moveDir, moveDesMode);
 				cornerCashe.slopeData.Add (key, slope);
-				Debug.Log ("ADD");
 			}
+			transform.position = _other.transform.position;
 		} else if (_other.tag == "CurveCorner") {
 			int key = _other.GetInstanceID () * 10 + (int)moveDir;
+			transform.position = _other.transform.position;
 		}
 
 		if (_other.tag == "Warp") {
