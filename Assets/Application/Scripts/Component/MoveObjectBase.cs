@@ -40,7 +40,7 @@ public class MoveObjectBase : MonoBehaviour {
 	protected string tag;
 	protected MoveMode moveMode = MoveMode.NORMAL;
 	protected EffectMode effectMode = EffectMode.NORMAL_SPEED;
-	protected Vector2 slope = new Vector2(0.0f, -0.5f);
+	protected Vector2 slope = new Vector2(0.0f, 1f);
 	#endregion
 
 	#region PrivateField
@@ -131,7 +131,7 @@ public class MoveObjectBase : MonoBehaviour {
 				slope = cornerCashe.slopeData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
-				slope = corner.ChangePurpose (ref moveDir, moveDesMode);
+				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineLayer);
 				cornerCashe.slopeData.Add (key, slope);
 			}
 			transform.position = _other.transform.position;
