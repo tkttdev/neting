@@ -129,10 +129,12 @@ public class MoveObjectBase : MonoBehaviour {
 			int key = _other.GetInstanceID () * 10 + (int)moveDir;
 			if (cornerCashe.slopeData.ContainsKey (key)) {
 				slope = cornerCashe.slopeData [key];
+				lineLayer = cornerCashe.lineLayerData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
 				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineLayer);
 				cornerCashe.slopeData.Add (key, slope);
+				cornerCashe.lineLayerData.Add (key, lineLayer);
 			}
 			transform.position = _other.transform.position;
 		} else if (_other.tag == "CurveCorner") {

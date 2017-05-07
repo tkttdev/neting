@@ -6,5 +6,6 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CasheCornerData : ScriptableObject {
 	public Dictionary<int, Vector2> slopeData = new Dictionary<int, Vector2>();	
+	public Dictionary<int, int> lineLayerData = new Dictionary<int, int>();
 	//public Dictionary<int, MoveObjectBase.MoveDir> moveDirData = new Dictionary<int, MoveObjectBase.MoveDir>();
 }
