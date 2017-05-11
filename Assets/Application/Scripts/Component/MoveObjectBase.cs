@@ -25,7 +25,7 @@ public class MoveObjectBase : MonoBehaviour {
 	#endregion
 
 	#region PubliField
-	public int lineLayer = 0;
+	public int lineId = 0;
 	public MoveDir moveDir = MoveDir.UP;
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
@@ -129,12 +129,12 @@ public class MoveObjectBase : MonoBehaviour {
 			int key = _other.GetInstanceID () * 10 + (int)moveDir;
 			if (cornerCashe.slopeData.ContainsKey (key)) {
 				slope = cornerCashe.slopeData [key];
-				lineLayer = cornerCashe.lineLayerData [key];
+				lineId = cornerCashe.lineIdData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
-				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineLayer);
+				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
 				cornerCashe.slopeData.Add (key, slope);
-				cornerCashe.lineLayerData.Add (key, lineLayer);
+				cornerCashe.lineIdData.Add (key, lineId);
 			}
 			transform.position = _other.transform.position;
 		} else if (_other.tag == "CurveCorner") {
@@ -151,90 +151,6 @@ public class MoveObjectBase : MonoBehaviour {
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
 		}
-
-		/*else if (_other.tag == "LeftCorner" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
-				moveDir = MoveDir.LEFT;
-			} else {
-				moveDir = MoveDir.FORWARD;
-			}
-		} else if (_other.tag == "RightCorner" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
-				moveDir = MoveDir.RIGHT;
-			} else {
-				moveDir = MoveDir.FORWARD;
-			}
-		} else if (_other.tag == "UpLeftCorner" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.RIGHT) {
-				moveDir = MoveDir.UP;	
-			} else {
-				moveDir = MoveDir.LEFT; 
-			}
-		} else if (_other.tag == "UpRightCorner" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.LEFT) {
-				moveDir = MoveDir.UP;	
-			} else {
-				moveDir = MoveDir.RIGHT; 
-			}
-		} else if (_other.tag == "DownLeftCorner" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.RIGHT) {
-				moveDir = MoveDir.DOWN;	
-			} else {
-				moveDir = MoveDir.LEFT; 
-			}
-		} else if (_other.tag == "DownRightCorner" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.LEFT) {
-				moveDir = MoveDir.DOWN;	
-			} else {
-				moveDir = MoveDir.RIGHT; 
-			}
-		} else if (_other.tag == "LeftEnemyTunnel" && tag == "Enemy" && !isInCorner) { 
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
-				moveDir = MoveDir.LEFT;
-			} else {
-				moveDir = MoveDir.FORWARD;
-			}
-		} else if (_other.tag == "RightEnemyTunnel" && tag == "Enemy" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
-				moveDir = MoveDir.RIGHT;
-			} else {
-				moveDir = MoveDir.FORWARD;
-			}
-		} else if (_other.tag == "LeftPlayerTunnel" && tag == "PlayerBullet" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
-				moveDir = MoveDir.LEFT;
-			} else {
-				moveDir = MoveDir.FORWARD;
-			}
-		} else if (_other.tag == "RightPlayerTunnel" && tag == "PlayerBullet" && !isInCorner) {
-			gameObject.transform.position = _other.transform.position;
-			if (moveDir == MoveDir.FORWARD || moveDir == MoveDir.DOWN || moveDir == MoveDir.UP) {
-				moveDir = MoveDir.RIGHT;
-			} else {
-				moveDir = MoveDir.FORWARD;
-			}
-		} else if (_other.tag == "ForwardCorner" && !isInCorner) { 
-			gameObject.transform.position = _other.transform.position;
-			moveDir = MoveDir.FORWARD;
-		} else if (_other.tag == "SlopeCorner" && !isInCorner) {
-		} else if (_other.tag == "Warp") {
-			if (afterWarp) {
-				afterWarp = false;
-				return;
-			}
-			SoundManager.I.SoundSE (SE.WARP);
-			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
-			afterWarp = true;
-		}*/
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){

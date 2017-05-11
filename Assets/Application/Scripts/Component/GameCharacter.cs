@@ -80,7 +80,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ().lineLayer = beAbleSpawn[_entryX + 2];
+		ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ().lineId = beAbleSpawn[_entryX + 2];
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 
