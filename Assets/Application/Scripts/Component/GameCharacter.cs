@@ -13,8 +13,10 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private int maxBulletStock = 0;
 	private int life = 3;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
-	private int[] beAbleSpawn = new int[5];
+	//private int[] beAbleSpawn = new int[5];
 	private GameObject bulletPrefab;
+
+	private Corner[] bulletSpawnCorner;
 
 	protected override void Initialize() {
 		base.Initialize();
@@ -30,7 +32,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	private void LoadSpawnPos(){
-		#if UNITY_EDITOR
+		/*#if UNITY_EDITOR
 		if(GameManager.I.isDemo){
 			StageLevelManager.I.SetStageLevel(GameManager.I.demoLevel);
 		}
@@ -42,7 +44,8 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		string[] line = sr.ReadLine ().Split (',');
 		for (int i = 0; i < line.Length; i++) {
 			beAbleSpawn[i] =  int.Parse(line [i]);
-		}
+		}*/
+		//StageManager.I.bulletSpawnPos.CopyTo (bulletSpawnPos, 0);
 	}
 
 	private void LoadCharaStatus() {
@@ -75,12 +78,14 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	}
 
 	public void Shoot(int _entryX) {
-		if (bulletStock == 0 || !(beAbleSpawn [_entryX + 2] > -1) || !GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
+		if (bulletStock == 0 || !GameManager.I.CheckGameStatus(GameStatus.PLAY) || bulletSpawnCorner[_entryX + 2] == null) {
 			return;
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ().lineId = beAbleSpawn[_entryX + 2];
+		MoveObjectBase bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ();
+		//bulletSpawnCorner = 
+
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 
