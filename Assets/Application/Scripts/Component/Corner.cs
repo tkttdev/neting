@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Corner : MonoBehaviour {
-	public enum Direction : int {
-		UP = 0,
-		RIGHT = 1,
-		DOWN = 2,
-		LEFT = 3,
-	}
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
 	private Vector2[] slope = new Vector2[4];
@@ -95,20 +89,7 @@ public class Corner : MonoBehaviour {
 			if (corner == null) {
 				continue;
 			}
-			switch (i) {
-			case (int)Direction.UP:
-				isConnected = corner.purposeTransform [(int)Direction.DOWN] == gameObject.transform;
-				break;
-			case (int)Direction.RIGHT:
-				isConnected = corner.purposeTransform [(int)Direction.LEFT] == gameObject.transform;
-				break;
-			case (int)Direction.DOWN:
-				isConnected = corner.purposeTransform [(int)Direction.UP] == gameObject.transform;
-				break;
-			case (int)Direction.LEFT:
-				isConnected = corner.purposeTransform [(int)Direction.RIGHT] == gameObject.transform;
-				break;
-			}
+			isConnected = corner.purposeTransform [(i+2)%4] == gameObject.transform;
 			if (isConnected) {
 				Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
 			}

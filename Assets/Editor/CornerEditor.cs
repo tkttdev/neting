@@ -25,7 +25,11 @@ public class CornerEditor : Editor {
 		serializedObject.Update ();
 		EditorGUI.BeginChangeCheck ();
 
-		base.OnInspectorGUI ();
+		for(int i = 0; i < 4; i++){
+			purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
+			EditorGUILayout.PropertyField (purposeTransform);
+		}
+
 		if (GUILayout.Button ("ResetAll")) {
 			for (int i = 0; i < 4; i++) {
 				corner.purposeTransform [i] = null;

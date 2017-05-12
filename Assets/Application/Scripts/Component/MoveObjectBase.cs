@@ -93,25 +93,6 @@ public class MoveObjectBase : MonoBehaviour {
 
 	protected virtual void FixedUpdate(){
 		gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime;
-		/*if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
-			switch (moveDir) {
-			case MoveDir.FORWARD:
-				gameObject.transform.position += new Vector3 (0, moveDesMode * (int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
-				break;
-			case MoveDir.LEFT:
-				gameObject.transform.position += new Vector3 (-moveSpeed * (int)effectMode * 0.1f * Time.fixedDeltaTime, 0, 0);
-				break;
-			case MoveDir.RIGHT:
-				gameObject.transform.position += new Vector3 (moveSpeed * (int)effectMode * 0.1f * Time.fixedDeltaTime, 0, 0);
-				break;
-			case MoveDir.UP:
-				gameObject.transform.position += new Vector3 (0, (int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
-				break;
-			case MoveDir.DOWN:
-				gameObject.transform.position += new Vector3 (0, -(int)effectMode * 0.1f * moveSpeed * Time.fixedDeltaTime, 0);
-				break;
-			}
-		}*/
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
@@ -120,10 +101,6 @@ public class MoveObjectBase : MonoBehaviour {
 		} else if (_other.tag == "HighSpeedZone") {
 			effectMode = EffectMode.HIGH_SPEED;
 		}
-
-		/*if (moveMode == MoveMode.IGNORE) {
-			return;
-		}*/
 			
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
 			int key = _other.GetInstanceID () * 10 + (int)moveDir;
@@ -154,13 +131,7 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
-		/*bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "UpLeftCorner" || _other.tag == "UpRightCorner" || _other.tag == "DownLeftCorner" || _other.tag == "DownRightCorner" || _other.tag == "ForwardCorner");
-		bool isTunnel = (_other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel" || _other.tag == "LeftPlayerTunnel" || _other.tag == "RightPlayerTunnel");
-		if (isCorner || isTunnel) {
-			isInCorner = false;
-		}*/
 		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || _other.tag == "CurveCorner");
-
 		if (isCorner) {
 			isInCorner = false;
 		}
