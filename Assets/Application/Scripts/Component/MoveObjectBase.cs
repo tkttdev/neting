@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum MoveDir : int {
+	UP = 0,
+	RIGHT = 1,
+	DOWN = 2,
+	LEFT = 3,
+}
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class MoveObjectBase : MonoBehaviour {
 
 	#region Define
-	public enum MoveDir : int {
-		UP = 0,
-		RIGHT = 1,
-		DOWN = 2,
-		LEFT = 3,
-	}
-
 	protected enum MoveMode : int {
 		NORMAL = 0,
 		IGNORE = 1,

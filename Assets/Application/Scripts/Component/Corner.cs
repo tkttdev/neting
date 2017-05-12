@@ -31,26 +31,26 @@ public class Corner : MonoBehaviour {
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector2 ChangePurpose(ref MoveObjectBase.MoveDir _moveDir, int _moveDesMode, ref int _lineId){
-		if ((_moveDir == MoveObjectBase.MoveDir.RIGHT || _moveDir == MoveObjectBase.MoveDir.LEFT) && tag != "PassCorner") {
+	public Vector2 ChangePurpose(ref MoveDir _moveDir, int _moveDesMode, ref int _lineId){
+		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && tag != "PassCorner") {
 			if (_moveDesMode == 1) {
-				_moveDir = MoveObjectBase.MoveDir.UP;
+				_moveDir = MoveDir.UP;
 				_lineId = lineId [0];
 				return slope [0];
 			} else {
-				_moveDir = MoveObjectBase.MoveDir.DOWN;
+				_moveDir = MoveDir.DOWN;
 				_lineId = lineId [2];
 				return slope [2];
 			}
 		} 
 
-		if ((onlyEnemy && _moveDir == MoveObjectBase.MoveDir.DOWN) || (onlyBullet && _moveDir == MoveObjectBase.MoveDir.UP)) {
+		if ((onlyEnemy && _moveDir == MoveDir.DOWN) || (onlyBullet && _moveDir == MoveDir.UP)) {
 			if (transform.tag == "RightCorner") {
-				_moveDir = MoveObjectBase.MoveDir.RIGHT;
+				_moveDir = MoveDir.RIGHT;
 				_lineId = lineId [2];
 				return slope [2];
 			} else {
-				_moveDir = MoveObjectBase.MoveDir.LEFT;
+				_moveDir = MoveDir.LEFT;
 				_lineId = lineId [1];
 				return slope [1];
 			}
@@ -59,13 +59,13 @@ public class Corner : MonoBehaviour {
 		}
 
 		if (transform.tag == "RightCorner") {
-			if (_moveDir == MoveObjectBase.MoveDir.RIGHT) {
+			if (_moveDir == MoveDir.RIGHT) {
 			}
-			_moveDir = MoveObjectBase.MoveDir.RIGHT;
+			_moveDir = MoveDir.RIGHT;
 			_lineId = lineId [1];
 			return slope [1];
 		} else if (transform.tag == "LeftCorner") {
-			_moveDir = MoveObjectBase.MoveDir.LEFT;
+			_moveDir = MoveDir.LEFT;
 			_lineId = lineId [3];
 			return slope [3];
 		} else if (transform.tag == "PassCorner") {
@@ -83,31 +83,8 @@ public class Corner : MonoBehaviour {
 	}
 
 	#if UNITY_EDITOR
-	public void SetCorner(){
-		Debug.Log ("set");
-		for (int i = 0; i < 4; i++) {
-			var corner = purposeTransform [i].GetComponent<Corner> ();
-			if (corner == null) {
-				continue;
-			}
-			switch (i) {
-			case (int)Direction.UP:
-				corner.purposeTransform [(int)Direction.DOWN] = gameObject.transform;
-				break;
-			case (int)Direction.RIGHT:
-				corner.purposeTransform [(int)Direction.LEFT] = gameObject.transform;
-				break;
-			case (int)Direction.DOWN:
-				corner.purposeTransform [(int)Direction.UP] = gameObject.transform;
-				break;
-			case (int)Direction.LEFT:
-				corner.purposeTransform [(int)Direction.RIGHT] = gameObject.transform;
-				break;
-			}
-		}
-	}
-
 	private void OnDrawGizmos(){
+		UnityEditor.Handles.Label(transform.position, name);
 		Gizmos.color = Color.red;
 		bool isConnected = false;
 		for (int i = 0; i < 4; i++) {
@@ -116,7 +93,6 @@ public class Corner : MonoBehaviour {
 			}
 			var corner = purposeTransform [i].GetComponent<Corner> ();
 			if (corner == null) {
-				Debug.Log ("Corner is not exist");
 				continue;
 			}
 			switch (i) {
