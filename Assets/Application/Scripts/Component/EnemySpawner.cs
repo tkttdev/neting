@@ -63,7 +63,7 @@ public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
 			enemyPrefabs [spawnerInfo.enemyId [0]] = Resources.Load (ENEMY_DEFINE.PATH [spawnerInfo.enemyId [0]]) as GameObject;
 			enemyPrefabs [spawnerInfo.enemyId [0]].GetComponent<Enemy> ().SetId (spawnerInfo.enemyId [0]);
         }
-		ObjectPool.I.Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position).GetComponent<MoveObjectBase>().lineLayer = spawnerInfo.lineLayer[0];
+		ObjectPool.I.Instantiate(enemyPrefabs[spawnerInfo.enemyId[0]], spawnerPos[spawnerInfo.spawnPos[0]].position).GetComponent<MoveObjectBase>().lineId = spawnerInfo.lineLayer[0];
 		//spawnEnemy.transform.name = "Enemy" + spawnerInfo.allSpawnEnemyNum.ToString ();
 
         spawnerInfo.enemyId.RemoveAt(0);

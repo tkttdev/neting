@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyDeadTransform : EnemyEffectBase {
 	[SerializeField] private int transformId = 0;
 
-	private MoveObjectBase.MoveDir moveDir;
+	private MoveDir moveDir;
 
 	public override void DeadEffect (){
 		moveDir = gameObject.GetComponent<Enemy> ().moveDir;

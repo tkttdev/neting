@@ -15,7 +15,7 @@ public class EnemyRandomSpawnOnCorner : EnemyEffectBase {
 	}
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel");
+		/*bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel");
 		if (isFirstCopy && isCorner) {
 			MoveObjectBase.MoveDir originalMoveDir = gameObject.GetComponent<Enemy>().moveDir;
 			MoveObjectBase.MoveDir copyMoveDir;
@@ -34,8 +34,8 @@ public class EnemyRandomSpawnOnCorner : EnemyEffectBase {
 			isFirstCopy = false;
 			GameObject copy = Instantiate (spawnEnemyPrefab, gameObject.transform.position, Quaternion.identity) as GameObject;
 			StageManager.I.CopyEnemy();
-			copy.GetComponent<Enemy> ().moveDir = copyMoveDir; 
+			//copy.GetComponent<Enemy> ().moveDir = copyMoveDir; 
 			isFirstCopy = !isOnlyOnceCopy;
-		}
+		}*/
 	}
 }

@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBullet : MoveObjectBase {
+public class Bullet : MoveObjectBase {
 
-    private int damage = 1;
+	private int damage = 1;
 
 	protected override void Initialize() {
 		base.Initialize ();
 		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
-        SetMoveToEnemy();
-    }
+		SetMoveToEnemy();
+	}
 
-    protected override void FixedUpdate() {
-        base.FixedUpdate();
+	protected override void FixedUpdate() {
+		base.FixedUpdate();
 		float scale = Mathf.PingPong (Time.time*2.0f, 1.0f) + 3.0f;
 		gameObject.transform.localScale = new Vector3 (scale, scale, scale);
-    }
+	}
 
-    protected override void OnTriggerEnter2D(Collider2D _other) {
-        base.OnTriggerEnter2D(_other);
+	protected override void OnTriggerEnter2D(Collider2D _other) {
+		base.OnTriggerEnter2D(_other);
 		if (_other.tag == "Enemy") {
 			if (_other.GetComponent<MoveObjectBase> ().lineId == lineId) {
 				_other.gameObject.GetComponent<Enemy> ().TakeDamage (damage);
@@ -28,7 +28,7 @@ public class CharacterBullet : MoveObjectBase {
 		} else if (_other.tag == "DestroyZone") {
 			DestroyOwn ();
 		}
-    }
+	}
 
 	private void DestroyOwn(){
 		base.Initialize ();

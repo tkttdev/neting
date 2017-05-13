@@ -6,10 +6,16 @@ using UnityEngine.EventSystems;
 
 public class StageManager : SingletonBehaviour<StageManager> {
 
-	[SerializeField] private Transform[] enemySpawnPos;
+	#region PublicField
+	public Corner[] enemySpawnCorner;
+	public Corner[] bulletSpawnCorner = new Corner[5];
+	#endregion
+
+	#region PrivateField
 	[SerializeField] private Transform[] itemSpawnPos;
 	[SerializeField] private TextAsset enemySpawnInfoText;
 	[SerializeField] private TextAsset itemSpawnInfoText; 
+
 	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 	private GameObject[] itemPrefabs = new GameObject[10];
 
@@ -23,6 +29,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 
 	private float waveStartTime = 0.0f;
 	private float wavePlayTime = 0.0f;
+	#endregion
 
 	// Use this for initialization
 	protected override void Initialize () {
@@ -45,7 +52,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 				enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
 				enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
 				enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
-	
+
 				id.Clear ();
 				spawnTime.Clear ();
 				spawnPos.Clear ();
@@ -132,7 +139,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[waveNum][0]]) as GameObject;
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[waveNum][0]);
 		}
-		ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id [waveNum] [0]], enemySpawnPos [enemySpawnInfo.spawnPos [waveNum] [0]].position);
+		ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id [waveNum] [0]], enemySpawnCorner [enemySpawnInfo.spawnPos [waveNum] [0]].transform.position);
 
 		enemySpawnInfo.RemoveFirstElement (waveNum);
 
