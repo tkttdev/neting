@@ -8,8 +8,9 @@ public class CharacterBullet : MoveObjectBase {
 
 	protected override void Initialize() {
 		base.Initialize ();
-		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
+		//damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
         SetMoveToEnemy();
+		slope = new Vector2 (0.0f, 1.0f);
     }
 
     protected override void FixedUpdate() {
@@ -21,7 +22,7 @@ public class CharacterBullet : MoveObjectBase {
     protected override void OnTriggerEnter2D(Collider2D _other) {
         base.OnTriggerEnter2D(_other);
 		if (_other.tag == "Enemy") {
-			if (_other.GetComponent<MoveObjectBase> ().lineId == lineId) {
+			if (_other.GetComponent<MoveObjectBase> ().lineId.Equals(lineId)) {
 				_other.gameObject.GetComponent<Enemy> ().TakeDamage (damage);
 				DestroyOwn ();
 			}

@@ -25,7 +25,7 @@ public class MoveObjectBase : MonoBehaviour {
 	#endregion
 
 	#region PubliField
-	public int lineId = 0;
+	public string lineId = "";
 	public MoveDir moveDir = MoveDir.UP;
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;

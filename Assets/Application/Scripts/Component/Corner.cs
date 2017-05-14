@@ -6,7 +6,7 @@ public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
 	private Vector2[] slope = new Vector2[4];
-	private int[] lineId = new int[5];
+	private string[] lineId = new string[5];
 	[SerializeField] private bool onlyEnemy;
 	[SerializeField] private bool onlyBullet;
 
@@ -15,17 +15,19 @@ public class Corner : MonoBehaviour {
 		for (int i = 0; i < 4; i++) {
 			if (purposeTransform [i] == null) {
 				slope [i] = Vector2.zero;
-				lineId [i] = 0;
+				lineId [i] = "";
 				continue;
 			}
+			int pid = purposeTransform [i].gameObject.GetInstanceID ();
 			slope [i] = (purposeTransform [i].position - transform.position).normalized;
-			lineId [i] = id + purposeTransform [i].GetInstanceID ();
+			lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
+
 		}
 	}
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector2 ChangePurpose(ref MoveDir _moveDir, int _moveDesMode, ref int _lineId){
+	public Vector2 ChangePurpose(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId){
 		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && tag != "PassCorner") {
 			if (_moveDesMode == 1) {
 				_moveDir = MoveDir.UP;
@@ -69,11 +71,6 @@ public class Corner : MonoBehaviour {
 
 		Debug.Log ("Error Case Corner " + transform.name);
 		return Vector2.zero;
-	}
-
-
-	public int[] GetLineId(){
-		return (int[])lineId.Clone ();
 	}
 
 	#if UNITY_EDITOR

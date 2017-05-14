@@ -13,10 +13,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private int maxBulletStock = 0;
 	private int life = 3;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
-	//private int[] beAbleSpawn = new int[5];
 	private GameObject bulletPrefab;
 
-	private Corner[] bulletSpawnCorner;
+	[SerializeField]private Corner[] bulletSpawnCorner;
 
 	protected override void Initialize() {
 		base.Initialize();
@@ -83,8 +82,8 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		MoveObjectBase bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ();
-		//bulletSpawnCorner = 
+		CharacterBullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<CharacterBullet> ();
+		//bullet.
 
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
