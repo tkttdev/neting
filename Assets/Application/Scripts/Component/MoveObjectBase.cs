@@ -27,6 +27,7 @@ public class MoveObjectBase : MonoBehaviour {
 	#region PubliField
 	public string lineId = "";
 	public MoveDir moveDir = MoveDir.UP;
+	public Vector2 slope = new Vector2(0.0f, 1f);
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
 	#endregion
@@ -37,10 +38,8 @@ public class MoveObjectBase : MonoBehaviour {
 	protected bool afterWarp = false;
 	[Range(1.0f,12.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
-	protected string tag;
 	protected MoveMode moveMode = MoveMode.NORMAL;
 	protected EffectMode effectMode = EffectMode.NORMAL_SPEED;
-	protected Vector2 slope = new Vector2(0.0f, 1f);
 	#endregion
 
 	#region PrivateField
@@ -65,7 +64,6 @@ public class MoveObjectBase : MonoBehaviour {
 		moveDir = initMoveDir;
 		moveMode = initMoveMode;
 		effectMode = EffectMode.NORMAL_SPEED;
-		tag = gameObject.tag;
 	}
 
 	/// <summary>
@@ -103,19 +101,25 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 			
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
-			int key = _other.GetInstanceID () * 10 + (int)moveDir;
+			string key = _other.GetInstanceID ().ToString () + moveDir.ToString();
 			if (cornerCashe.slopeData.ContainsKey (key)) {
 				slope = cornerCashe.slopeData [key];
 				lineId = cornerCashe.lineIdData [key];
+				moveDir = cornerCashe.moveDirData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
 				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
 				cornerCashe.slopeData.Add (key, slope);
 				cornerCashe.lineIdData.Add (key, lineId);
+				cornerCashe.moveDirData.Add (key, moveDir);
 			}
+			//Corner corner = _other.GetComponent<Corner> ();
+			//slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
+			//cornerCashe.slopeData.Add (key, slope);
+			//cornerCashe.lineIdData.Add (key, lineId);
 			transform.position = _other.transform.position;
 		} else if (_other.tag == "CurveCorner") {
-			int key = _other.GetInstanceID () * 10 + (int)moveDir;
+			string key = _other.GetInstanceID ().ToString () + moveDir.ToString();
 			transform.position = _other.transform.position;
 		}
 

@@ -76,7 +76,6 @@ public class Corner : MonoBehaviour {
 	#if UNITY_EDITOR
 	private void OnDrawGizmos(){
 		UnityEditor.Handles.Label(transform.position, name);
-		Gizmos.color = Color.red;
 		bool isConnected = false;
 		for (int i = 0; i < 4; i++) {
 			if (purposeTransform [i] == null) {
@@ -88,6 +87,10 @@ public class Corner : MonoBehaviour {
 			}
 			isConnected = corner.purposeTransform [(i+2)%4] == gameObject.transform;
 			if (isConnected) {
+				Gizmos.color = Color.red;
+				Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
+			} else {
+				Gizmos.color = Color.blue;
 				Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
 			}
 		}

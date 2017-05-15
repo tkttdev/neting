@@ -8,9 +8,8 @@ public class CharacterBullet : MoveObjectBase {
 
 	protected override void Initialize() {
 		base.Initialize ();
-		//damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
+		damage = CHARACTER_DEFINE.BULLET_DAMAGE [UserDataManager.I.GetUseCharacterIndex ()];
         SetMoveToEnemy();
-		slope = new Vector2 (0.0f, 1.0f);
     }
 
     protected override void FixedUpdate() {
