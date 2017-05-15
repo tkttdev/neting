@@ -101,7 +101,7 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 			
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
-			string key = _other.GetInstanceID ().ToString () + moveDir.ToString();
+			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveDesMode.ToString();
 			if (cornerCashe.slopeData.ContainsKey (key)) {
 				slope = cornerCashe.slopeData [key];
 				lineId = cornerCashe.lineIdData [key];

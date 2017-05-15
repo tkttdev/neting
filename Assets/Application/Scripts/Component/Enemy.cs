@@ -21,7 +21,6 @@ public class Enemy : MoveObjectBase {
 	protected override void Initialize (){
 		base.Initialize ();
 		SetMoveToPlayer ();
-		slope = new Vector2 (0, -1.0f);
 		hp = ENEMY_DEFINE.HP [id];
 		maxHP = hp;
 		damage = ENEMY_DEFINE.DAMAGE [id];
@@ -133,6 +132,7 @@ public class Enemy : MoveObjectBase {
 	public void DestroyOwn(){
 		StageManager.I.DeadEnemy ();
 		InitializeOnDead ();
+		Initialize ();
 		ObjectPool.I.Release (gameObject);
 	}
 
