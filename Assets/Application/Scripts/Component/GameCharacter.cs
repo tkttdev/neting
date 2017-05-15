@@ -25,7 +25,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
+	}
 
+	private void Start(){
 		LoadSpawnPos ();
 		LoadCharaStatus();
 	}

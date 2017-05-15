@@ -25,9 +25,9 @@ public class MoveObjectBase : MonoBehaviour {
 	#endregion
 
 	#region PubliField
-	public string lineId = "";
-	public MoveDir moveDir = MoveDir.UP;
-	public Vector2 slope = new Vector2(0.0f, 1f);
+	[HideInInspector]public string lineId = "";
+	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
+	[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
 	#endregion

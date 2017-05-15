@@ -23,7 +23,7 @@ public class GameManager : SingletonBehaviour<GameManager> {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
-		/*
+
 		if (StageLevelManager.I.GetStageLevel () < 8) {
 			SoundManager.I.SoundBGM (BGM.STAGE_EASY);
 		} else if (StageLevelManager.I.GetStageLevel () < 15) {
@@ -32,7 +32,7 @@ public class GameManager : SingletonBehaviour<GameManager> {
 			SoundManager.I.SoundBGM (BGM.STAGE_HARD);
 		} else {
 			SoundManager.I.SoundBGM (BGM.STAGE_VERY_HARD);
-		}*/
+		}
 
 		if (!isDemo) {
 			GameObject stage = Resources.Load ("Prefabs/Stage/Stage" + StageLevelManager.I.GetStageLevel ().ToString ()) as GameObject;
