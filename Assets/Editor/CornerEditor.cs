@@ -15,8 +15,8 @@ public class CornerEditor : Editor {
 	private SerializedProperty onlyEnemyProp;
 	private SerializedProperty onlyBulletProp;
 	private SerializedProperty onlyForwardProp;
-	private SerializedProperty isBezerProp;
-	private SerializedProperty isBezer;
+	private SerializedProperty isCurveProp;
+	private SerializedProperty isCurve;
 
 	void OnEnable(){
 		corner = target as Corner;
@@ -27,20 +27,20 @@ public class CornerEditor : Editor {
 		onlyEnemyProp = serializedObject.FindProperty ("onlyEnemy");
 		onlyBulletProp = serializedObject.FindProperty ("onlyBullet");
 		onlyForwardProp = serializedObject.FindProperty ("onlyForward");
-		isBezerProp = serializedObject.FindProperty("isBezer");
+		isCurveProp = serializedObject.FindProperty("isCurve");
 	}
 
 	public override void OnInspectorGUI (){
 		serializedObject.Update ();
 		EditorGUI.BeginChangeCheck ();
 		for (int i = 0; i < 4; i++) {
-			isBezer = isBezerProp.GetArrayElementAtIndex (i);
-			EditorGUILayout.PropertyField (isBezer);
+			isCurve = isCurveProp.GetArrayElementAtIndex (i);
+			EditorGUILayout.PropertyField (isCurve);
 		}
 
 		for(int i = 0; i < 4; i++){
-			isBezer = isBezerProp.GetArrayElementAtIndex (i);
-			if (isBezer.boolValue) {
+			isCurve = isCurveProp.GetArrayElementAtIndex (i);
+			if (isCurve.boolValue) {
 				purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
 				purposeTransform.objectReferenceValue = null;
 				switch (i) {
@@ -153,8 +153,8 @@ public class CornerEditor : Editor {
 				if (purposeOfPartnerTransform == corner.transform) {
 					continue;
 				}
-				Debug.Log (purposeOfPartnerTransform.gameObject);
-				Debug.Log ((MoveDir)(((i + 2) % 4 + 2) % 4));
+				//Debug.Log (purposeOfPartnerTransform.gameObject);
+				//Debug.Log ((MoveDir)(((i + 2) % 4 + 2) % 4));
 				SerializedObject obj = new SerializedObject (purposeOfPartnerTransform.gameObject.GetComponent<Corner> ());
 				obj.Update ();
 				SerializedProperty prop = obj.FindProperty ("purposeTransform").GetArrayElementAtIndex (i);

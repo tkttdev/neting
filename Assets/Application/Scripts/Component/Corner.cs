@@ -9,7 +9,7 @@ public class Corner : MonoBehaviour {
 	public List<Transform> rightBezerTransform = new List<Transform> ();
 	public List<Transform> downBezerTransform = new List<Transform> ();
 	public List<Transform> leftBezerTransform = new List<Transform> ();
-	public bool[] isBezer = new bool[4];
+	public bool[] isCurve = new bool[4];
 	//public List<Transform>[] bezerControlTransform = new List<Transform>[4] ();
 	//public List<Transform> bezerControlTransform = new List<Transform> ();
 	private Vector2[] slope = new Vector2[4];
@@ -17,7 +17,7 @@ public class Corner : MonoBehaviour {
 	[SerializeField] private bool onlyEnemy;
 	[SerializeField] private bool onlyBullet;
 	[SerializeField] private bool onlyForward;
-	public bool[] isCurve = new bool[5];
+	//public bool[] isCurve = new bool[5];
 
 	private void Awake(){
 		int id = gameObject.GetInstanceID ();
@@ -30,7 +30,6 @@ public class Corner : MonoBehaviour {
 			int pid = purposeTransform [i].gameObject.GetInstanceID ();
 			slope [i] = (purposeTransform [i].position - transform.position).normalized;
 			lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
-
 		}
 	}
 
@@ -98,20 +97,65 @@ public class Corner : MonoBehaviour {
 		UnityEditor.Handles.Label(transform.position, name);
 		bool isConnected = false;
 		for (int i = 0; i < 4; i++) {
-			if (purposeTransform [i] == null) {
-				continue;
-			}
-			var corner = purposeTransform [i].GetComponent<Corner> ();
-			if (corner == null) {
-				continue;
-			}
-			isConnected = corner.purposeTransform [(i+2)%4] == gameObject.transform;
-			if (isConnected) {
-				Gizmos.color = Color.red;
-				Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
+			if (isCurve [i]) {
+				List<Transform> drawTransform = new List<Transform> ();
+				switch (i) {
+				case 0:
+					for (int j = 0; i < upBezerTransform.Count; i++) {
+						if (upBezerTransform [j] == null) {
+							break;
+						}
+					}
+					drawTransform = new List<Transform> (upBezerTransform);
+					break;
+				case 1:
+					for (int j = 0; i < rightBezerTransform.Count; i++) {
+						if (rightBezerTransform [j] == null) {
+							break;
+						}
+					}
+					drawTransform = new List<Transform> (rightBezerTransform);
+					break;
+				case 2:
+					for(int j = 0; i < downBezerTransform.Count; i++){
+						if(downBezerTransform[j] == null){
+							break;
+						}
+					}
+					drawTransform = new List<Transform> (downBezerTransform);
+					break;
+				case 3:
+					for (int j = 0; i < leftBezerTransform.Count; i++) {
+						if (leftBezerTransform [j] == null) {
+							break;
+						}
+					}
+					drawTransform = new List<Transform> (leftBezerTransform);
+					break;
+				}
+				if (drawTransform.Count > 0) {
+					Gizmos.color = Color.red;
+					Gizmos.DrawLine (transform.position, upBezerTransform [0].position);
+					for (int j = 1; j < drawTransform.Count; j++) {
+						Gizmos.DrawLine (drawTransform [j-1].position, drawTransform [j].position);
+					}
+				}
 			} else {
-				Gizmos.color = Color.blue;
-				Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
+				if (purposeTransform [i] == null) {
+					continue;
+				}
+				var corner = purposeTransform [i].GetComponent<Corner> ();
+				if (corner == null) {
+					continue;
+				}
+				isConnected = corner.purposeTransform [(i + 2) % 4] == gameObject.transform;
+				if (isConnected) {
+					Gizmos.color = Color.red;
+					Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
+				} else {
+					Gizmos.color = Color.blue;
+					Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
+				}
 			}
 		}
 	}
