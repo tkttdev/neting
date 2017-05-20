@@ -9,6 +9,8 @@ public class Corner : MonoBehaviour {
 	private string[] lineId = new string[5];
 	[SerializeField] private bool onlyEnemy;
 	[SerializeField] private bool onlyBullet;
+	[SerializeField] private bool onlyForward;
+	public bool[] isCurve = new bool[5];
 
 	private void Awake(){
 		int id = gameObject.GetInstanceID ();
@@ -40,17 +42,28 @@ public class Corner : MonoBehaviour {
 			}
 		} 
 
-		if ((onlyEnemy && _moveDir == MoveDir.DOWN) || (onlyBullet && _moveDir == MoveDir.UP)) {
+		if (onlyForward) {
+			if (_moveDesMode == 1) {
+				_moveDir = MoveDir.UP;
+				_lineId = lineId [0];
+				return slope [0];
+			} else {
+				_moveDir = MoveDir.DOWN;
+				_lineId = lineId [2];
+				return slope [2];
+			}
+		} else if ((onlyEnemy && _moveDir == MoveDir.DOWN) || (onlyBullet && _moveDir == MoveDir.UP)) {
 			if (transform.tag == "RightCorner") {
 				_moveDir = MoveDir.RIGHT;
 				_lineId = lineId [2];
 				return slope [2];
 			} else {
 				_moveDir = MoveDir.LEFT;
-				_lineId = lineId [1];
-				return slope [1];
+				_lineId = lineId [3];
+				return slope [3];
 			}
 		} else if(onlyEnemy || onlyBullet) {
+			_lineId = lineId [(int)_moveDir];
 			return slope [(int)_moveDir];
 		}
 

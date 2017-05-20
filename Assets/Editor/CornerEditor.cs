@@ -11,6 +11,9 @@ public class CornerEditor : Editor {
 	private Corner corner;
 	private SerializedProperty purposeTransformProp;
 	private SerializedProperty purposeTransform;
+	private SerializedProperty onlyEnemyProp;
+	private SerializedProperty onlyBulletProp;
+	private SerializedProperty onlyForwardProp;
 
 	void OnEnable(){
 		corner = target as Corner;
@@ -18,7 +21,10 @@ public class CornerEditor : Editor {
 			formerPurposeTransform [i] = corner.purposeTransform [i];
 		}
 		purposeTransformProp = serializedObject.FindProperty ("purposeTransform");
-		serializedObject.Update ();
+		onlyEnemyProp = serializedObject.FindProperty ("onlyEnemy");
+		onlyBulletProp = serializedObject.FindProperty ("onlyBullet");
+		onlyForwardProp = serializedObject.FindProperty ("onlyForward");
+
 	}
 
 	public override void OnInspectorGUI (){
@@ -29,6 +35,10 @@ public class CornerEditor : Editor {
 			purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
 			EditorGUILayout.PropertyField (purposeTransform);
 		}
+
+		EditorGUILayout.PropertyField (onlyEnemyProp);
+		EditorGUILayout.PropertyField (onlyBulletProp);
+		EditorGUILayout.PropertyField (onlyForwardProp);
 
 		if (GUILayout.Button ("ResetAll")) {
 			for (int i = 0; i < 4; i++) {
