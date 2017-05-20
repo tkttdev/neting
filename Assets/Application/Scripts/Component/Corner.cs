@@ -5,6 +5,13 @@ using UnityEngine;
 public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
+	public List<Transform> upBezerTransform = new List<Transform> ();
+	public List<Transform> rightBezerTransform = new List<Transform> ();
+	public List<Transform> downBezerTransform = new List<Transform> ();
+	public List<Transform> leftBezerTransform = new List<Transform> ();
+	public bool[] isBezer = new bool[4];
+	//public List<Transform>[] bezerControlTransform = new List<Transform>[4] ();
+	//public List<Transform> bezerControlTransform = new List<Transform> ();
 	private Vector2[] slope = new Vector2[4];
 	private string[] lineId = new string[5];
 	[SerializeField] private bool onlyEnemy;
