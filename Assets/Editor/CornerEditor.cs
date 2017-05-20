@@ -77,10 +77,11 @@ public class CornerEditor : Editor {
 				purposeTransform.objectReferenceValue = null;
 			}
 		}
+
 		serializedObject.ApplyModifiedProperties ();
 
 		if (EditorGUI.EndChangeCheck ()) {
-			CheckTargetCorner ();
+			CheckTargetCornerNotOwn ();
 			ModifyDuplicateElement ();
 			ModifyCornerConnection ();
 			ModifyFormerCornerConnection ();
@@ -90,17 +91,20 @@ public class CornerEditor : Editor {
 			
 	}
 
-	private void CheckTargetCorner(){
+	private void CheckTargetCornerNotOwn(){
 		for (int i = 0; i < 4; i++) {
-			if (corner.purposeTransform [i] == null) {
+			purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
+			if (purposeTransform.objectReferenceValue == null) {
 				continue;
+			} else if(purposeTransform.objectReferenceValue == corner.transform) {
+				purposeTransform.objectReferenceValue = null;
+				serializedObject.ApplyModifiedProperties ();
 			}
-			if (corner.purposeTransform [i] == corner.transform) {
-				corner.purposeTransform [i] = null;
-			}
+
 		}
 	}
 
+	//TODO : implements via serializedObjet
 	private void ModifyDuplicateElement(){
 		bool isDuplication = false;
 		int duplicationIndex = -1;
@@ -123,7 +127,9 @@ public class CornerEditor : Editor {
 		if (isDuplication) {
 			for (int i = 0; i < 4; i++) {
 				if (formerPurposeTransform [i] == corner.purposeTransform [duplicationIndex]) {
-					corner.purposeTransform[i] = null;
+					purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
+					purposeTransform.objectReferenceValue = null;
+					serializedObject.ApplyModifiedProperties ();
 					break;
 				}
 			}
@@ -142,17 +148,21 @@ public class CornerEditor : Editor {
 			partnerCorner.Update ();
 			partnerPurposeTransformProp = partnerCorner.FindProperty ("purposeTransform");
 			partnerPurposeTransform = partnerPurposeTransformProp.GetArrayElementAtIndex ((i+2)%4);
-			/*if (partnerPurposeTransform.objectReferenceValue != null) {
+			if (partnerPurposeTransform.objectReferenceValue != null) {
 				Transform purposeOfPartnerTransform = partnerPurposeTransform.objectReferenceValue as Transform;
+				if (purposeOfPartnerTransform == corner.transform) {
+					continue;
+				}
+				Debug.Log (purposeOfPartnerTransform.gameObject);
+				Debug.Log ((MoveDir)(((i + 2) % 4 + 2) % 4));
 				SerializedObject obj = new SerializedObject (purposeOfPartnerTransform.gameObject.GetComponent<Corner> ());
 				obj.Update ();
 				SerializedProperty prop = obj.FindProperty ("purposeTransform").GetArrayElementAtIndex (i);
 				prop.objectReferenceValue = null;
 				obj.ApplyModifiedProperties ();
-				partnerPurposeTransform.objectReferenceValue = corner.transform;
 			} else {
 				partnerPurposeTransform.objectReferenceValue = corner.transform;
-			}*/
+			}
 			partnerPurposeTransform.objectReferenceValue = corner.transform;
 			partnerCorner.ApplyModifiedProperties ();
 		}
@@ -163,13 +173,11 @@ public class CornerEditor : Editor {
 		SerializedProperty partnerPurposeTransformProp;
 		SerializedProperty partnerPurposeTransform;
 		for (int i = 0; i < 4; i++) {
-			if (formerPurposeTransform[i] != corner.purposeTransform[i] && corner.purposeTransform[i] == null) {
-				//partnerCorner = new SerializedObject (formerPurposeTransform[i].gameObject.GetComponent<Corner> ());
-				//partnerCorner.Update ();
-				//partnerPurposeTransform = partnerCorner.FindProperty ("purposeTransform").GetArrayElementAtIndex ((i + 2) % 4);
-				//partnerPurposeTransform.objectReferenceValue = null;
-				//partnerCorner.ApplyModifiedProperties ();
-				partnerCorner = new SerializedObject(formerPurposeTransform[i].GetComponent<Corner>());
+			if (formerPurposeTransform[i] != corner.purposeTransform[i]) {
+				if (formerPurposeTransform [i] == null) {
+					continue;
+				}
+				partnerCorner = new SerializedObject (formerPurposeTransform [i].gameObject.GetComponent<Corner> ());
 				partnerCorner.Update ();
 				partnerPurposeTransformProp = partnerCorner.FindProperty ("purposeTransform");
 				partnerPurposeTransform = partnerPurposeTransformProp.GetArrayElementAtIndex ((i + 2) % 4);
