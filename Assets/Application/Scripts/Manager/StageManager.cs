@@ -140,7 +140,12 @@ public class StageManager : SingletonBehaviour<StageManager> {
 			enemyPrefabs [enemySpawnInfo.id[waveNum][0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[waveNum][0]);
 		}
 		Enemy enemy = ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id [waveNum] [0]], enemySpawnCorner [enemySpawnInfo.spawnPos [waveNum] [0]].transform.position).GetComponent<Enemy> ();
-		enemy.slope = enemySpawnCorner [enemySpawnInfo.spawnPos [waveNum] [0]].ChangePurpose (ref enemy.moveDir, -1, ref enemy.lineId);
+		if (enemySpawnCorner [enemySpawnInfo.spawnPos [waveNum] [0]].CheckCurve (MoveDir.DOWN, -1)) {
+			enemy.isCurve = true;
+			enemy.bezerPoints = enemySpawnCorner [enemySpawnInfo.spawnPos [waveNum] [0]].ChangePurposeCurve (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onCurveLength);
+		} else {
+			enemy.slope = enemySpawnCorner [enemySpawnInfo.spawnPos [waveNum] [0]].ChangePurposeStraight (ref enemy.moveDir, -1, ref enemy.lineId);
+		}
 		enemySpawnInfo.RemoveFirstElement (waveNum);
 	}
 

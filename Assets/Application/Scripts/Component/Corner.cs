@@ -10,8 +10,9 @@ public class Corner : MonoBehaviour {
 	public Transform[] bezerPoints = new Transform[16];
 	[NamedArrayAttribute(new string[] { "UP CURVE", "RIGHT CURVE", "DOWN CURVE", "LEFT CURVE" })]
 	public bool[] isCurve = new bool[4];
+	public float[] curveLength = new float[4];
 
-	private int bezerFineness = 20;
+	private int bezerFineness = 100;
 	private Vector2[] slope = new Vector2[4];
 	private string[] lineId = new string[5];
 	[SerializeField] private bool onlyEnemy;
@@ -21,13 +22,27 @@ public class Corner : MonoBehaviour {
 	private void Awake(){
 		int id = gameObject.GetInstanceID ();
 		for (int i = 0; i < 4; i++) {
-			if (purposeTransform [i] == null) {
-				slope [i] = Vector2.zero;
-				lineId [i] = "";
-				continue;
+			if (isCurve [i]) {
+				bool isConnectCurve = true;
+				for (int j = 0; j < 4; j++) {
+					if (bezerPoints [i * 4 + j] == null) {
+						isConnectCurve = false;
+					}
+				}
+				if (!isConnectCurve) {
+					continue;
+				}
+				curveLength [i] = GetCurveLength (i);
+				Debug.Log (curveLength [i]);
+			} else { 
+				if (purposeTransform [i] == null) {
+					slope [i] = Vector2.zero;
+					lineId [i] = "";
+					continue;
+				}
+				slope [i] = (purposeTransform [i].position - transform.position).normalized;
 			}
 			int pid = purposeTransform [i].gameObject.GetInstanceID ();
-			slope [i] = (purposeTransform [i].position - transform.position).normalized;
 			lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
 		}
 	}
@@ -42,10 +57,19 @@ public class Corner : MonoBehaviour {
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector2 ChangePurpose(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId){
+	public Vector2 ChangePurposeStraight(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId){
 		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode);
 		_lineId = lineId [(int)_moveDir];
 		return slope [(int)_moveDir];
+	}
+
+	public Transform[] ChangePurposeCurve(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _curveLength) {
+		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode);
+		_lineId = lineId [(int)_moveDir];
+		_curveLength = curveLength [(int)_moveDir];
+		Transform[] points = new Transform[4];
+		Array.Copy (bezerPoints, (int)_moveDir * 4, points, 0, 4);
+		return points;
 	}
 
 	private MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode){
@@ -100,6 +124,18 @@ public class Corner : MonoBehaviour {
 
 	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode){
 		return isCurve [(int)GetNextMoveDir (_moveDir, _moveDesMode)];
+	}
+
+	public float GetCurveLength(int _index){
+		float length = 0.0f;
+		float t = 0.0f;
+		for (int k = 0; k < bezerFineness; k++) {
+			Vector3 tmp1 = Bezer3 (bezerPoints [_index * 4].position, bezerPoints [_index * 4 + 1].position, bezerPoints [_index * 4 + 2].position, bezerPoints [_index * 4 + 3].position, t);
+			Vector3 tmp2 = Bezer3 (bezerPoints [_index * 4].position, bezerPoints [_index * 4 + 1].position, bezerPoints [_index * 4 + 2].position, bezerPoints [_index * 4 + 3].position, Mathf.Clamp (t + 1f/bezerFineness, 0.0f, 1.0f));
+			t += 1f / bezerFineness;
+			length += (tmp2 - tmp1).magnitude;
+		}
+		return length;
 	}
 
 	#if UNITY_EDITOR
