@@ -6,7 +6,9 @@ using System;
 public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
+	[NamedArrayAttribute(new string[] { "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END"})]
 	public Transform[] bezerPoints = new Transform[16];
+	[NamedArrayAttribute(new string[] { "UP CURVE", "RIGHT CURVE", "DOWN CURVE", "LEFT CURVE" })]
 	public bool[] isCurve = new bool[4];
 
 	private int bezerFineness = 20;
