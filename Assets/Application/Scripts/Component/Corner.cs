@@ -1,23 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
-	public List<Transform> upBezerTransform = new List<Transform> ();
-	public List<Transform> rightBezerTransform = new List<Transform> ();
-	public List<Transform> downBezerTransform = new List<Transform> ();
-	public List<Transform> leftBezerTransform = new List<Transform> ();
+	public Transform[] bezerPoints = new Transform[16];
 	public bool[] isCurve = new bool[4];
-	//public List<Transform>[] bezerControlTransform = new List<Transform>[4] ();
-	//public List<Transform> bezerControlTransform = new List<Transform> ();
+
+	private int bezerFineness = 20;
 	private Vector2[] slope = new Vector2[4];
 	private string[] lineId = new string[5];
 	[SerializeField] private bool onlyEnemy;
 	[SerializeField] private bool onlyBullet;
 	[SerializeField] private bool onlyForward;
-	//public bool[] isCurve = new bool[5];
+
+	private int vertexCountDiff = 0;
+	private Func<Transform[], int, bool> CheckBoundary = null;
+	private Action<Transform[] , int> SetupPoints = null;
+	private Func<float, Vector3> ParametricTransformWithGeometryMatrix = null;
+	private int numberOfPoints = 20;
 
 	private void Awake(){
 		int id = gameObject.GetInstanceID ();
@@ -31,6 +34,14 @@ public class Corner : MonoBehaviour {
 			slope [i] = (purposeTransform [i].position - transform.position).normalized;
 			lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
 		}
+	}
+
+	private Vector3 GetPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
+		var oneMinusT = 1f - t;
+		return oneMinusT * oneMinusT * oneMinusT * p0 +
+			3f * oneMinusT * oneMinusT * t * p1 +
+			3f * oneMinusT * t * t * p2 +
+			t * t * t * p3;
 	}
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
@@ -92,53 +103,26 @@ public class Corner : MonoBehaviour {
 		return Vector2.zero;
 	}
 
+
+
 	#if UNITY_EDITOR
 	private void OnDrawGizmos(){
 		UnityEditor.Handles.Label(transform.position, name);
 		bool isConnected = false;
 		for (int i = 0; i < 4; i++) {
 			if (isCurve [i]) {
-				List<Transform> drawTransform = new List<Transform> ();
-				switch (i) {
-				case 0:
-					for (int j = 0; i < upBezerTransform.Count; i++) {
-						if (upBezerTransform [j] == null) {
-							break;
-						}
+				for (int j = 0; j < 4; j++) {
+					if (bezerPoints [i * 4 + j] == null) {
+						return;
 					}
-					drawTransform = new List<Transform> (upBezerTransform);
-					break;
-				case 1:
-					for (int j = 0; i < rightBezerTransform.Count; i++) {
-						if (rightBezerTransform [j] == null) {
-							break;
-						}
-					}
-					drawTransform = new List<Transform> (rightBezerTransform);
-					break;
-				case 2:
-					for(int j = 0; i < downBezerTransform.Count; i++){
-						if(downBezerTransform[j] == null){
-							break;
-						}
-					}
-					drawTransform = new List<Transform> (downBezerTransform);
-					break;
-				case 3:
-					for (int j = 0; i < leftBezerTransform.Count; i++) {
-						if (leftBezerTransform [j] == null) {
-							break;
-						}
-					}
-					drawTransform = new List<Transform> (leftBezerTransform);
-					break;
 				}
-				if (drawTransform.Count > 0) {
-					Gizmos.color = Color.red;
-					Gizmos.DrawLine (transform.position, upBezerTransform [0].position);
-					for (int j = 1; j < drawTransform.Count; j++) {
-						Gizmos.DrawLine (drawTransform [j-1].position, drawTransform [j].position);
-					}
+				Gizmos.color = Color.red;
+				float t = 0.0f;
+				for (int k = 0; k < bezerFineness - 1; k++) {
+					t += 1f / bezerFineness;
+					Vector3 tmp1 = GetPoint (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, t);
+					Vector3 tmp2 = GetPoint (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, Mathf.Clamp (t + 1f/bezerFineness, 0.0f, 1.0f));
+					Gizmos.DrawLine (tmp1, tmp2);
 				}
 			} else {
 				if (purposeTransform [i] == null) {

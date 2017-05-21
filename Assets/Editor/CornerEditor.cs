@@ -11,12 +11,14 @@ public class CornerEditor : Editor {
 	private Corner corner;
 	private SerializedProperty purposeTransformProp;
 	private SerializedProperty purposeTransform;
-	private SerializedProperty bezerControlTransform;
+	private SerializedProperty bezerPointsProp;
+	private SerializedProperty bezerPoints;
 	private SerializedProperty onlyEnemyProp;
 	private SerializedProperty onlyBulletProp;
 	private SerializedProperty onlyForwardProp;
 	private SerializedProperty isCurveProp;
 	private SerializedProperty isCurve;
+	private bool[] curveFoldOut = new bool[4];
 
 	void OnEnable(){
 		corner = target as Corner;
@@ -28,6 +30,7 @@ public class CornerEditor : Editor {
 		onlyBulletProp = serializedObject.FindProperty ("onlyBullet");
 		onlyForwardProp = serializedObject.FindProperty ("onlyForward");
 		isCurveProp = serializedObject.FindProperty("isCurve");
+		bezerPointsProp = serializedObject.FindProperty ("bezerPoints");
 	}
 
 	public override void OnInspectorGUI (){
@@ -41,25 +44,13 @@ public class CornerEditor : Editor {
 		for(int i = 0; i < 4; i++){
 			isCurve = isCurveProp.GetArrayElementAtIndex (i);
 			if (isCurve.boolValue) {
-				purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
-				purposeTransform.objectReferenceValue = null;
-				switch (i) {
-				case 0:
-					bezerControlTransform = serializedObject.FindProperty ("upBezerTransform");
-					EditorGUILayout.PropertyField (bezerControlTransform, true);
-					break;
-				case 1:
-					bezerControlTransform = serializedObject.FindProperty ("rightBezerTransform");
-					EditorGUILayout.PropertyField (bezerControlTransform, true);
-					break;
-				case 2:
-					bezerControlTransform = serializedObject.FindProperty ("downBezerTransform");
-					EditorGUILayout.PropertyField (bezerControlTransform, true);
-					break;
-				case 3:
-					bezerControlTransform = serializedObject.FindProperty ("leftBezerTransform");
-					EditorGUILayout.PropertyField (bezerControlTransform, true);
-					break;
+				purposeTransformProp.GetArrayElementAtIndex (i).objectReferenceValue = null;
+				curveFoldOut[i] = EditorGUILayout.Foldout (curveFoldOut[i], ((MoveDir)i).ToString () + "(Curve)");
+				if (curveFoldOut[i]) {
+					for (int j = 0; j < 4; j++) {
+						bezerPoints = bezerPointsProp.GetArrayElementAtIndex (i * 4 + j);
+						EditorGUILayout.PropertyField (bezerPoints);
+					}
 				}
 			} else {
 				purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
