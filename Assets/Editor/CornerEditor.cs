@@ -68,6 +68,12 @@ public class CornerEditor : Editor {
 			for (int i = 0; i < 4; i++) {
 				purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
 				purposeTransform.objectReferenceValue = null;
+				isCurve = isCurveProp.GetArrayElementAtIndex (i);
+				isCurve.boolValue = false;
+				for (int j = 0; j < 4; j++) {
+					bezerPoints = bezerPointsProp.GetArrayElementAtIndex (i * 4 + j);
+					bezerPoints.objectReferenceValue = null;
+				}
 			}
 		}
 
@@ -230,7 +236,6 @@ public class CornerEditor : Editor {
 			formerPartnerIsCurve = formerPartnerIsCurveProp.GetArrayElementAtIndex ((i + 2) % 4);
 			formerPartnerIsCurve.boolValue = false;
 			formerPartnerBezerPointsProp = formerPartnerCorner.FindProperty ("bezerPoints");
-			Debug.Log ((i + 2) % 4);
 			for (int j = 0; j < 4; j++) {
 				formerPartnerBezerPoints = formerPartnerBezerPointsProp.GetArrayElementAtIndex (((i + 2) % 4) * 4 + j);
 				formerPartnerBezerPoints.objectReferenceValue = null;
