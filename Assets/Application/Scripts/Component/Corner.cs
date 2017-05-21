@@ -8,6 +8,10 @@ public class Corner : MonoBehaviour {
 	public Transform[] purposeTransform = new Transform[4];
 	public Transform[] bezerPoints = new Transform[16];
 	public bool[] isCurve = new bool[4];
+	#if UNITY_EDITOR
+	public Vector3[] bezerStartPos = new Vector3[4];
+	public Vector3[] bezerEndPos = new Vector3[4];
+	#endif
 
 	private int bezerFineness = 20;
 	private Vector2[] slope = new Vector2[4];
@@ -118,12 +122,14 @@ public class Corner : MonoBehaviour {
 				}
 				Gizmos.color = Color.red;
 				float t = 0.0f;
-				for (int k = 0; k < bezerFineness - 1; k++) {
-					t += 1f / bezerFineness;
+				for (int k = 0; k < bezerFineness; k++) {
 					Vector3 tmp1 = GetPoint (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, t);
 					Vector3 tmp2 = GetPoint (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, Mathf.Clamp (t + 1f/bezerFineness, 0.0f, 1.0f));
+					t += 1f / bezerFineness;
 					Gizmos.DrawLine (tmp1, tmp2);
 				}
+				bezerStartPos[i] = GetPoint (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, 0);
+				bezerEndPos [i] = GetPoint (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, 1.0f);
 			} else {
 				if (purposeTransform [i] == null) {
 					continue;

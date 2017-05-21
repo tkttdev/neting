@@ -18,6 +18,10 @@ public class CornerEditor : Editor {
 	private SerializedProperty onlyForwardProp;
 	private SerializedProperty isCurveProp;
 	private SerializedProperty isCurve;
+	private SerializedProperty bezerStartPosProp;
+	private SerializedProperty bezerStartPos;
+	private SerializedProperty bezerEndPosProp;
+	private SerializedProperty bezerEndPos;
 	private bool[] curveFoldOut = new bool[4];
 
 	void OnEnable(){
@@ -31,6 +35,8 @@ public class CornerEditor : Editor {
 		onlyForwardProp = serializedObject.FindProperty ("onlyForward");
 		isCurveProp = serializedObject.FindProperty("isCurve");
 		bezerPointsProp = serializedObject.FindProperty ("bezerPoints");
+		bezerStartPosProp = serializedObject.FindProperty ("bezerStartPos");
+		bezerEndPosProp = serializedObject.FindProperty ("bezerEndPos");
 	}
 
 	public override void OnInspectorGUI (){
@@ -51,6 +57,12 @@ public class CornerEditor : Editor {
 						bezerPoints = bezerPointsProp.GetArrayElementAtIndex (i * 4 + j);
 						EditorGUILayout.PropertyField (bezerPoints);
 					}
+					bezerStartPos = bezerStartPosProp.GetArrayElementAtIndex (i);
+					bezerEndPos = bezerEndPosProp.GetArrayElementAtIndex (i);
+					Vector3 tmp = bezerStartPos.vector3Value;
+					EditorGUILayout.LabelField (string.Format ("START x : {0} y : {1} z : {2}", tmp.x, tmp.y, tmp.z));
+					tmp = bezerEndPos.vector3Value;
+					EditorGUILayout.LabelField (string.Format ("END   x : {0} y : {1} z : {2}", tmp.x, tmp.y, tmp.z));
 				}
 			} else {
 				purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
