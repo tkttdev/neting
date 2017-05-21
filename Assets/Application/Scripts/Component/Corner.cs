@@ -81,8 +81,6 @@ public class Corner : MonoBehaviour {
 		}
 
 		if (transform.tag == "RightCorner") {
-			if (_moveDir == MoveDir.RIGHT) {
-			}
 			_moveDir = MoveDir.RIGHT;
 			_lineId = lineId [1];
 			return slope [1];
@@ -99,12 +97,26 @@ public class Corner : MonoBehaviour {
 		return Vector2.zero;
 	}
 
-	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode){
-		if (tag == "PassCorner") {
-			return isCurve [(int)_moveDir];
-		}
+	private MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode){
+		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && tag != "PassCorner") {
+			if (_moveDesMode == 1) {
+				return MoveDir.UP;
+			} else {
+				return MoveDir.DOWN;
+			}
+		} 
 
-		return false;
+		if (transform.tag == "RightCorner") {
+			return MoveDir.RIGHT;
+		} else if (transform.tag == "LeftCorner") {
+			return MoveDir.LEFT;
+		} else if (transform.tag == "PassCorner") {
+			return _moveDir;
+		}
+	}
+
+	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode){
+		return isCurve [(int)GetNextMoveDir (_moveDir, _moveDesMode)];
 	}
 
 	#if UNITY_EDITOR
