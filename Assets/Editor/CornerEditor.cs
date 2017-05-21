@@ -46,7 +46,7 @@ public class CornerEditor : Editor {
 		for(int i = 0; i < 4; i++){
 			isCurve = isCurveProp.GetArrayElementAtIndex (i);
 			if (isCurve.boolValue) {
-				purposeTransformProp.GetArrayElementAtIndex (i).objectReferenceValue = null;
+				//purposeTransformProp.GetArrayElementAtIndex (i).objectReferenceValue = null;
 				curveFoldOut[i] = EditorGUILayout.Foldout (curveFoldOut[i], ((MoveDir)i).ToString () + "(Curve)");
 				if (curveFoldOut[i]) {
 					for (int j = 0; j < 4; j++) {

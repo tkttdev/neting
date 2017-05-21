@@ -116,7 +116,11 @@ public class Corner : MonoBehaviour {
 						return;
 					}
 				}
-				Gizmos.color = Color.red;
+				var purposeCorner = bezerPoints [i * 4 + 3].gameObject.GetComponent<Corner> ();
+				if (purposeCorner != null) {
+					isConnected = transform == purposeCorner.bezerPoints [(i + 2) % 4 * 4 + 3];
+				}
+				Gizmos.color = isConnected ? Color.red : Color.blue;
 				float t = 0.0f;
 				for (int k = 0; k < bezerFineness; k++) {
 					Vector3 tmp1 = Bezer3 (bezerPoints [i * 4].position, bezerPoints [i * 4 + 1].position, bezerPoints [i * 4 + 2].position, bezerPoints [i * 4 + 3].position, t);
@@ -128,11 +132,11 @@ public class Corner : MonoBehaviour {
 				if (purposeTransform [i] == null) {
 					continue;
 				}
-				var corner = purposeTransform [i].GetComponent<Corner> ();
-				if (corner == null) {
+				var purposeCorner = purposeTransform [i].GetComponent<Corner> ();
+				if (purposeCorner == null) {
 					continue;
 				}
-				isConnected = corner.purposeTransform [(i + 2) % 4] == gameObject.transform;
+				isConnected = purposeCorner.purposeTransform [(i + 2) % 4] == gameObject.transform;
 				if (isConnected) {
 					Gizmos.color = Color.red;
 					Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
