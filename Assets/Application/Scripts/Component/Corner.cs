@@ -43,61 +43,38 @@ public class Corner : MonoBehaviour {
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
 	public Vector2 ChangePurpose(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId){
-		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && tag != "PassCorner") {
-			if (_moveDesMode == 1) {
-				_moveDir = MoveDir.UP;
-				_lineId = lineId [0];
-				return slope [0];
-			} else {
-				_moveDir = MoveDir.DOWN;
-				_lineId = lineId [2];
-				return slope [2];
-			}
-		} 
-
-		if (onlyForward) {
-			if (_moveDesMode == 1) {
-				_moveDir = MoveDir.UP;
-				_lineId = lineId [0];
-				return slope [0];
-			} else {
-				_moveDir = MoveDir.DOWN;
-				_lineId = lineId [2];
-				return slope [2];
-			}
-		} else if ((onlyEnemy && _moveDir == MoveDir.DOWN) || (onlyBullet && _moveDir == MoveDir.UP)) {
-			if (transform.tag == "RightCorner") {
-				_moveDir = MoveDir.RIGHT;
-				_lineId = lineId [2];
-				return slope [2];
-			} else {
-				_moveDir = MoveDir.LEFT;
-				_lineId = lineId [3];
-				return slope [3];
-			}
-		} else if(onlyEnemy || onlyBullet) {
-			_lineId = lineId [(int)_moveDir];
-			return slope [(int)_moveDir];
-		}
-
-		if (transform.tag == "RightCorner") {
-			_moveDir = MoveDir.RIGHT;
-			_lineId = lineId [1];
-			return slope [1];
-		} else if (transform.tag == "LeftCorner") {
-			_moveDir = MoveDir.LEFT;
-			_lineId = lineId [3];
-			return slope [3];
-		} else if (transform.tag == "PassCorner") {
-			_lineId = lineId [(int)_moveDir];
-			return slope [(int)_moveDir];
-		}
-
-		Debug.Log ("Error Case Corner " + transform.name);
-		return Vector2.zero;
+		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode);
+		_lineId = lineId [(int)_moveDir];
+		return slope [(int)_moveDir];
 	}
 
 	private MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode){
+		if (onlyForward) {
+			if (_moveDesMode == 1) {
+				return MoveDir.UP;
+			} else {
+				return MoveDir.DOWN;
+			}
+		} else if ((onlyEnemy && _moveDir == MoveDir.DOWN) || (onlyBullet && _moveDir == MoveDir.UP)) {
+			if (transform.tag == "RightCorner") {
+				return MoveDir.RIGHT;
+			} else {
+				return MoveDir.DOWN;
+			}
+		} else if ((onlyEnemy && _moveDesMode == -1) || (onlyBullet && _moveDesMode == 1)) {
+			if (_moveDesMode == 1) {
+				return MoveDir.UP;
+			} else {
+				return MoveDir.DOWN;
+			}
+		} else if(onlyEnemy || onlyBullet) {
+			if (_moveDesMode == 1) {
+				return MoveDir.UP;
+			} else {
+				return MoveDir.DOWN;
+			}
+		}
+
 		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && tag != "PassCorner") {
 			if (_moveDesMode == 1) {
 				return MoveDir.UP;
@@ -113,6 +90,12 @@ public class Corner : MonoBehaviour {
 		} else if (transform.tag == "PassCorner") {
 			return _moveDir;
 		}
+
+		Debug.Log ("Error Case Corner (GetNextMoveDir)");
+		Debug.Log (tag);
+		Debug.Log (_moveDir);
+		Debug.Log (_moveDesMode);
+		return MoveDir.UP;
 	}
 
 	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode){
