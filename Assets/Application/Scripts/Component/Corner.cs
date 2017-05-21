@@ -83,7 +83,7 @@ public class Corner : MonoBehaviour {
 			if (transform.tag == "RightCorner") {
 				return MoveDir.RIGHT;
 			} else {
-				return MoveDir.DOWN;
+				return MoveDir.LEFT;
 			}
 		} else if ((onlyEnemy && _moveDesMode == -1) || (onlyBullet && _moveDesMode == 1)) {
 			if (_moveDesMode == 1) {
