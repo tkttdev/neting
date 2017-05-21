@@ -8,6 +8,7 @@ using UnityEditor;
 public class CornerEditor : Editor {
 
 	private Transform[] formerPurposeTransform = new Transform[4];
+	private Transform[] formerCurvePurpose = new Transform[4];
 	private Corner corner;
 	private SerializedProperty purposeTransformProp;
 	private SerializedProperty purposeTransform;
@@ -18,16 +19,13 @@ public class CornerEditor : Editor {
 	private SerializedProperty onlyForwardProp;
 	private SerializedProperty isCurveProp;
 	private SerializedProperty isCurve;
-	private SerializedProperty bezerStartPosProp;
-	private SerializedProperty bezerStartPos;
-	private SerializedProperty bezerEndPosProp;
-	private SerializedProperty bezerEndPos;
 	private bool[] curveFoldOut = new bool[4];
 
 	void OnEnable(){
 		corner = target as Corner;
 		for (int i = 0; i < 4; i++) {
 			formerPurposeTransform [i] = corner.purposeTransform [i];
+			formerCurvePurpose [i] = corner.bezerPoints [i * 4 + 3];
 		}
 		purposeTransformProp = serializedObject.FindProperty ("purposeTransform");
 		onlyEnemyProp = serializedObject.FindProperty ("onlyEnemy");
@@ -35,8 +33,6 @@ public class CornerEditor : Editor {
 		onlyForwardProp = serializedObject.FindProperty ("onlyForward");
 		isCurveProp = serializedObject.FindProperty("isCurve");
 		bezerPointsProp = serializedObject.FindProperty ("bezerPoints");
-		bezerStartPosProp = serializedObject.FindProperty ("bezerStartPos");
-		bezerEndPosProp = serializedObject.FindProperty ("bezerEndPos");
 	}
 
 	public override void OnInspectorGUI (){
@@ -57,12 +53,6 @@ public class CornerEditor : Editor {
 						bezerPoints = bezerPointsProp.GetArrayElementAtIndex (i * 4 + j);
 						EditorGUILayout.PropertyField (bezerPoints);
 					}
-					bezerStartPos = bezerStartPosProp.GetArrayElementAtIndex (i);
-					bezerEndPos = bezerEndPosProp.GetArrayElementAtIndex (i);
-					Vector3 tmp = bezerStartPos.vector3Value;
-					EditorGUILayout.LabelField (string.Format ("START x : {0} y : {1} z : {2}", tmp.x, tmp.y, tmp.z));
-					tmp = bezerEndPos.vector3Value;
-					EditorGUILayout.LabelField (string.Format ("END   x : {0} y : {1} z : {2}", tmp.x, tmp.y, tmp.z));
 				}
 			} else {
 				purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
@@ -84,17 +74,18 @@ public class CornerEditor : Editor {
 		serializedObject.ApplyModifiedProperties ();
 
 		if (EditorGUI.EndChangeCheck ()) {
-			CheckTargetCornerNotOwn ();
+			RemoveOwnByTargetCorner ();
 			ModifyDuplicateElement ();
 			ModifyCornerConnection ();
 			ModifyFormerCornerConnection ();
+			ModifyCurveConnection ();
+			ModifyFormerCurveConnection ();
 			UpdateFormerInfo ();
 			serializedObject.ApplyModifiedProperties ();
 		}
-			
 	}
 
-	private void CheckTargetCornerNotOwn(){
+	private void RemoveOwnByTargetCorner(){
 		for (int i = 0; i < 4; i++) {
 			purposeTransform = purposeTransformProp.GetArrayElementAtIndex (i);
 			if (purposeTransform.objectReferenceValue == null) {
@@ -156,8 +147,6 @@ public class CornerEditor : Editor {
 				if (purposeOfPartnerTransform == corner.transform) {
 					continue;
 				}
-				//Debug.Log (purposeOfPartnerTransform.gameObject);
-				//Debug.Log ((MoveDir)(((i + 2) % 4 + 2) % 4));
 				SerializedObject obj = new SerializedObject (purposeOfPartnerTransform.gameObject.GetComponent<Corner> ());
 				obj.Update ();
 				SerializedProperty prop = obj.FindProperty ("purposeTransform").GetArrayElementAtIndex (i);
@@ -190,9 +179,70 @@ public class CornerEditor : Editor {
 		}
 	}
 
+	private void ModifyCurveConnection () {
+		SerializedObject partnerCorner;
+		SerializedProperty partnerIsCurveProp;
+		SerializedProperty partnerIsCurve;
+		SerializedProperty partnerBezerPointsProp;
+		SerializedProperty partnerBezerPoints;
+		for (int i = 0; i < 4; i++) {
+			if (bezerPointsProp.GetArrayElementAtIndex (i * 4 + 3).objectReferenceValue == null) {
+				continue;
+			}
+			Corner c = corner.bezerPoints [i * 4 + 3].gameObject.GetComponent<Corner> ();
+			if (c == null) {
+				continue;
+			}
+			partnerCorner = new SerializedObject (c);
+			partnerCorner.Update ();
+			partnerIsCurveProp = partnerCorner.FindProperty ("isCurve");
+			partnerIsCurve = partnerIsCurveProp.GetArrayElementAtIndex ((i + 2) % 4);
+			partnerIsCurve.boolValue = isCurveProp.GetArrayElementAtIndex(i).boolValue;
+			partnerBezerPointsProp = partnerCorner.FindProperty ("bezerPoints");
+			for (int j = 0; j < 4; j++) {
+				partnerBezerPoints = partnerBezerPointsProp.GetArrayElementAtIndex ((i + 2) % 4 * 4 + 3 - j);
+				partnerBezerPoints.objectReferenceValue = bezerPointsProp.GetArrayElementAtIndex (i * 4 + j).objectReferenceValue;
+			}
+			partnerCorner.ApplyModifiedProperties ();
+		}
+	}
+
+	private void ModifyFormerCurveConnection(){
+		SerializedObject formerPartnerCorner;
+		SerializedProperty formerPartnerIsCurveProp;
+		SerializedProperty formerPartnerIsCurve;
+		SerializedProperty formerPartnerBezerPointsProp;
+		SerializedProperty formerPartnerBezerPoints;
+		for (int i = 0; i < 4; i++) {
+			if (bezerPointsProp.GetArrayElementAtIndex (i * 4 + 3).objectReferenceValue == formerCurvePurpose[i]) {
+				continue;
+			}
+			if (formerCurvePurpose [i] == null) {
+				return;
+			}
+			Corner c = formerCurvePurpose[i].gameObject.GetComponent<Corner> ();
+			if (c == null) {
+				continue;
+			}
+			formerPartnerCorner = new SerializedObject (c);
+			formerPartnerCorner.Update ();
+			formerPartnerIsCurveProp = formerPartnerCorner.FindProperty ("isCurve");
+			formerPartnerIsCurve = formerPartnerIsCurveProp.GetArrayElementAtIndex ((i + 2) % 4);
+			formerPartnerIsCurve.boolValue = false;
+			formerPartnerBezerPointsProp = formerPartnerCorner.FindProperty ("bezerPoints");
+			Debug.Log ((i + 2) % 4);
+			for (int j = 0; j < 4; j++) {
+				formerPartnerBezerPoints = formerPartnerBezerPointsProp.GetArrayElementAtIndex (((i + 2) % 4) * 4 + j);
+				formerPartnerBezerPoints.objectReferenceValue = null;
+			}
+			formerPartnerCorner.ApplyModifiedProperties ();
+		}
+	}
+
 	private void UpdateFormerInfo(){
 		for (int i = 0; i < 4; i++) {
 			formerPurposeTransform [i] = corner.purposeTransform [i];
+			formerCurvePurpose [i] = corner.bezerPoints [i * 4 + 3];
 		}
 	}
 }

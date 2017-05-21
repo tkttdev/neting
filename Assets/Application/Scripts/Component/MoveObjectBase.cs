@@ -46,6 +46,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[SerializeField] private MoveDir initMoveDir = MoveDir.UP;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
 	[SerializeField] private CasheCornerData cornerCashe;
+	private Transform[] curveTransform =  new Transform[4];
 	#endregion
 
 
@@ -106,22 +107,23 @@ public class MoveObjectBase : MonoBehaviour {
 				slope = cornerCashe.slopeData [key];
 				lineId = cornerCashe.lineIdData [key];
 				moveDir = cornerCashe.moveDirData [key];
+			} else if (cornerCashe.curveData.ContainsKey (key)) { 
+				curveTransform = cornerCashe.curveData [key];	
+				lineId = cornerCashe.lineIdData [key];
+				moveDir = cornerCashe.moveDirData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
-				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
-				cornerCashe.slopeData.Add (key, slope);
-				cornerCashe.lineIdData.Add (key, lineId);
-				cornerCashe.moveDirData.Add (key, moveDir);
+				if (corner.CheckCurve(moveDir, moveDesMode)) {
+					
+				} else {
+					slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
+					cornerCashe.slopeData.Add (key, slope);
+					cornerCashe.lineIdData.Add (key, lineId);
+					cornerCashe.moveDirData.Add (key, moveDir);
+				}
 			}
-			//Corner corner = _other.GetComponent<Corner> ();
-			//slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
-			//cornerCashe.slopeData.Add (key, slope);
-			//cornerCashe.lineIdData.Add (key, lineId);
 			transform.position = _other.transform.position;
-		} else if (_other.tag == "CurveCorner") {
-			string key = _other.GetInstanceID ().ToString () + moveDir.ToString();
-			transform.position = _other.transform.position;
-		}
+		} 
 
 		if (_other.tag == "Warp") {
 			if (afterWarp) {
@@ -132,6 +134,14 @@ public class MoveObjectBase : MonoBehaviour {
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
 		}
+	}
+
+	private Vector3 Bezer3(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
+		var oneMinusT = 1f - t;
+		return oneMinusT * oneMinusT * oneMinusT * p0 +
+			3f * oneMinusT * oneMinusT * t * p1 +
+			3f * oneMinusT * t * t * p2 +
+			t * t * t * p3;
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
