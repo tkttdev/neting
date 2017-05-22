@@ -68,6 +68,7 @@ public class MoveObjectBase : MonoBehaviour {
 		moveDir = initMoveDir;
 		moveMode = initMoveMode;
 		effectMode = EffectMode.NORMAL_SPEED;
+		bezerT = 0.0f;
 	}
 
 	/// <summary>
@@ -129,7 +130,6 @@ public class MoveObjectBase : MonoBehaviour {
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
 				if (corner.CheckCurve(moveDir, moveDesMode)) {
-					Debug.Log ("curve");
 					bezerT = 0.0f;
 					isCurve = true;
 					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength);
