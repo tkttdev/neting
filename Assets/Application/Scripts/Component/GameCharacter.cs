@@ -13,10 +13,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 	private int maxBulletStock = 0;
 	private int life = 3;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
-	//private int[] beAbleSpawn = new int[5];
 	private GameObject bulletPrefab;
 
-	private Corner[] bulletSpawnCorner;
+	[SerializeField]private Corner[] bulletSpawnCorner = new Corner[5];
 
 	protected override void Initialize() {
 		base.Initialize();
@@ -26,7 +25,9 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 			Instantiate(obj).name = "Systems";
 		}
 		#endif
+	}
 
+	private void Start(){
 		LoadSpawnPos ();
 		LoadCharaStatus();
 	}
@@ -45,7 +46,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		for (int i = 0; i < line.Length; i++) {
 			beAbleSpawn[i] =  int.Parse(line [i]);
 		}*/
-		//StageManager.I.bulletSpawnPos.CopyTo (bulletSpawnPos, 0);
+		StageManager.I.bulletSpawnCorner.CopyTo (bulletSpawnCorner, 0);
 	}
 
 	private void LoadCharaStatus() {
@@ -83,9 +84,13 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		}
 		bulletStock--;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		MoveObjectBase bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -3.8f, 0.0f)).GetComponent<MoveObjectBase> ();
-		//bulletSpawnCorner = 
-
+		CharacterBullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -4f, 0.0f)).GetComponent<CharacterBullet> ();
+		if (bulletSpawnCorner [_entryX + 2].CheckCurve (MoveDir.UP, 1)) {
+			bullet.isCurve = true;
+			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (ref bullet.moveDir, 1, ref bullet.lineId, ref bullet.onCurveLength);
+		} else {
+			bullet.slope = bulletSpawnCorner [_entryX + 2].ChangePurposeStraight (ref bullet.moveDir, 1, ref bullet.lineId);
+		}
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
 

@@ -25,8 +25,13 @@ public class MoveObjectBase : MonoBehaviour {
 	#endregion
 
 	#region PubliField
-	public int lineId = 0;
-	public MoveDir moveDir = MoveDir.UP;
+	[HideInInspector]public string lineId = "";
+	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
+	[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
+	[HideInInspector]public Transform[] bezerPoints = new Transform[4];
+	[HideInInspector]public float onCurveLength = 0.0f;
+	[HideInInspector]public bool isCurve = false;
+	[HideInInspector]public float bezerT = 0.0f;
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
 	[HideInInspector] public bool isInCorner = false;
 	#endregion
@@ -37,10 +42,8 @@ public class MoveObjectBase : MonoBehaviour {
 	protected bool afterWarp = false;
 	[Range(1.0f,12.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
-	protected string tag;
 	protected MoveMode moveMode = MoveMode.NORMAL;
 	protected EffectMode effectMode = EffectMode.NORMAL_SPEED;
-	protected Vector2 slope = new Vector2(0.0f, 1f);
 	#endregion
 
 	#region PrivateField
@@ -65,7 +68,8 @@ public class MoveObjectBase : MonoBehaviour {
 		moveDir = initMoveDir;
 		moveMode = initMoveMode;
 		effectMode = EffectMode.NORMAL_SPEED;
-		tag = gameObject.tag;
+		bezerT = 0.0f;
+		isCurve = false;
 	}
 
 	/// <summary>
@@ -92,7 +96,15 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void FixedUpdate(){
-		gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime;
+		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
+			if (isCurve) {
+				bezerT += Time.deltaTime * (moveSpeed / onCurveLength);
+				bezerT = Mathf.Clamp (bezerT, 0.0f, 1.0f);
+				gameObject.transform.position = Bezer3 (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
+			} else {
+				gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime * moveSpeed;
+			}
+		}
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
@@ -103,21 +115,39 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 			
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
-			int key = _other.GetInstanceID () * 10 + (int)moveDir;
+			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveDesMode.ToString();
 			if (cornerCashe.slopeData.ContainsKey (key)) {
+				isCurve = false;
 				slope = cornerCashe.slopeData [key];
 				lineId = cornerCashe.lineIdData [key];
+				moveDir = cornerCashe.moveDirData [key];
+			} else if (cornerCashe.curveData.ContainsKey (key)) { 
+				isCurve = true;
+				bezerT = 0.0f;
+				bezerPoints = cornerCashe.curveData [key];
+				onCurveLength = cornerCashe.curveLengthData [key];
+				lineId = cornerCashe.lineIdData [key];
+				moveDir = cornerCashe.moveDirData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
-				slope = corner.ChangePurpose (ref moveDir, moveDesMode, ref lineId);
-				cornerCashe.slopeData.Add (key, slope);
-				cornerCashe.lineIdData.Add (key, lineId);
+				if (corner.CheckCurve(moveDir, moveDesMode)) {
+					bezerT = 0.0f;
+					isCurve = true;
+					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength);
+					cornerCashe.curveData.Add (key, bezerPoints);
+					cornerCashe.curveLengthData.Add (key, onCurveLength);
+					cornerCashe.lineIdData.Add (key, lineId);
+					cornerCashe.moveDirData.Add (key, moveDir);
+				} else {
+					isCurve = false;
+					slope = corner.ChangePurposeStraight (ref moveDir, moveDesMode, ref lineId);
+					cornerCashe.slopeData.Add (key, slope);
+					cornerCashe.lineIdData.Add (key, lineId);
+					cornerCashe.moveDirData.Add (key, moveDir);
+				}
 			}
 			transform.position = _other.transform.position;
-		} else if (_other.tag == "CurveCorner") {
-			int key = _other.GetInstanceID () * 10 + (int)moveDir;
-			transform.position = _other.transform.position;
-		}
+		} 
 
 		if (_other.tag == "Warp") {
 			if (afterWarp) {
@@ -128,6 +158,14 @@ public class MoveObjectBase : MonoBehaviour {
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
 		}
+	}
+
+	private Vector3 Bezer3(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
+		var oneMinusT = 1f - t;
+		return oneMinusT * oneMinusT * oneMinusT * p0 +
+			3f * oneMinusT * oneMinusT * t * p1 +
+			3f * oneMinusT * t * t * p2 +
+			t * t * t * p3;
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){

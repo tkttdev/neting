@@ -13,7 +13,7 @@ public class GameManager : SingletonBehaviour<GameManager> {
 
     protected GameStatus gameStatus = GameStatus.WAIT;
 	public bool isDemo = false;
-	public int demoLevel = 1;
+	//public int demoLevel = 1;
 
 	protected override void Initialize (){
 		base.Initialize ();
