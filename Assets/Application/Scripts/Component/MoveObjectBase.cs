@@ -29,6 +29,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
 	[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
 	[HideInInspector]public Transform[] bezerPoints = new Transform[4];
+	[HideInInspector]public float[] lengthOfBezerSection = new float[51];
 	[HideInInspector]public float onCurveLength = 0.0f;
 	[HideInInspector]public bool isCurve = false;
 	[HideInInspector]public float bezerT = 0.0f;
@@ -100,7 +101,8 @@ public class MoveObjectBase : MonoBehaviour {
 			if (isCurve) {
 				bezerT += Time.deltaTime * (moveSpeed / onCurveLength);
 				bezerT = Mathf.Clamp (bezerT, 0.0f, 1.0f);
-				gameObject.transform.position = Bezer3 (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
+				//Bezer3Interpolate (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
+				gameObject.transform.position = Bezer3Interpolate (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
 			} else {
 				gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime * moveSpeed;
 			}
@@ -126,6 +128,7 @@ public class MoveObjectBase : MonoBehaviour {
 				bezerT = 0.0f;
 				bezerPoints = cornerCashe.curveData [key];
 				onCurveLength = cornerCashe.curveLengthData [key];
+				lengthOfBezerSection = cornerCashe.curveSectionLengthData [key];
 				lineId = cornerCashe.lineIdData [key];
 				moveDir = cornerCashe.moveDirData [key];
 			} else {
@@ -133,9 +136,10 @@ public class MoveObjectBase : MonoBehaviour {
 				if (corner.CheckCurve(moveDir, moveDesMode)) {
 					bezerT = 0.0f;
 					isCurve = true;
-					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength);
+					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength, ref lengthOfBezerSection);
 					cornerCashe.curveData.Add (key, bezerPoints);
 					cornerCashe.curveLengthData.Add (key, onCurveLength);
+					cornerCashe.curveSectionLengthData.Add (key, lengthOfBezerSection);
 					cornerCashe.lineIdData.Add (key, lineId);
 					cornerCashe.moveDirData.Add (key, moveDir);
 				} else {
@@ -158,6 +162,19 @@ public class MoveObjectBase : MonoBehaviour {
 			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
 			afterWarp = true;
 		}
+	}
+
+	private Vector3 Bezer3Interpolate (Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t){
+		int k=0;
+		float tt;
+		for (int i = 0; i < 50; i++,k++) {
+			if (lengthOfBezerSection [i] <= t && t <= lengthOfBezerSection [i + 1]) {
+				break;
+			}
+		}
+		tt = (t - lengthOfBezerSection [k]) / (lengthOfBezerSection [k + 1] - lengthOfBezerSection [k]);
+		tt = (k + tt) * 1.0f / 50.0f;
+		return Bezer3 (p0, p1, p2, p3,tt);
 	}
 
 	private Vector3 Bezer3(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {

@@ -87,7 +87,7 @@ public class GameCharacter : SingletonBehaviour<GameCharacter> {
 		CharacterBullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -4f, 0.0f)).GetComponent<CharacterBullet> ();
 		if (bulletSpawnCorner [_entryX + 2].CheckCurve (MoveDir.UP, 1)) {
 			bullet.isCurve = true;
-			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (ref bullet.moveDir, 1, ref bullet.lineId, ref bullet.onCurveLength);
+			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (ref bullet.moveDir, 1, ref bullet.lineId, ref bullet.onCurveLength, ref bullet.lengthOfBezerSection);
 		} else {
 			bullet.slope = bulletSpawnCorner [_entryX + 2].ChangePurposeStraight (ref bullet.moveDir, 1, ref bullet.lineId);
 		}

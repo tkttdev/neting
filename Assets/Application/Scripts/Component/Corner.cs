@@ -7,12 +7,13 @@ public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
 	[NamedArrayAttribute(new string[] { "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END"})]
-	public Transform[] bezerPoints = new Transform[16];
+	public Transform[] bezerPoints = new Transform[4*4];
 	[NamedArrayAttribute(new string[] { "UP CURVE", "RIGHT CURVE", "DOWN CURVE", "LEFT CURVE" })]
 	public bool[] isCurve = new bool[4];
 	public float[] curveLength = new float[4];
+	public float[] lengthOfBezerSection = new float[4*51];
 
-	private int bezerFineness = 100;
+	private int bezerFineness = 50;
 	private Vector2[] slope = new Vector2[4];
 	private string[] lineId = new string[5];
 	[SerializeField] private bool onlyEnemy;
@@ -32,8 +33,9 @@ public class Corner : MonoBehaviour {
 				if (!isConnectCurve) {
 					continue;
 				}
-				curveLength [i] = GetCurveLength (i);
-				Debug.Log (curveLength [i]);
+				CulcBezerLength (i);
+				int pid = bezerPoints [i * 4 + 3].gameObject.GetInstanceID ();
+				lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
 			} else { 
 				if (purposeTransform [i] == null) {
 					slope [i] = Vector2.zero;
@@ -41,10 +43,28 @@ public class Corner : MonoBehaviour {
 					continue;
 				}
 				slope [i] = (purposeTransform [i].position - transform.position).normalized;
+				int pid = purposeTransform [i].gameObject.GetInstanceID ();
+				lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
 			}
-			int pid = purposeTransform [i].gameObject.GetInstanceID ();
-			lineId [i] = (id > pid) ? id.ToString () + pid.ToString () : pid.ToString () + id.ToString ();
 		}
+	}
+
+	public void CulcBezerLength(int _index){
+		float length = 0.0f;
+		float t = 0.0f;
+		lengthOfBezerSection [0] = 0.0f;
+		for (int k = 0; k < bezerFineness; k++) {
+			Vector3 tmp1 = Bezer3 (bezerPoints [_index * 4].position, bezerPoints [_index * 4 + 1].position, bezerPoints [_index * 4 + 2].position, bezerPoints [_index * 4 + 3].position, t);
+			Vector3 tmp2 = Bezer3 (bezerPoints [_index * 4].position, bezerPoints [_index * 4 + 1].position, bezerPoints [_index * 4 + 2].position, bezerPoints [_index * 4 + 3].position, Mathf.Clamp (t + 1f/bezerFineness, 0.0f, 1.0f));
+			t += 1f / bezerFineness;
+			Vector3 tmp3 = tmp2 - tmp1;
+			length += tmp3.magnitude;
+			lengthOfBezerSection [_index * 51 + k + 1] = length;
+		}
+		for (int k = 0; k < 51; k++) {
+			lengthOfBezerSection [_index * 51 + k + 1] /= length;
+		}
+		curveLength [_index] = length;
 	}
 
 	private Vector3 Bezer3(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
@@ -63,12 +83,13 @@ public class Corner : MonoBehaviour {
 		return slope [(int)_moveDir];
 	}
 
-	public Transform[] ChangePurposeCurve(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _curveLength) {
+	public Transform[] ChangePurposeCurve(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _curveLength, ref float[] _lengthOfBezerSection) {
 		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode);
 		_lineId = lineId [(int)_moveDir];
 		_curveLength = curveLength [(int)_moveDir];
 		Transform[] points = new Transform[4];
 		Array.Copy (bezerPoints, (int)_moveDir * 4, points, 0, 4);
+		Array.Copy (lengthOfBezerSection, (int)_moveDir * 51, _lengthOfBezerSection, 0, 51);
 		return points;
 	}
 
@@ -124,18 +145,6 @@ public class Corner : MonoBehaviour {
 
 	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode){
 		return isCurve [(int)GetNextMoveDir (_moveDir, _moveDesMode)];
-	}
-
-	public float GetCurveLength(int _index){
-		float length = 0.0f;
-		float t = 0.0f;
-		for (int k = 0; k < bezerFineness; k++) {
-			Vector3 tmp1 = Bezer3 (bezerPoints [_index * 4].position, bezerPoints [_index * 4 + 1].position, bezerPoints [_index * 4 + 2].position, bezerPoints [_index * 4 + 3].position, t);
-			Vector3 tmp2 = Bezer3 (bezerPoints [_index * 4].position, bezerPoints [_index * 4 + 1].position, bezerPoints [_index * 4 + 2].position, bezerPoints [_index * 4 + 3].position, Mathf.Clamp (t + 1f/bezerFineness, 0.0f, 1.0f));
-			t += 1f / bezerFineness;
-			length += (tmp2 - tmp1).magnitude;
-		}
-		return length;
 	}
 
 	#if UNITY_EDITOR
