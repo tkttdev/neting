@@ -168,13 +168,14 @@ public class MoveObjectBase : MonoBehaviour {
 	private Vector3 Bezer3Interpolate (Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t){
 		int k=0;
 		float tt;
-		for (int i = 0; i < bezerFineness; i++,k++) {
+		for (int i = 0; i < Corner.bezerFineness; i++,k++) {
 			if (lengthOfBezerSection [i] <= t && t <= lengthOfBezerSection [i + 1]) {
 				break;
 			}
 		}
 		tt = (t - lengthOfBezerSection [k]) / (lengthOfBezerSection [k + 1] - lengthOfBezerSection [k]);
-		tt = (k + tt) * 1.0f / bezerFineness;
+		tt = (k + tt) * 1.0f / Corner.bezerFineness;
+		tt = Mathf.Clamp (tt, 0f, 1f);
 		return Bezer3 (p0, p1, p2, p3,tt);
 	}
 
