@@ -12,7 +12,7 @@ public class Corner : MonoBehaviour {
 	public bool[] isCurve = new bool[4];
 	public float[] curveLength = new float[4];
 	public float[] lengthOfBezerSection = new float[4 * 51];
-	[HideInInspector]public static readonly int bezerFineness = 50;
+	public const int bezerFineness = 50;
 
 	private Vector2[] slope = new Vector2[4];
 	private string[] lineId = new string[5];
