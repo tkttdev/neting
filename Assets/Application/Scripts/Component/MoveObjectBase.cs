@@ -29,7 +29,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
 	[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
 	[HideInInspector]public Transform[] bezerPoints = new Transform[4];
-	[HideInInspector]public float[] lengthOfBezerSection = new float[51];
+	[HideInInspector]public float[] lengthOfBezerSection = new float[(Corner.bezerFineness + 1)];
 	[HideInInspector]public float onCurveLength = 0.0f;
 	[HideInInspector]public bool isCurve = false;
 	[HideInInspector]public float bezerT = 0.0f;

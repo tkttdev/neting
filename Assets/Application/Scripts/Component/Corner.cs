@@ -11,7 +11,7 @@ public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP CURVE", "RIGHT CURVE", "DOWN CURVE", "LEFT CURVE" })]
 	public bool[] isCurve = new bool[4];
 	public float[] curveLength = new float[4];
-	public float[] lengthOfBezerSection = new float[4 * 51];
+	public float[] lengthOfBezerSection = new float[4 * (bezerFineness + 1)];
 	public const int bezerFineness = 50;
 
 	private Vector2[] slope = new Vector2[4];
