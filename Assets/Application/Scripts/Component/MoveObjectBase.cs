@@ -69,6 +69,7 @@ public class MoveObjectBase : MonoBehaviour {
 		moveMode = initMoveMode;
 		effectMode = EffectMode.NORMAL_SPEED;
 		bezerT = 0.0f;
+		isCurve = false;
 	}
 
 	/// <summary>
