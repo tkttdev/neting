@@ -51,6 +51,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[SerializeField] private MoveDir initMoveDir = MoveDir.UP;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
 	[SerializeField] private CasheCornerData cornerCashe;
+	private int bezerFineness = 50;
 	#endregion
 
 
@@ -167,13 +168,13 @@ public class MoveObjectBase : MonoBehaviour {
 	private Vector3 Bezer3Interpolate (Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t){
 		int k=0;
 		float tt;
-		for (int i = 0; i < 50; i++,k++) {
+		for (int i = 0; i < bezerFineness; i++,k++) {
 			if (lengthOfBezerSection [i] <= t && t <= lengthOfBezerSection [i + 1]) {
 				break;
 			}
 		}
 		tt = (t - lengthOfBezerSection [k]) / (lengthOfBezerSection [k + 1] - lengthOfBezerSection [k]);
-		tt = (k + tt) * 1.0f / 50.0f;
+		tt = (k + tt) * 1.0f / bezerFineness;
 		return Bezer3 (p0, p1, p2, p3,tt);
 	}
 

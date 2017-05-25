@@ -7,11 +7,11 @@ public class Corner : MonoBehaviour {
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
 	[NamedArrayAttribute(new string[] { "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END"})]
-	public Transform[] bezerPoints = new Transform[4*4];
+	public Transform[] bezerPoints = new Transform[4 * 4];
 	[NamedArrayAttribute(new string[] { "UP CURVE", "RIGHT CURVE", "DOWN CURVE", "LEFT CURVE" })]
 	public bool[] isCurve = new bool[4];
 	public float[] curveLength = new float[4];
-	public float[] lengthOfBezerSection = new float[4*51];
+	public float[] lengthOfBezerSection = new float[4 * 51];
 
 	private int bezerFineness = 50;
 	private Vector2[] slope = new Vector2[4];
@@ -59,9 +59,9 @@ public class Corner : MonoBehaviour {
 			t += 1f / bezerFineness;
 			Vector3 tmp3 = tmp2 - tmp1;
 			length += tmp3.magnitude;
-			lengthOfBezerSection [_index * 51 + k + 1] = length;
+			lengthOfBezerSection [_index * (bezerFineness + 1) + k + 1] = length;
 		}
-		for (int k = 0; k < 51; k++) {
+		for (int k = 0; k < bezerFineness + 1; k++) {
 			lengthOfBezerSection [_index * 51 + k + 1] /= length;
 		}
 		curveLength [_index] = length;
