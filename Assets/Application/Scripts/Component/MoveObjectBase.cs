@@ -161,7 +161,6 @@ public class MoveObjectBase : MonoBehaviour {
 			Warp warp = _other.GetComponent<Warp> ();
 			gameObject.transform.position = warp.warpPos;
 			lineId = warp.afterWarpLineId;
-			moveDir = warp.afterMoveDir;
 			afterWarp = true;
 		}
 	}

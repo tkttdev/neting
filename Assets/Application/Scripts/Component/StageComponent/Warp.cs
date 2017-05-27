@@ -6,7 +6,6 @@ public class Warp : MonoBehaviour {
 
 	[SerializeField] private GameObject warpPurposeObject;
 	[SerializeField] private GameObject[] cornerOfBothSides = new GameObject[2];
-	public MoveDir afterMoveDir = MoveDir.UP;
 	[HideInInspector] public Vector3 warpPos;
 	[HideInInspector] public string afterWarpLineId;
 
