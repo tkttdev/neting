@@ -23,6 +23,9 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	[SerializeField] private Text moneyText;
 
 	private int willPurchaseCharaId = 0;
+	private float posx = 0;
+	private int tposx = 0;
+	public GameObject CharacterLocation;
 
 	// Use this for initialization
 	void Start () {
@@ -125,5 +128,22 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	public void ReturnButton() {
 		SoundManager.I.SoundSE (SE.BUTTON2);
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
+	}
+
+	public void RightButton(){
+		//CharacterLocation.gameObject.transform.position -= new Vector3(100/10, 0, 0);
+
+		posx = CharacterLocation.transform.position.x - 100/10;
+		tposx = Mathf.RoundToInt (posx/10);
+		iTween.MoveTo (CharacterLocation, iTween.Hash ("x", tposx * 10, "time", 2));
+		Debug.Log (tposx * 10);
+		//if(CharacterLocation.transform.position.x )
+	}
+
+	public void LeftButton(){
+		posx = CharacterLocation.transform.position.x + 100/10;
+		tposx = Mathf.RoundToInt (posx/10);
+		iTween.MoveTo (CharacterLocation, iTween.Hash ("x", tposx * 10, "time", 2));
+		Debug.Log (tposx * 10);
 	}
 }
