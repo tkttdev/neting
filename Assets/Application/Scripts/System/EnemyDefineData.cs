@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class EnemyDefine : ScriptableObject {
+public class EnemyDefineData : ScriptableObject {
 	#region public_field
-	public List<EnemyStatus> enemyStatus = new List<EnemyStatus>();
+	public List<EnemyDefine> enemyDefine = new List<EnemyDefine>();
 	#endregion
 
 	[MenuItem("CreateScriptable/EnemyDefine")]
 	static void Create(){
-		var instance = CreateInstance<EnemyDefine> ();
-		AssetDatabase.CreateAsset(instance, "Assets/EnemyDefine.asset");
+		var instance = CreateInstance<EnemyDefineData> ();
+		AssetDatabase.CreateAsset(instance, "Assets/EnemyDefineData.asset");
 		AssetDatabase.Refresh();
 	}
 }
 
 [System.Serializable]
-public class EnemyStatus {
+public class EnemyDefine {
 	public int HP;
 	public int DAMAGE;
 	public int MONEY;
