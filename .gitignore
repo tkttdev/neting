@@ -30,3 +30,4 @@ sysinfo.txt
 *.apk
 *.unitypackage
 Assets/Application/savedata.txt.*
+Assets/Application/savedata.txt
