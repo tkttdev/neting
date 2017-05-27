@@ -140,7 +140,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 
 			float deltaScale = magPre - mag;
 
-			stageButtonRoot[0].transform.localScale -= new Vector3(deltaScale / 3000, deltaScale / 3000, 0);
+			stageButtonRoot[0].transform.localScale -= new Vector3(deltaScale / 1000, deltaScale / 1000, 0);
 		}
 
 		if (stageButtonRoot[0].transform.localPosition.x > 0 - (1 - scale) * 140) {
