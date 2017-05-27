@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyDefineData : ScriptableObject {
 	#region public_field
 	public List<EnemyDefine> enemyDefine = new List<EnemyDefine>();
+	public int varietyNum = 0;
 	#endregion
 
 	[MenuItem("CreateScriptable/EnemyDefine")]

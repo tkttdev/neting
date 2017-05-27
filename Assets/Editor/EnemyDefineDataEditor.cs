@@ -6,6 +6,7 @@ using UnityEngine;
 [CustomEditor(typeof(EnemyDefineData))]
 public class EnemyDefineDataEditor : Editor {
 	private SerializedProperty enemyDefine;
+	private SerializedProperty varietyNum;
 	private int enemyVarietyCount = 0;
 	private List<bool> enemyFoldOut = new List<bool>();
 	private List<GameObject> enemyPrefab =  new List<GameObject>();
@@ -13,6 +14,7 @@ public class EnemyDefineDataEditor : Editor {
 
 	private void OnEnable(){
 		enemyDefine = serializedObject.FindProperty ("enemyDefine");
+		varietyNum = serializedObject.FindProperty ("varietyNum");
 		enemyVarietyCount = enemyDefine.arraySize;
 		for (int i = 0; i < enemyVarietyCount; i++) {
 			enemyFoldOut.Add (false);
@@ -24,6 +26,7 @@ public class EnemyDefineDataEditor : Editor {
 			}
 		}
 		formerEnemyPrefab = new List<GameObject> (enemyPrefab);
+		varietyNum.intValue = enemyPrefab.Count;
 	}
 
 	public override void OnInspectorGUI () {
@@ -32,6 +35,10 @@ public class EnemyDefineDataEditor : Editor {
 		EditorGUI.BeginChangeCheck ();
 		enemyVarietyCount = enemyDefine.arraySize;
 
+		EditorGUILayout.BeginHorizontal ();
+		EditorGUILayout.LabelField ("VARIETY NUM", GUILayout.Width (130));
+		EditorGUILayout.LabelField (varietyNum.intValue.ToString ());
+		EditorGUILayout.EndHorizontal ();
 		for (int i = 0; i < enemyVarietyCount; i++) {
 			SerializedProperty tmp = enemyDefine.GetArrayElementAtIndex (i);
 			enemyFoldOut [i] = EditorGUILayout.Foldout (enemyFoldOut [i], "ENEMY" + i.ToString ());
@@ -85,6 +92,8 @@ public class EnemyDefineDataEditor : Editor {
 			CheckDuplicationPrefab ();
 			CheckFormerPrefab ();
 			UpdateFormerInfo ();
+			varietyNum.intValue = enemyPrefab.Count;
+			serializedObject.ApplyModifiedProperties ();
 		}
 	}
 
