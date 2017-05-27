@@ -9,6 +9,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 	#region PublicField
 	public Corner[] enemySpawnCorner;
 	public Corner[] bulletSpawnCorner = new Corner[5];
+	public static readonly float[] regularSpawnPosX = new float[5];
 	#endregion
 
 	#region PrivateField

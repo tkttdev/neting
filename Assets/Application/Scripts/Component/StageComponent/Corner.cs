@@ -133,13 +133,19 @@ public class Corner : MonoBehaviour {
 		} else if (transform.tag == "LeftCorner") {
 			return MoveDir.LEFT;
 		} else if (transform.tag == "PassCorner") {
-			return _moveDir;
+			int nextMoveDir = ((int)_moveDir + 2) % 4;
+			for (int i = 1; i < 4; i++) {
+				nextMoveDir = (nextMoveDir + i) % 4;
+				if (purposeTransform [nextMoveDir] != null) {
+					return (MoveDir)nextMoveDir;
+				}
+			}
 		}
 
-		Debug.Log ("Error Case Corner (GetNextMoveDir)");
+		/*Debug.Log ("Error Case Corner (GetNextMoveDir)");
 		Debug.Log (tag);
 		Debug.Log (_moveDir);
-		Debug.Log (_moveDesMode);
+		Debug.Log (_moveDesMode);*/
 		return MoveDir.UP;
 	}
 
