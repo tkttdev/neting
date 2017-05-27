@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyCopyOnCorner : EnemyEffectBase {
-	//static int 
-	[HideInInspector] public bool isFirstCopy = true;
-	public bool afterCopy = false;
-
-	[SerializeField] private bool isOnlyOnceCopy = true;
+	[HideInInspector] public bool afterCopy = false;
 	private Enemy original;
 
 	private void Awake(){
@@ -16,7 +12,7 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
 		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner");
-		if (isFirstCopy && isCorner && !afterCopy) {
+		if (!afterCopy) {
 			afterCopy = true;
 			Corner corner = _other.gameObject.GetComponent<Corner> ();
 			GameObject copyObj = Instantiate (gameObject, gameObject.transform.position, Quaternion.identity) as GameObject;
@@ -29,13 +25,11 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 				copy.slope = corner.ChangePurposeStraight (ref copy.moveDir, -1, ref copy.lineId, copy.moveMode);
 			}
 
-			isFirstCopy = false;
 			StageManager.I.AddAllEnemyNum(1);
-			isFirstCopy = !isOnlyOnceCopy;
 		}
 	}
 
 	void OnDisable (){
-		isFirstCopy = true;
+		afterCopy = true;
 	}
 }
