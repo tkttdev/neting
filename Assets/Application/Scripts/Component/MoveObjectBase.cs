@@ -153,7 +153,7 @@ public class MoveObjectBase : MonoBehaviour {
 			transform.position = _other.transform.position;
 		} 
 
-		if (_other.tag == "Warp") {
+		if (_other.tag == "Warp" && moveMode != MoveMode.IGNORE) {
 			if (afterWarp) {
 				afterWarp = false;
 				return;
