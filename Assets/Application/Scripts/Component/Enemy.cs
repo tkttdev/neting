@@ -25,6 +25,7 @@ public class Enemy : MoveObjectBase {
 		maxHP = hp;
 		damage = ENEMY_DEFINE.DAMAGE [id];
 		money = ENEMY_DEFINE.MONEY [id];
+		moveSpeed = ENEMY_DEFINE.SPEED [id];
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
 	}
 
