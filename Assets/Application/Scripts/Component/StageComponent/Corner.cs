@@ -135,7 +135,10 @@ public class Corner : MonoBehaviour {
 		} else if (transform.tag == "PassCorner") {
 			bool isChangeDir = false;
 			for (int i = 0; i < 4; i++) {
-				isChangeDir = (isCurve [i] != null || purposeTransform [i] != null) && (isCurve [(i + 1) % 4] != null || purposeTransform [(i + 1) % 4] != null);
+				isChangeDir = (!isCurve [i] && !isCurve [(i + 1) % 4]) || (purposeTransform [i] != null && purposeTransform [(i + 1) % 4] != null);
+				if (isChangeDir) {
+					break;
+				}
 			}
 			if (isChangeDir) {
 				int nextMoveDir = ((int)_moveDir + 2) % 4;

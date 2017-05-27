@@ -89,20 +89,4 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		pauseButton.SetActive (true);
 		GameManager.I.SetStatuPlay ();
 	}
-
-	/*public void WaveStart(int _wave, int _maxWave){
-		StartCoroutine (WaveStartCorutine (_wave, _maxWave));
-	}*/
-
-	/*private IEnumerator WaveStartCorutine(int _wave, int _maxWave){
-		wavePanel.gameObject.SetActive (true);
-		wavePanel.Show (_wave,_maxWave);
-		yield return new WaitForSeconds (2.3f);
-		wavePanel.Hide ();
-		StageManager.I.StartSpawn ();
-		if (!GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
-			GameManager.I.SetStatuPlay ();
-		}
-		yield break;
-	}*/
 }

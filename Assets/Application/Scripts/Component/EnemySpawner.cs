@@ -38,7 +38,7 @@ public class EnemySpawner : MonoBehaviour {
 					id.Add (int.Parse (values [0]));
 					spawnTime.Add (float.Parse (values [1]));
 					spawnPos.Add (int.Parse (values [2]));
-				} else {
+				} else if(values.Length == 3) {
 					bossStageEnemySpawnInfo.Add (new EnemySpawnInfo ());
 					bossStageEnemySpawnInfo [i].id = new List<int> (id);
 					bossStageEnemySpawnInfo [i].spawnTime = new List<float> (spawnTime);
@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour {
 					spawnTime.Clear ();
 					spawnPos.Clear ();
 				}
-			} else {
+			} else if(values.Length == 3){
 				enemySpawnInfo.id.Add (int.Parse (values [0]));
 				enemySpawnInfo.spawnTime.Add (float.Parse (values [1]));
 				enemySpawnInfo.spawnPos.Add (int.Parse (values [2]));
