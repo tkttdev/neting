@@ -20,6 +20,15 @@ public class Corner : MonoBehaviour {
 	[SerializeField] private bool onlyBullet;
 	[SerializeField] private bool onlyForward;
 
+	public int a {
+		set {
+			a = 3;
+		}
+		get {
+			return 3;
+		}
+	}
+
 	private void Awake(){
 		int id = gameObject.GetInstanceID ();
 		for (int i = 0; i < 4; i++) {

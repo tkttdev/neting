@@ -34,11 +34,11 @@ public class EnemySpawner : MonoBehaviour {
 			string line = sr.ReadLine();
 			string[] values = line.Split(',');
 			if (StageManager.I.isBossStage) {
-				if (values.Length != 1) {
+				if (values.Length == 3) {
 					id.Add (int.Parse (values [0]));
 					spawnTime.Add (float.Parse (values [1]));
 					spawnPos.Add (int.Parse (values [2]));
-				} else if(values.Length == 3) {
+				} else {
 					bossStageEnemySpawnInfo.Add (new EnemySpawnInfo ());
 					bossStageEnemySpawnInfo [i].id = new List<int> (id);
 					bossStageEnemySpawnInfo [i].spawnTime = new List<float> (spawnTime);

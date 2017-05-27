@@ -33,19 +33,6 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	}
 
 	private void LoadSpawnPos(){
-		/*#if UNITY_EDITOR
-		if(GameManager.I.isDemo){
-			StageLevelManager.I.SetStageLevel(GameManager.I.demoLevel);
-		}
-		#endif
-		StringReader sr = new StringReader(bulletSpawnerInfo.text);
-		for (int i = 0; i < StageLevelManager.I.GetStageLevel () - 1; i++) {
-			sr.ReadLine ();
-		}
-		string[] line = sr.ReadLine ().Split (',');
-		for (int i = 0; i < line.Length; i++) {
-			beAbleSpawn[i] =  int.Parse(line [i]);
-		}*/
 		StageManager.I.bulletSpawnCorner.CopyTo (bulletSpawnCorner, 0);
 	}
 

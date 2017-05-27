@@ -4,34 +4,35 @@ using UnityEngine;
 
 public class EnemyCopyOnCorner : EnemyEffectBase {
 	[HideInInspector] public bool isFirstCopy = true;
+
 	[SerializeField] private bool isOnlyOnceCopy = true;
-	/*
+	private Enemy original;
+
+	private void Awake(){
+		original = GetComponent<Enemy> ();
+	}
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "LeftEnemyTunnel" || _other.tag == "RightEnemyTunnel");
+		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner");
 		if (isFirstCopy && isCorner) {
-			gameObject.GetComponent<Enemy> ().isInCorner = true;
-			MoveObjectBase.MoveDir originalMoveDir = gameObject.GetComponent<Enemy>().moveDir;
-			MoveObjectBase.MoveDir copyMoveDir;
+			original.isInCorner = true;
+			Corner corner = _other.gameObject.GetComponent<Corner> ();
+			GameObject copyObj = Instantiate (gameObject, gameObject.transform.position, Quaternion.identity) as GameObject;
+			Enemy copy = copyObj.GetComponent<Enemy> ();
 
-			if ((_other.tag == "LeftCorner" || _other.tag == "LeftEnemyTunnel") && originalMoveDir == MoveObjectBase.MoveDir.FORWARD) {
-				copyMoveDir = MoveObjectBase.MoveDir.LEFT;
-			} else if ((_other.tag == "RightCorner" || _other.tag == "RightEnemyTunnel") && originalMoveDir == MoveObjectBase.MoveDir.FORWARD) {
-				copyMoveDir = MoveObjectBase.MoveDir.RIGHT;
+			if (corner.CheckCurve (original.moveDir, -1, original.moveMode)) {
+				copy.isCurve = true;
+				copy.bezerPoints = corner.ChangePurposeCurve (ref copy.moveDir, -1, ref copy.lineId, ref copy.onCurveLength, ref copy.lengthOfBezerSection, copy.moveMode);
 			} else {
-				copyMoveDir = MoveObjectBase.MoveDir.FORWARD;
+				copy.slope = corner.ChangePurposeStraight (ref copy.moveDir, -1, ref copy.lineId, copy.moveMode);
 			}
 
 			isFirstCopy = false;
-			GameObject copy = Instantiate (gameObject, gameObject.transform.position, Quaternion.identity) as GameObject;
-			StageManager.I.CopyEnemy();
-			copy.GetComponent<Enemy> ().moveDir = copyMoveDir; 
+			StageManager.I.AddAllEnemyNum(1);
 			isFirstCopy = !isOnlyOnceCopy;
 			gameObject.GetComponent<Enemy> ().isInCorner = false;
 		}
 	}
-
-*/
 
 	void OnDisable (){
 		isFirstCopy = true;
