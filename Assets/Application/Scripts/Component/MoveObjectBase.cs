@@ -34,7 +34,7 @@ public class MoveObjectBase : MonoBehaviour {
 	[HideInInspector]public bool isCurve = false;
 	[HideInInspector]public float bezerT = 0.0f;
 	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
-	[HideInInspector] public bool isInCorner = false;
+	//[HideInInspector] public bool isInCorner = false;
 	#endregion
 
 	#region ProtectedField
@@ -101,7 +101,6 @@ public class MoveObjectBase : MonoBehaviour {
 			if (isCurve) {
 				bezerT += Time.deltaTime * (moveSpeed / onCurveLength);
 				bezerT = Mathf.Clamp (bezerT, 0.0f, 1.0f);
-				//Bezer3Interpolate (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
 				gameObject.transform.position = Bezer3Interpolate (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
 			} else {
 				gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime * moveSpeed;
@@ -117,7 +116,7 @@ public class MoveObjectBase : MonoBehaviour {
 			effectMode = EffectMode.HIGH_SPEED;
 		}
 			
-		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
+		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner"))) {
 			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveMode.ToString() + moveDesMode.ToString();
 			if (cornerCashe.slopeData.ContainsKey (key)) {
 				isCurve = false;
