@@ -32,7 +32,6 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 			isFirstCopy = false;
 			StageManager.I.AddAllEnemyNum(1);
 			isFirstCopy = !isOnlyOnceCopy;
-			//gameObject.GetComponent<Enemy> ().isInCorner = false;
 		}
 	}
 
