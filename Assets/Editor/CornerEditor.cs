@@ -141,7 +141,7 @@ public class CornerEditor : Editor {
 		SerializedProperty partnerPurposeTransformProp;
 		SerializedProperty partnerPurposeTransform;
 		for (int i = 0; i < 4; i++) {
-			if (corner.purposeTransform [i] == null) {
+			if (corner.purposeTransform [i] == null || corner.purposeTransform [i].gameObject.GetComponent<Corner> () == null) {
 				continue;
 			}
 			partnerCorner = new SerializedObject (corner.purposeTransform [i].gameObject.GetComponent<Corner> ());
@@ -172,7 +172,7 @@ public class CornerEditor : Editor {
 		SerializedProperty partnerPurposeTransform;
 		for (int i = 0; i < 4; i++) {
 			if (formerPurposeTransform[i] != corner.purposeTransform[i]) {
-				if (formerPurposeTransform [i] == null) {
+				if (formerPurposeTransform [i] == null || formerPurposeTransform [i].gameObject.GetComponent<Corner> () == null) {
 					continue;
 				}
 				partnerCorner = new SerializedObject (formerPurposeTransform [i].gameObject.GetComponent<Corner> ());

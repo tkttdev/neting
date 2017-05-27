@@ -193,10 +193,12 @@ public class Corner : MonoBehaviour {
 				}
 				var purposeCorner = purposeTransform [i].GetComponent<Corner> ();
 				if (purposeCorner == null) {
+					Gizmos.color = Color.blue;
+					Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
 					continue;
 				}
 				isConnected = purposeCorner.purposeTransform [(i + 2) % 4] == gameObject.transform;
-				isConnected = !purposeCorner.isCurve [(i + 2) % 4];
+				//isConnected = !purposeCorner.isCurve [(i + 2) % 4];
 				if (isConnected) {
 					Gizmos.color = Color.red;
 					Gizmos.DrawLine (transform.position, purposeTransform [i].transform.position);
