@@ -77,14 +77,14 @@ public class Corner : MonoBehaviour {
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector2 ChangePurposeStraight(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId){
-		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode);
+	public Vector2 ChangePurposeStraight(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, MoveMode _moveMode){
+		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode, _moveMode);
 		_lineId = lineId [(int)_moveDir];
 		return slope [(int)_moveDir];
 	}
 
-	public Transform[] ChangePurposeCurve(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _curveLength, ref float[] _lengthOfBezerSection) {
-		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode);
+	public Transform[] ChangePurposeCurve(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _curveLength, ref float[] _lengthOfBezerSection, MoveMode _moveMode) {
+		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode, _moveMode);
 		_lineId = lineId [(int)_moveDir];
 		_curveLength = curveLength [(int)_moveDir];
 		Transform[] points = new Transform[4];
@@ -93,8 +93,8 @@ public class Corner : MonoBehaviour {
 		return points;
 	}
 
-	private MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode){
-		if (onlyForward) {
+	private MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode, MoveMode _moveMode){
+		if (onlyForward || _moveMode == MoveMode.IGNORE) {
 			if (_moveDesMode == 1) {
 				return MoveDir.UP;
 			} else {
@@ -157,8 +157,8 @@ public class Corner : MonoBehaviour {
 		return MoveDir.UP;
 	}
 
-	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode){
-		return isCurve [(int)GetNextMoveDir (_moveDir, _moveDesMode)];
+	public bool CheckCurve(MoveDir _moveDir, int _moveDesMode, MoveMode _moveMode){
+		return isCurve [(int)GetNextMoveDir (_moveDir, _moveDesMode, _moveMode)];
 	}
 
 	#if UNITY_EDITOR

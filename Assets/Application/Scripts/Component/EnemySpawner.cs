@@ -95,11 +95,11 @@ public class EnemySpawner : MonoBehaviour {
 			enemyPrefabs [enemySpawnInfo.id[0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[0]);
 		}
 		Enemy enemy = ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id[0]], enemySpawnCorner [enemySpawnInfo.spawnPos[0]].transform.position).GetComponent<Enemy> ();
-		if (enemySpawnCorner [enemySpawnInfo.spawnPos[0]].CheckCurve (MoveDir.DOWN, -1)) {
+		if (enemySpawnCorner [enemySpawnInfo.spawnPos[0]].CheckCurve (MoveDir.DOWN, -1, enemy.moveMode)) {
 			enemy.isCurve = true;
-			enemy.bezerPoints = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeCurve (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onCurveLength, ref enemy.lengthOfBezerSection);
+			enemy.bezerPoints = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeCurve (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onCurveLength, ref enemy.lengthOfBezerSection, enemy.moveMode);
 		} else {
-			enemy.slope = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeStraight (ref enemy.moveDir, -1, ref enemy.lineId);
+			enemy.slope = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeStraight (ref enemy.moveDir, -1, ref enemy.lineId, enemy.moveMode);
 		}
 		enemySpawnInfo.RemoveFirstElement ();
 	}
