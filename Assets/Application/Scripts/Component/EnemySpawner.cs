@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour {
 
 	#region PrivateField
 	[SerializeField] private TextAsset enemySpawnInfoText;
+	[SerializeField] private EnemyDefineData enemyDefineData;
 	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 	private EnemySpawnInfo enemySpawnInfo = new EnemySpawnInfo();
 	private List<EnemySpawnInfo> bossStageEnemySpawnInfo = new List<EnemySpawnInfo> ();
