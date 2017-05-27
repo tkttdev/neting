@@ -4,80 +4,97 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.EventSystems;
 
-public class EnemySpawner : SingletonBehaviour<EnemySpawner> {
+public class EnemySpawner : MonoBehaviour {
 
-    [SerializeField] private Transform[] spawnerPos;
-    [SerializeField] private TextAsset spawnerInfoText;
-    private SpawnerInfo spawnerInfo = new SpawnerInfo();
-    private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
+	#region PublicField
+	public Corner[] enemySpawnCorner;
+	public Corner[] bulletSpawnCorner = new Corner[5];
+	#endregion
 
-    private float playTime = 0.0f;
-    private int allEnemyNum = 0;
+	#region PrivateField
+	[SerializeField] private TextAsset enemySpawnInfoText;
+	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
+	private EnemySpawnInfo enemySpawnInfo = new EnemySpawnInfo();
+	private float playTime = 0.0f;
+	#endregion
 
-	private int maxWave = 0;
-	private int waveNum = 0;
-
-	// Use this for initialization
-	void Start () {
-		ParseSpawnerInfoText();
-        playTime = 0.0f;
+	void Awake(){
+		ParseEnemySpawnInfoText ();
 	}
 
-    private void ParseSpawnerInfoText() {
-        //spawnerInfoText.csv => enemyID,spawnerTime,spawnerPos
-        StringReader sr = new StringReader(spawnerInfoText.text);
-        while(sr.Peek() > -1) {
-            string line = sr.ReadLine();
-            string[] values = line.Split(',');
-            spawnerInfo.enemyId.Add(int.Parse(values[0]));
-            spawnerInfo.spawnTime.Add(float.Parse(values[1]));
-            spawnerInfo.spawnPos.Add(int.Parse(values[2]));
-			spawnerInfo.lineLayer.Add (1);
-        }
-        allEnemyNum = spawnerInfo.enemyId.Count;
-    }
+	private void ParseEnemySpawnInfoText() {
+		//EnemySpawnInfo.csv => enemyID,spawnTime,spawnPos
+		StringReader sr = new StringReader(enemySpawnInfoText.text);
+		List<int> id = new List<int> ();
+		List<float> spawnTime = new List<float> ();
+		List<int> spawnPos = new List<int> ();
 
-    // Update is called once per frame
-    void Update() {
-        if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
-            playTime += Time.deltaTime;
-            CheckSpawn();
-        }
-    }
+		while(sr.Peek() > -1) {
+			string line = sr.ReadLine();
+			string[] values = line.Split(',');
+			if (values.Length == 1) {
+				/*enemySpawnInfo.id.Add (new List<int> (id));
+				enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
+				enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
+				enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
 
-    private void CheckSpawn() {
-        if (spawnerInfo.allSpawnEnemyNum == allEnemyNum) {
-            return;
-        }
+				id.Clear ();
+				spawnTime.Clear ();
+				spawnPos.Clear ();*/
+			} else {
+				id.Add (int.Parse (values [0]));
+				spawnTime.Add (float.Parse (values [1]));
+				spawnPos.Add (int.Parse (values [2]));
+			}
+		}
+	}
 
-        while (playTime > spawnerInfo.spawnTime[0]) {
-            SpawnEnemy();
-            if (spawnerInfo.allSpawnEnemyNum == allEnemyNum) {
-                return;
-            }
-        }
-    }
+	// Update is called once per frame
+	void Update() {
+		if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
+			playTime += Time.deltaTime;
+			CheckSpawnEnemy();
+		}
+	}
 
-    private void SpawnEnemy() {
-        if (enemyPrefabs[spawnerInfo.enemyId[0]] == null) {
-			enemyPrefabs [spawnerInfo.enemyId [0]] = Resources.Load (ENEMY_DEFINE.PATH [spawnerInfo.enemyId [0]]) as GameObject;
-			enemyPrefabs [spawnerInfo.enemyId [0]].GetComponent<Enemy> ().SetId (spawnerInfo.enemyId [0]);
-        }
-		ObjectPool.I.Instantiate (enemyPrefabs [spawnerInfo.enemyId [0]], spawnerPos [spawnerInfo.spawnPos [0]].position);
-		//spawnEnemy.transform.name = "Enemy" + spawnerInfo.allSpawnEnemyNum.ToString ();
+	private void CheckSpawnEnemy() {
+		if (enemySpawnInfo.id.Count == 0) {
+			return;
+		}
 
-        spawnerInfo.enemyId.RemoveAt(0);
-        spawnerInfo.spawnTime.RemoveAt(0);
-        spawnerInfo.spawnPos.RemoveAt(0);
-		spawnerInfo.lineLayer.RemoveAt (0);
-		spawnerInfo.allSpawnEnemyNum++;
-    }
-}
+		while (playTime > enemySpawnInfo.spawnTime[0]) {
+			SpawnEnemy();
+			if (enemySpawnInfo.id.Count == 0) {
+				return;
+			}
+		}
+	}
 
-public class SpawnerInfo {
-    public List<int> enemyId = new List<int>();
-    public List<float> spawnTime = new List<float>();
-    public List<int> spawnPos = new List<int>();
-	public List<int> lineLayer = new List<int>();
-    public int allSpawnEnemyNum = 0;
+	private void SpawnEnemy() {
+		if (enemyPrefabs[enemySpawnInfo.id[0]] == null) {
+			enemyPrefabs [enemySpawnInfo.id[0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[0]]) as GameObject;
+			enemyPrefabs [enemySpawnInfo.id[0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[0]);
+		}
+		Enemy enemy = ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id[0]], enemySpawnCorner [enemySpawnInfo.spawnPos[0]].transform.position).GetComponent<Enemy> ();
+		if (enemySpawnCorner [enemySpawnInfo.spawnPos[0]].CheckCurve (MoveDir.DOWN, -1)) {
+			enemy.isCurve = true;
+			enemy.bezerPoints = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeCurve (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onCurveLength, ref enemy.lengthOfBezerSection);
+		} else {
+			enemy.slope = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeStraight (ref enemy.moveDir, -1, ref enemy.lineId);
+		}
+		enemySpawnInfo.RemoveFirstElement ();
+	}
+
+	private class EnemySpawnInfo{
+		public List<int> id = new List<int>();
+		public List<float> spawnTime = new List<float> ();
+		public List<int> spawnPos = new List<int>();
+		public List<int> enemyNum = new List<int> ();
+
+		public void RemoveFirstElement(){
+			id.RemoveAt (0);
+			spawnTime.RemoveAt (0);
+			spawnPos.RemoveAt (0);
+		}
+	}
 }
