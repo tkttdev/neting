@@ -110,6 +110,7 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D _other){
+		
 		if (_other.tag == "LowSpeedZone") {
 			effectMode = EffectMode.LOW_SPEED;
 		} else if (_other.tag == "HighSpeedZone") {
@@ -189,7 +190,7 @@ public class MoveObjectBase : MonoBehaviour {
 	protected virtual void OnTriggerExit2D(Collider2D _other){
 		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || _other.tag == "CurveCorner");
 		if (isCorner) {
-			isInCorner = false;
+			//isInCorner = false;
 		}
 
 		if (_other.tag == "LowSpeedZone" || _other.tag == "HighSpeedZone") {
