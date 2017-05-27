@@ -21,24 +21,22 @@ public class AreaButton : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		pos = gameObject.transform.position;
+
+		var mag = pos - chara.transform.position;
+		if (mag.magnitude <= 0.5) {
+			foreach (GameObject n in objectSet) {
+				n.gameObject.SetActive(true);
+			}
+		} else {
+			foreach (GameObject n in objectSet) {
+				n.gameObject.SetActive(false);
+			}
+		}
 	}
 
 	public void PushAreaButton() {
 		GameObject[] stageButtons = GameObject.FindGameObjectsWithTag("StageButton");
-		foreach (GameObject stageButton in stageButtons) {
-			stageButton.SetActive(false);
-		}
-
 		var dis = pos - chara.transform.position;
 		iTween.MoveBy(chara, iTween.Hash("x", dis.x, "y", dis.y, "time", 5.0f));
-		StartCoroutine("SetStageButton");
-	}
-
-	public IEnumerator SetStageButton() {
-		yield return new WaitForSeconds(2.0f);
-
-		foreach (GameObject n in objectSet) {
-			n.gameObject.SetActive(true);
-		}
 	}
 }
