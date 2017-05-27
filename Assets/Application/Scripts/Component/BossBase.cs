@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class BossBase : MonoBehaviour {
 
-	private float hp = 100.0f;
-	//[SerializeField]private GameObject core;
-	//private Collider2D collider;
+	private float hp = 2.0f;
 
 	private void Awake(){
 		Initialize ();
@@ -17,19 +15,22 @@ public class BossBase : MonoBehaviour {
 
 	public void TakeDamage(float _damage){
 		hp -= _damage;
+		CheckHP ();
 		MoveCore ();
 	}
 
 	private void CheckHP(){
-		
+		if (hp <= 0) {
+			GameManager.I.SetStatuEnd ();
+		}
 	}
 
 	private void MoveCore() {
-		float afterMoveX = Random.Range (-2, 3);
+		float afterMoveX = Random.Range (-1, 2);
 		while (Mathf.Abs(afterMoveX - transform.position.x) < Mathf.Epsilon) {
-			afterMoveX = Random.Range (-2, 3);
+			afterMoveX = Random.Range (-1, 2);
 		}
-		transform.position = new Vector3 (Random.Range (-2, 3), transform.position.y, 0);
+		transform.position = new Vector3 (afterMoveX, transform.position.y, 0);
 	}
 
 	private void OnTriggerEnter2D(Collider2D _other){

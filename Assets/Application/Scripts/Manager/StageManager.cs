@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class StageManager : SingletonBehaviour<StageManager> {
 
 	#region PublicField
-	public Corner[] enemySpawnCorner;
+	public List<Transform> enemySpawnPos = new List<Transform>();
 	public Corner[] bulletSpawnCorner = new Corner[5];
 	public static readonly float[] regularSpawnPosX = new float[5];
 	#endregion
@@ -38,9 +38,14 @@ public class StageManager : SingletonBehaviour<StageManager> {
 		allEnemyNum += _num;
 	}
 
+	public void SetEnemySpawnPos(Corner[] _corner){
+		for (int i = 0; i < _corner.Length; i++) {
+			enemySpawnPos.Add (_corner [i].gameObject.transform);
+		}
+	}
+
 	public void AddDestoryEnemyNum(int _num){
 		destroyEnemyNum += _num;
-		Debug.Log (destroyEnemyNum);
 		if (destroyEnemyNum == allEnemyNum) {
 			GameManager.I.SetStatuEnd ();
 		}

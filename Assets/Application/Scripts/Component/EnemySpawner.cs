@@ -12,8 +12,10 @@ public class EnemySpawner : MonoBehaviour {
 
 	#region PrivateField
 	[SerializeField] private TextAsset enemySpawnInfoText;
+	[SerializeField] private bool isBossStage = false;
 	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 	private EnemySpawnInfo enemySpawnInfo = new EnemySpawnInfo();
+	private List<EnemySpawnInfo> bossStageEnemySpawnInfo = new List<EnemySpawnInfo> ();
 	private float playTime = 0.0f;
 	#endregion
 
@@ -24,6 +26,7 @@ public class EnemySpawner : MonoBehaviour {
 	private void ParseEnemySpawnInfoText() {
 		//EnemySpawnInfo.csv => enemyID,spawnTime,spawnPos
 		StringReader sr = new StringReader(enemySpawnInfoText.text);
+		int i = 0;
 		List<int> id = new List<int> ();
 		List<float> spawnTime = new List<float> ();
 		List<int> spawnPos = new List<int> ();
@@ -31,14 +34,32 @@ public class EnemySpawner : MonoBehaviour {
 		while(sr.Peek() > -1) {
 			string line = sr.ReadLine();
 			string[] values = line.Split(',');
-			if (values.Length != 1) {
+			if (isBossStage) {
+				if (values.Length != 1) {
+					id.Add (int.Parse (values [0]));
+					spawnTime.Add (float.Parse (values [1]));
+					spawnPos.Add (int.Parse (values [2]));
+				} else {
+					bossStageEnemySpawnInfo.Add (new EnemySpawnInfo ());
+					bossStageEnemySpawnInfo [i].id = new List<int> (id);
+					bossStageEnemySpawnInfo [i].spawnTime = new List<float> (spawnTime);
+					bossStageEnemySpawnInfo [i].spawnPos = new List<int> (spawnPos);
+					i++;
+					id.Clear ();
+					spawnTime.Clear ();
+					spawnPos.Clear ();
+				}
+			} else {
 				enemySpawnInfo.id.Add (int.Parse (values [0]));
 				enemySpawnInfo.spawnTime.Add (float.Parse (values [1]));
 				enemySpawnInfo.spawnPos.Add (int.Parse (values [2]));
 			}
 		}
-
-		StageManager.I.SetAllEnemyNum (enemySpawnInfo.id.Count);
+		if (isBossStage) {
+			StageManager.I.SetAllEnemyNum (-1);
+		} else {
+			StageManager.I.SetAllEnemyNum (enemySpawnInfo.id.Count);
+		}
 	}
 
 	// Update is called once per frame
@@ -50,7 +71,14 @@ public class EnemySpawner : MonoBehaviour {
 	}
 
 	private void CheckSpawnEnemy() {
-		if (enemySpawnInfo.id.Count == 0) {
+		if (enemySpawnInfo.id.Count == 0 && isBossStage) {
+			int i = Random.Range (0, bossStageEnemySpawnInfo.Count);
+			enemySpawnInfo.id = new List<int> (bossStageEnemySpawnInfo [i].id);
+			enemySpawnInfo.spawnTime = new List<float> (bossStageEnemySpawnInfo [i].spawnTime);
+			enemySpawnInfo.spawnPos = new List<int> (bossStageEnemySpawnInfo [i].spawnPos);
+			playTime = 0f;
+			return;
+		} else if (enemySpawnInfo.id.Count == 0) {
 			return;
 		}
 		while (playTime > enemySpawnInfo.spawnTime[0]) {
@@ -62,7 +90,7 @@ public class EnemySpawner : MonoBehaviour {
 	}
 
 	private void SpawnEnemy() {
-		if (enemyPrefabs[enemySpawnInfo.id[0]] == null) {
+		if (enemyPrefabs [enemySpawnInfo.id[0]] == null) {
 			enemyPrefabs [enemySpawnInfo.id[0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[0]]) as GameObject;
 			enemyPrefabs [enemySpawnInfo.id[0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[0]);
 		}
