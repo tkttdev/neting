@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBullet : MoveObjectBase {
+public class Bullet : MoveObjectBase {
 
 	private int damage = 1;
 

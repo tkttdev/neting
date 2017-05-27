@@ -9,6 +9,7 @@ public class StageManager : SingletonBehaviour<StageManager> {
 	#region PublicField
 	public List<Transform> enemySpawnPos = new List<Transform>();
 	public Corner[] bulletSpawnCorner = new Corner[5];
+	public bool isBossStage = false;
 	public static readonly float[] regularSpawnPosX = new float[5];
 	#endregion
 
@@ -31,7 +32,6 @@ public class StageManager : SingletonBehaviour<StageManager> {
 
 	public void SetAllEnemyNum(int _num){
 		allEnemyNum = _num;
-		Debug.Log (allEnemyNum);
 	}
 
 	public void AddAllEnemyNum(int _num){

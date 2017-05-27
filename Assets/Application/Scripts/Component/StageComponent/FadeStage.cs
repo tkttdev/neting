@@ -8,7 +8,6 @@ public class FadeStage : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        float a = 0;
         iTween.ValueTo(gameObject,iTween.Hash("loopType",iTween.LoopType.pingPong,"easeType",iTween.EaseType.linear,"from",0.0f,"to",1.0f,"onupdate","SetAlpha"));
 	}
 	

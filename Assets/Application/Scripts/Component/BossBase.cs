@@ -17,7 +17,6 @@ public class BossBase : MonoBehaviour {
 
 	public void TakeDamage(float _damage){
 		hp -= _damage;
-		Debug.Log (hp);
 		CheckHP ();
 		MoveCore ();
 	}
@@ -34,8 +33,5 @@ public class BossBase : MonoBehaviour {
 			afterMoveX = Random.Range (-2, 3);
 		}
 		transform.position = new Vector3 (afterMoveX, transform.position.y, 0);
-	}
-
-	private void OnTriggerEnter2D(Collider2D _other){
 	}
 }

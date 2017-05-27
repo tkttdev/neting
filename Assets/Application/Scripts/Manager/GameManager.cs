@@ -71,7 +71,7 @@ public class GameManager : SingletonBehaviour<GameManager> {
         gameStatus = GameStatus.END;
 		AdsManager.I.EnableWatch ();
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
-		if (GameCharacter.I.GetLife() <= 0) {
+		if (BattleShip.I.GetLife() <= 0) {
 			UIManager.I.gameOverDialog.Show ();
 			SoundManager.I.StopBGM ();
 			SoundManager.I.SoundSE (SE.GAME_OVER);

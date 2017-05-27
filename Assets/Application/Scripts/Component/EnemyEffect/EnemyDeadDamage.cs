@@ -8,6 +8,6 @@ public class EnemyDeadDamage : EnemyEffectBase {
 
 	public override void DeadEffect (){
 		base.DeadEffect ();
-		GameCharacter.I.TakeDamage (damage);
+		BattleShip.I.TakeDamage (damage);
 	}
 }

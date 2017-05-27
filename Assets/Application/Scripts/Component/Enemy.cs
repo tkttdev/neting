@@ -123,7 +123,7 @@ public class Enemy : MoveObjectBase {
 			} else {
 				SoundManager.I.SoundSE (SE.DAMAGE1);
 			}
-			GameCharacter.I.TakeDamage (damage);
+			BattleShip.I.TakeDamage (damage);
 			DestroyOwn ();
 		} else if (_other.tag == "BugDestroyZone") {
 			DestroyOwn ();

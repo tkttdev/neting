@@ -27,7 +27,6 @@ public class UIManager : SingletonBehaviour<UIManager> {
 
 	protected override void Initialize (){
 		base.Initialize ();
-		Debug.Log (CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH [UserDataManager.I.GetUseCharacterIndex ()]);
 		characterFace.GetComponent<Image> ().sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH[UserDataManager.I.GetUseCharacterIndex()]);
 		for (int i = CHARACTER_DEFINE.MAX_BULLET_STOCK [UserDataManager.I.GetUseCharacterIndex ()]; i < 5; i++) {
 			bullet [i].enabled = false;
@@ -36,7 +35,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 
 	void Update(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
-			batteryGage.transform.localScale = new Vector3 (GameCharacter.I.bulletRate, 1, 1);
+			batteryGage.transform.localScale = new Vector3 (BattleShip.I.bulletRate, 1, 1);
 		}
 	}
 
