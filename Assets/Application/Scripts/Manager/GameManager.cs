@@ -47,8 +47,9 @@ public class GameManager : SingletonBehaviour<GameManager> {
 		while (AppSceneManager.I.isFade) {
 			yield return null;
 		}
-		StageManager.I.StartNextWave ();
-		yield break;
+		GameManager.I.SetStatuPlay ();
+		//StageManager.I.StartNextWave ();
+		//yield break;
 	}
 
     public void SetStatusWait() {

@@ -91,11 +91,11 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		GameManager.I.SetStatuPlay ();
 	}
 
-	public void WaveStart(int _wave, int _maxWave){
+	/*public void WaveStart(int _wave, int _maxWave){
 		StartCoroutine (WaveStartCorutine (_wave, _maxWave));
-	}
+	}*/
 
-	private IEnumerator WaveStartCorutine(int _wave, int _maxWave){
+	/*private IEnumerator WaveStartCorutine(int _wave, int _maxWave){
 		wavePanel.gameObject.SetActive (true);
 		wavePanel.Show (_wave,_maxWave);
 		yield return new WaitForSeconds (2.3f);
@@ -105,5 +105,5 @@ public class UIManager : SingletonBehaviour<UIManager> {
 			GameManager.I.SetStatuPlay ();
 		}
 		yield break;
-	}
+	}*/
 }

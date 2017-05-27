@@ -13,7 +13,7 @@ public class EnemyDeadTransform : EnemyEffectBase {
 	}
 
 	private void TransformEnemy(){
-		StageManager.I.CopyEnemy ();
+		StageManager.I.AddAllEnemyNum (1);
 		GameObject enemyPrefab = Resources.Load (ENEMY_DEFINE.PATH [transformId]) as GameObject;
 		GameObject transformEnemy = Instantiate (enemyPrefab, gameObject.transform.position, Quaternion.identity);
 		transformEnemy.GetComponent<Enemy> ().moveDir = moveDir;

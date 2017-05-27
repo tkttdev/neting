@@ -8,7 +8,6 @@ public class EnemySpawner : MonoBehaviour {
 
 	#region PublicField
 	public Corner[] enemySpawnCorner;
-	public Corner[] bulletSpawnCorner = new Corner[5];
 	#endregion
 
 	#region PrivateField
@@ -32,21 +31,14 @@ public class EnemySpawner : MonoBehaviour {
 		while(sr.Peek() > -1) {
 			string line = sr.ReadLine();
 			string[] values = line.Split(',');
-			if (values.Length == 1) {
-				/*enemySpawnInfo.id.Add (new List<int> (id));
-				enemySpawnInfo.spawnTime.Add (new List<float> (spawnTime));
-				enemySpawnInfo.spawnPos.Add (new List<int> (spawnPos));
-				enemySpawnInfo.allWaveEnemyNum.Add (id.Count);
-
-				id.Clear ();
-				spawnTime.Clear ();
-				spawnPos.Clear ();*/
-			} else {
-				id.Add (int.Parse (values [0]));
-				spawnTime.Add (float.Parse (values [1]));
-				spawnPos.Add (int.Parse (values [2]));
+			if (values.Length != 1) {
+				enemySpawnInfo.id.Add (int.Parse (values [0]));
+				enemySpawnInfo.spawnTime.Add (float.Parse (values [1]));
+				enemySpawnInfo.spawnPos.Add (int.Parse (values [2]));
 			}
 		}
+
+		StageManager.I.SetAllEnemyNum (enemySpawnInfo.id.Count);
 	}
 
 	// Update is called once per frame
@@ -61,7 +53,6 @@ public class EnemySpawner : MonoBehaviour {
 		if (enemySpawnInfo.id.Count == 0) {
 			return;
 		}
-
 		while (playTime > enemySpawnInfo.spawnTime[0]) {
 			SpawnEnemy();
 			if (enemySpawnInfo.id.Count == 0) {

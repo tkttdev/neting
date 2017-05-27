@@ -131,7 +131,7 @@ public class Enemy : MoveObjectBase {
 	}
 
 	public void DestroyOwn(){
-		StageManager.I.DeadEnemy ();
+		StageManager.I.AddDestoryEnemyNum (1);
 		InitializeOnDead ();
 		Initialize ();
 		ObjectPool.I.Release (gameObject);
