@@ -50,7 +50,6 @@ public class MoveObjectBase : MonoBehaviour {
 	[SerializeField] private MoveDir initMoveDir = MoveDir.UP;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
 	[SerializeField] private CasheCornerData cornerCashe;
-	private int bezerFineness = 50;
 	#endregion
 
 
@@ -159,7 +158,9 @@ public class MoveObjectBase : MonoBehaviour {
 				return;
 			}
 			SoundManager.I.SoundSE (SE.WARP);
-			gameObject.transform.position = _other.GetComponent<Warp> ().warpPos;
+			Warp warp = _other.GetComponent<Warp> ();
+			gameObject.transform.position = warp.warpPos;
+			lineId = warp.afterWarpLineId;
 			afterWarp = true;
 		}
 	}
