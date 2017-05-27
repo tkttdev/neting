@@ -7,16 +7,15 @@ public enum MoveDir : int {
 	DOWN = 2,
 	LEFT = 3,
 }
+public enum MoveMode : int {
+	NORMAL = 0,
+	IGNORE = 1,
+}
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MoveObjectBase : MonoBehaviour {
 
 	#region Define
-	protected enum MoveMode : int {
-		NORMAL = 0,
-		IGNORE = 1,
-	}
-
 	protected enum EffectMode : int {
 		LOW_SPEED = 5,
 		NORMAL_SPEED = 10,
@@ -25,6 +24,7 @@ public class MoveObjectBase : MonoBehaviour {
 	#endregion
 
 	#region PubliField
+	public MoveMode moveMode = MoveMode.NORMAL;
 	[HideInInspector]public string lineId = "";
 	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
 	[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
@@ -43,7 +43,6 @@ public class MoveObjectBase : MonoBehaviour {
 	protected bool afterWarp = false;
 	[Range(1.0f,12.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
-	protected MoveMode moveMode = MoveMode.NORMAL;
 	protected EffectMode effectMode = EffectMode.NORMAL_SPEED;
 	#endregion
 
@@ -118,7 +117,7 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 			
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner")) && !isInCorner) {
-			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveDesMode.ToString();
+			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveMode.ToString() + moveDesMode.ToString();
 			if (cornerCashe.slopeData.ContainsKey (key)) {
 				isCurve = false;
 				slope = cornerCashe.slopeData [key];
@@ -134,10 +133,10 @@ public class MoveObjectBase : MonoBehaviour {
 				moveDir = cornerCashe.moveDirData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
-				if (corner.CheckCurve(moveDir, moveDesMode)) {
+				if (corner.CheckCurve(moveDir, moveDesMode, moveMode)) {
 					bezerT = 0.0f;
 					isCurve = true;
-					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength, ref lengthOfBezerSection);
+					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength, ref lengthOfBezerSection, moveMode);
 					cornerCashe.curveData.Add (key, bezerPoints);
 					cornerCashe.curveLengthData.Add (key, onCurveLength);
 					cornerCashe.curveSectionLengthData.Add (key, lengthOfBezerSection);
@@ -145,7 +144,7 @@ public class MoveObjectBase : MonoBehaviour {
 					cornerCashe.moveDirData.Add (key, moveDir);
 				} else {
 					isCurve = false;
-					slope = corner.ChangePurposeStraight (ref moveDir, moveDesMode, ref lineId);
+					slope = corner.ChangePurposeStraight (ref moveDir, moveDesMode, ref lineId, moveMode);
 					cornerCashe.slopeData.Add (key, slope);
 					cornerCashe.lineIdData.Add (key, lineId);
 					cornerCashe.moveDirData.Add (key, moveDir);
