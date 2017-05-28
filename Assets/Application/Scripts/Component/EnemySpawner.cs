@@ -12,7 +12,6 @@ public class EnemySpawner : MonoBehaviour {
 
 	#region PrivateField
 	[SerializeField] private TextAsset enemySpawnInfoText;
-	[SerializeField] private EnemyDefineData enemyDefineData;
 	private GameObject[] enemyPrefabs = new GameObject[ENEMY_DEFINE.enemyVarietyNum];
 	private EnemySpawnInfo enemySpawnInfo = new EnemySpawnInfo();
 	private List<EnemySpawnInfo> bossStageEnemySpawnInfo = new List<EnemySpawnInfo> ();
@@ -91,7 +90,7 @@ public class EnemySpawner : MonoBehaviour {
 
 	private void SpawnEnemy() {
 		if (enemyPrefabs [enemySpawnInfo.id[0]] == null) {
-			enemyPrefabs [enemySpawnInfo.id[0]] = Resources.Load (ENEMY_DEFINE.PATH [enemySpawnInfo.id[0]]) as GameObject;
+			enemyPrefabs [enemySpawnInfo.id [0]] = Resources.Load ("Prefabs/Enemy/Enemy" + enemySpawnInfo.id [0].ToString ()) as GameObject;
 			enemyPrefabs [enemySpawnInfo.id[0]].GetComponent<Enemy> ().SetId (enemySpawnInfo.id[0]);
 		}
 		Enemy enemy = ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id[0]], enemySpawnCorner [enemySpawnInfo.spawnPos[0]].transform.position).GetComponent<Enemy> ();

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(EnemyDefineData))]
+[CustomEditor(typeof(EnemyDefine))]
 public class EnemyDefineDataEditor : Editor {
-	private SerializedProperty enemyDefine;
+	private SerializedProperty enemyDataProp;
 	private SerializedProperty varietyNum;
 	private int enemyVarietyCount = 0;
 	private List<bool> enemyFoldOut = new List<bool>();
@@ -13,34 +13,34 @@ public class EnemyDefineDataEditor : Editor {
 	private List<GameObject> formerEnemyPrefab;
 
 	private void OnEnable(){
-		enemyDefine = serializedObject.FindProperty ("enemyDefine");
+		enemyDataProp = serializedObject.FindProperty ("enemy");
 		varietyNum = serializedObject.FindProperty ("varietyNum");
-		enemyVarietyCount = enemyDefine.arraySize;
+		enemyVarietyCount = enemyDataProp.arraySize;
 		for (int i = 0; i < enemyVarietyCount; i++) {
 			enemyFoldOut.Add (false);
-			if (enemyDefine.GetArrayElementAtIndex(i).FindPropertyRelative("PATH").stringValue == "") {
+			if (enemyDataProp.GetArrayElementAtIndex(i).FindPropertyRelative("PATH").stringValue == "") {
 				enemyPrefab.Add (null);
 			} else {
-				GameObject obj = Resources.Load (enemyDefine.GetArrayElementAtIndex (i).FindPropertyRelative ("PATH").stringValue) as GameObject;
+				GameObject obj = Resources.Load (enemyDataProp.GetArrayElementAtIndex (i).FindPropertyRelative ("PATH").stringValue) as GameObject;
 				enemyPrefab.Add (obj);
 			}
 		}
 		formerEnemyPrefab = new List<GameObject> (enemyPrefab);
-		varietyNum.intValue = enemyPrefab.Count;
+		varietyNum.intValue = enemyVarietyCount;
 	}
 
 	public override void OnInspectorGUI () {
 		serializedObject.Update ();
 
 		EditorGUI.BeginChangeCheck ();
-		enemyVarietyCount = enemyDefine.arraySize;
+		enemyVarietyCount = enemyDataProp.arraySize;
 
 		EditorGUILayout.BeginHorizontal ();
 		EditorGUILayout.LabelField ("VARIETY NUM", GUILayout.Width (130));
 		EditorGUILayout.LabelField (varietyNum.intValue.ToString ());
 		EditorGUILayout.EndHorizontal ();
 		for (int i = 0; i < enemyVarietyCount; i++) {
-			SerializedProperty tmp = enemyDefine.GetArrayElementAtIndex (i);
+			SerializedProperty tmp = enemyDataProp.GetArrayElementAtIndex (i);
 			enemyFoldOut [i] = EditorGUILayout.Foldout (enemyFoldOut [i], "ENEMY" + i.ToString ());
 			if (enemyFoldOut [i]) {
 				EditorGUILayout.BeginHorizontal ();
@@ -65,7 +65,7 @@ public class EnemyDefineDataEditor : Editor {
 					enemyPrefab.RemoveAt (i);
 					formerEnemyPrefab.RemoveAt (i);
 					enemyFoldOut.RemoveAt (i);
-					enemyDefine.DeleteArrayElementAtIndex (i);
+					enemyDataProp.DeleteArrayElementAtIndex (i);
 					i--;
 					enemyVarietyCount--;
 				}
@@ -73,14 +73,14 @@ public class EnemyDefineDataEditor : Editor {
 		}
 
 		if (GUILayout.Button ("Add")) {
-			enemyDefine.arraySize = enemyDefine.arraySize + 1;
+			enemyDataProp.arraySize = enemyDataProp.arraySize + 1;
 			enemyFoldOut.Add (false);
 			enemyPrefab.Add (null);
 			formerEnemyPrefab.Add (null);
 		}
 
 		if (GUILayout.Button ("RemoveAll")) {
-			enemyDefine.ClearArray ();
+			enemyDataProp.ClearArray ();
 			enemyPrefab.Clear ();
 			formerEnemyPrefab.Clear ();
 			enemyFoldOut.Clear ();
@@ -117,10 +117,10 @@ public class EnemyDefineDataEditor : Editor {
 		for (int i = 0; i < enemyPrefab.Count; i++) {
 			if (enemyPrefab [i] != formerEnemyPrefab [i]) {
 				if (enemyPrefab [i] == null) {
-					enemyDefine.GetArrayElementAtIndex (i).FindPropertyRelative ("PATH").stringValue = "";
+					enemyDataProp.GetArrayElementAtIndex (i).FindPropertyRelative ("PATH").stringValue = "";
 				} else {
 					string path = "Prefabs/Enemy/" + enemyPrefab [i].name;
-					enemyDefine.GetArrayElementAtIndex (i).FindPropertyRelative ("PATH").stringValue = path;
+					enemyDataProp.GetArrayElementAtIndex (i).FindPropertyRelative ("PATH").stringValue = path;
 				}
 			}
 		}

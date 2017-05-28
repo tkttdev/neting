@@ -10,6 +10,7 @@ public class Enemy : MoveObjectBase {
 	private int damage;
 	private int money;
 	[SerializeField]private SpriteRenderer hpBar;
+	[SerializeField]private EnemyDefine enemyDefine;
 	private Vector2 hpBarInitLocalScale;
 
 	public int copyEnemyNum = 0;
@@ -21,11 +22,11 @@ public class Enemy : MoveObjectBase {
 	protected override void Initialize (){
 		base.Initialize ();
 		SetMoveToPlayer ();
-		hp = ENEMY_DEFINE.HP [id];
+		hp = enemyDefine.enemy[id].HP;
 		maxHP = hp;
-		damage = ENEMY_DEFINE.DAMAGE [id];
-		money = ENEMY_DEFINE.MONEY [id];
-		moveSpeed = ENEMY_DEFINE.SPEED [id];
+		damage = enemyDefine.enemy[id].DAMAGE;
+		money = enemyDefine.enemy[id].MONEY;
+		moveSpeed = enemyDefine.enemy[id].SPEED;
 		enemyEffect = gameObject.GetComponents<EnemyEffectBase> ();
 	}
 
