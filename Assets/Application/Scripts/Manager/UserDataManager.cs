@@ -16,6 +16,7 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		public int money = 0;
 		public bool[] hasChara = new bool[10];
 		public bool[] isClearStage = new bool[100];
+		public int[] characterLevel = new int[10];
 
 		public UserData() {
 			hasChara[0] = true;
@@ -23,8 +24,12 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 				hasChara[i] = false;
 			}
 
-			for(int i = 0; i < 40; i++){
+			for(int i = 0; i < 100; i++){
 				isClearStage[i] = false;
+			}
+
+			for(int i = 0; i < 10; i++){
+				characterLevel[i] = 1;
 			}
 		}
 	}
@@ -46,6 +51,15 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 		}
     }
 
+	public int GetCharacterLevel(int _characterIndex){
+		return userData.characterLevel[_characterIndex];
+	}
+
+	public void AddCharacterLevel(int _characterIndex){
+		userData.characterLevel [_characterIndex] += 1;
+		SaveData ();
+	}
+
     public int GetUseCharacterIndex() {
         return userData.useCharaIndex;
     }
@@ -59,6 +73,18 @@ public class UserDataManager : SingletonBehaviour<UserDataManager> {
 	public void GetCharacter(int _characterIndex){
 		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return;
 		userData.hasChara [_characterIndex] = true;
+		SaveData ();
+	}
+
+	//Debug用関数
+	public void LossCharacter(int _characterIndex){
+		if (_characterIndex >= CHARACTER_DEFINE.characterVarietyNum) return;
+		userData.hasChara [_characterIndex] = false;
+		SaveData ();
+	}
+
+	public void ResetLevel(int _characterIndex){
+		userData.characterLevel [_characterIndex] = 1;
 		SaveData ();
 	}
 

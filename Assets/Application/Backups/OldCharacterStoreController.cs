@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CharacterStoreController : SingletonBehaviour<CharacterStoreController> {
+public class OldCharacterStoreController : SingletonBehaviour<CharacterStoreController> {
 
 	[SerializeField] private Image[] characterBackground;
 	[SerializeField] private GameObject[] characterKey;
@@ -28,12 +28,8 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	private float posx = 0;
 	private int tposx = 0;
 	[SerializeField] private GameObject CharacterLocation;
-	[SerializeField] private Text purchaseButtonMoneyText;
-	[SerializeField] private Button truePurchaseButton;
-	[SerializeField] private Text levelText;
-	[SerializeField] private Text purchaseButtonText;
-	private int PurchaseButtonId;
-
+	[SerializeField] private Text newPurchaseMoneyText;
+	[SerializeField] private Button newPurchaseButton;
 
 	// Use this for initialization
 	void Start () {
@@ -47,9 +43,6 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		SoundManager.I.SoundBGM (BGM.CHARACTER_STORE_BGM);
 		DesignCharacterButton ();
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
-		//
-		//truePurchaseButton.interactable = false;
-		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (0).ToString();
 	}
 
 	private void DesignCharacterButton(){
@@ -141,104 +134,45 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		AppSceneManager.I.GoScene(GameSceneType.MENU_SCENE);
 	}
 
-	public void DirButton(int _dir){
+	public void RightButton(){
 		//CharacterLocation.gameObject.transform.position -= new Vector3(100/10, 0, 0);
-		if((_dir == -1 && PurchaseButtonId == 0)||(_dir == 1 && PurchaseButtonId == CHARACTER_DEFINE.characterVarietyNum - 1)) return;
-
-
-
-		posx = CharacterLocation.transform.position.x - (100 / 10) * _dir;
-		tposx = Mathf.RoundToInt (posx / 10);
+		posx = CharacterLocation.transform.position.x - 100/10;
+		tposx = Mathf.RoundToInt (posx/10);
 		iTween.MoveTo (CharacterLocation, iTween.Hash ("x", tposx * 10, "time", 2));
-
 		Debug.Log (tposx * 10);
-
-		PurchaseButtonId = -tposx;
-
-		if ((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ())/*|| (UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == true)*/) {
-			truePurchaseButton.interactable = false;
-		} else {
-			truePurchaseButton.interactable = true;
-		}
-
-		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true) {
-			purchaseButtonText.text = "Grade UP";
-
-		} else {
-			purchaseButtonText.text = "PURCHASE";
-		}
-
-
-		ShowLevelText();
-		//levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
-		Debug.Log ("CharacterLevel = " + UserDataManager.I.GetCharacterLevel(PurchaseButtonId).ToString());
-
-		purchaseButtonMoneyText.text = CHARACTER_DEFINE.MONEY [PurchaseButtonId].ToString ();
-		Debug.Log ("PurchaseButtonId ="+PurchaseButtonId);
-
-
-
-
-
+		//if(CharacterLocation.transform.position.x )
 	}
 
-	public void ShowLevelText(){
-		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
-	}
-
-	public void ShowMoneyText(){
-		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
+	public void LeftButton(){
+		if (CharacterLocation.transform.position.x <= -100/10) {
+			posx = CharacterLocation.transform.position.x + 100 / 10;
+			tposx = Mathf.RoundToInt (posx / 10);
+			iTween.MoveTo (CharacterLocation, iTween.Hash ("x", tposx * 10, "time", 2));
+			Debug.Log (tposx * 10);
+		}
 	}
 
 	public void NewPurchaseButton(){
-		
-
-		UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [PurchaseButtonId]);
+		willPurchaseCharaId = -tposx / 10;
+		UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [willPurchaseCharaId]);
 		SoundManager.I.SoundSE (SE.PURCHASE);
-
-		if ((UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true) && (UserDataManager.I.GetMoney() >= 0 /*CHARACTER_DEFINE.MONEY[PurchaseButtonId]*/)) {
-			UserDataManager.I.AddCharacterLevel (PurchaseButtonId);
-			//moneyText.text = UserDataManager.I.GetMoney ().ToString ();
-			ShowMoneyText();
-			ShowLevelText ();
-			HideTruePurchaseButton ();
-		}
-
-
-		UserDataManager.I.GetCharacter (PurchaseButtonId);
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
-
-		UserDataManager.I.GetCharacter (PurchaseButtonId);
-		Debug.Log ("You bought it");
-		purchaseButtonText.text = "Grade UP";
-
-
-		HideTruePurchaseButton ();
-
+		UserDataManager.I.GetCharacter (willPurchaseCharaId);
+		HidePurchasePanel ();
+		ShowPurchaseInforPanel ();
+		DesignCharacterButton ();
 	}
 
-	public void AddMoney(){
-		UserDataManager.I.AddMoney (1000);
-		ShowMoneyText();
-	}
-
-	public void LossCharacterButton(){
-		UserDataManager.I.LossCharacter (PurchaseButtonId);
-	}
-
-	public void LevelUpButton(){
-		UserDataManager.I.AddCharacterLevel (PurchaseButtonId);
-		ShowLevelText ();
-	}
-
-	public void ResetLevel(){
-		UserDataManager.I.ResetLevel (PurchaseButtonId);
-		ShowLevelText ();
-	}
-
-	public void HideTruePurchaseButton(){
-		if ((UserDataManager.I.GetMoney() < CHARACTER_DEFINE.MONEY [PurchaseButtonId])) {
-			truePurchaseButton.interactable = false;
+	private void NewShowPurchasePanel(int _charaId){
+		if (UserDataManager.I.GetMoney () < CHARACTER_DEFINE.MONEY [_charaId]) {
+			newPurchaseButton.interactable = false;
+		} else {
+			newPurchaseButton.interactable = true;
+			willPurchaseCharaId = _charaId;
 		}
+		//showPurchaseStatusImage.sprite = characterStatus [_charaId];
+		newPurchaseMoneyText.text = CHARACTER_DEFINE.MONEY [_charaId].ToString ();
+		//purchasePanel.SetActive (true);
 	}
+
 }

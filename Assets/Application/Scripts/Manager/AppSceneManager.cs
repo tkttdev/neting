@@ -7,10 +7,10 @@ using UnityEngine.EventSystems;
 
 public enum GameSceneType : int {
     TITLE_SCENE = 0,
-    MENU_SCENE = 1,
-    CHARACTER_STORE = 2,
-    GAME_SCENE = 3,
-    CREDIT_SCENE = 4,
+    CHARACTER_STORE = 1,
+    GAME_SCENE = 2,
+    CREDIT_SCENE = 3,
+	MENU_SCENE = 4,
 }
 
 public class AppSceneManager : SingletonBehaviour<AppSceneManager> {
