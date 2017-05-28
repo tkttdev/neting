@@ -49,9 +49,10 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 			}
 		}
 		showStageIndex = PlayerPrefs.GetInt(SHOW_STAGE_INDEX_KEY, 0);
-		for (int i = 0; i < stageButtonRoot.Length; i++) {
+        for (int i = 0; i < stageButtonRoot.Length; i++) {
 			stageButtonRoot[i].transform.position += new Vector3(-showStageIndex * unitX, stageButtonRoot[i].transform.position.y);
 		}
+		stageButtonRoot[0].transform.localPosition = new Vector3(0, 0, 0);
 	}
 
 	void Update() {
@@ -113,11 +114,6 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 		yield break;
 	}
 
-	public void RightButton() {
-		stageButtonRoot[0].transform.position += new Vector3(3, 0, 0);
-		count++;
-	}
-
 	public void MoveMap() {
 		float scale = stageButtonRoot[0].transform.localScale.x;
 
@@ -125,7 +121,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 			Touch tap = Input.GetTouch(0);
 			Vector3 deltaPos = tap.deltaPosition;
 
-			stageButtonRoot[0].transform.position += deltaPos / 300;
+			iTween.MoveBy(stageButtonRoot[0], iTween.Hash("x", deltaPos.x / 10, "y", deltaPos.y / 20));
 		}
 
 		if (Input.touchCount == 2) {
@@ -143,22 +139,22 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 			stageButtonRoot[0].transform.localScale -= new Vector3(deltaScale / 1000, deltaScale / 1000, 0);
 		}
 
-		if (stageButtonRoot[0].transform.localPosition.x > 0 - (1 - scale) * 140) {
-			stageButtonRoot[0].transform.localPosition = new Vector3(0 - (1 - scale) * 140, stageButtonRoot[0].transform.localPosition.y, 0);
-		}
-		if (stageButtonRoot[0].transform.localPosition.x < -700 + (1 - scale) * 800) {
+		if (stageButtonRoot[0].transform.localPosition.x <= -700 + (1 - scale) * 800) {
 			stageButtonRoot[0].transform.localPosition = new Vector3(-700 + (1 - scale) * 800, stageButtonRoot[0].transform.localPosition.y, 0);
 		}
-		if (stageButtonRoot[0].transform.localPosition.y > 0 - (1 - scale) * 100) {
-			stageButtonRoot[0].transform.localPosition = new Vector3(stageButtonRoot[0].transform.localPosition.x, 0 - (1 - scale) * 100, 0);
+		if (stageButtonRoot[0].transform.localPosition.x >= 0 - (1 - scale) * 120) {
+			stageButtonRoot[0].transform.localPosition = new Vector3(0 - (1 - scale) * 120, stageButtonRoot[0].transform.localPosition.y, 0);
 		}
-		if (stageButtonRoot[0].transform.localPosition.y < -300  + (1 - scale) * 500) {
+		if (stageButtonRoot[0].transform.localPosition.y <= -300 + (1 - scale) * 500) {
 			stageButtonRoot[0].transform.localPosition = new Vector3(stageButtonRoot[0].transform.localPosition.x, -300 + (1 - scale) * 500, 0);
 		}
-		if (stageButtonRoot[0].transform.localScale.x < 0.5) {
+		if (stageButtonRoot[0].transform.localPosition.y >= 0 - (1 - scale) * 100) {
+			stageButtonRoot[0].transform.localPosition = new Vector3(stageButtonRoot[0].transform.localPosition.x, 0 - (1 - scale) * 100, 0);
+		}
+		if (stageButtonRoot[0].transform.localScale.x <= 0.5) {
 			stageButtonRoot[0].transform.localScale = new Vector3(0.5f, 0.5f, 1);
 		}
-		if (stageButtonRoot[0].transform.localScale.x > 1) {
+		if (stageButtonRoot[0].transform.localScale.x >= 1) {
 			stageButtonRoot[0].transform.localScale = new Vector3(1, 1, 1);
 		}
 	}

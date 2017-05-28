@@ -24,12 +24,12 @@ public class AreaButton : MonoBehaviour {
 
 		var mag = pos - chara.transform.position;
 		if (mag.magnitude <= 0.5) {
-			foreach (GameObject n in objectSet) {
-				n.gameObject.SetActive(true);
+			for (int i = 0; i < objectSet.Length; i++) {
+				objectSet[i].SetActive(true);
 			}
 		} else {
-			foreach (GameObject n in objectSet) {
-				n.gameObject.SetActive(false);
+			for (int i = 0; i < objectSet.Length; i++) {
+				objectSet[i].SetActive(false);
 			}
 		}
 	}
