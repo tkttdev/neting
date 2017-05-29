@@ -5,29 +5,21 @@ using UnityEngine.UI;
 
 public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 
-	[SerializeField]
-	private Text moneyText;
-	[SerializeField]
-	private GameObject[] buttonRoot;
-	[SerializeField]
-	private GameObject[] stageButtonRoot;
-	[SerializeField]
-	private Image[] stageButtonImage;
+	[SerializeField] private Text moneyText;
+	[SerializeField] private GameObject[] buttonRoot;
+	[SerializeField] private GameObject[] stageButtonRoot;
+	[SerializeField] private Image[] stageButtonImage;
 
-	[SerializeField]
-	private GameObject[] coverPanel;
-	[SerializeField]
-	private Image characterImage;
+	[SerializeField] private GameObject[] coverPanel;
+	[SerializeField] private Image characterImage;
 
-	[SerializeField]
-	private GameObject getMoneyDialog;
+	[SerializeField] private GameObject getMoneyDialog;
 
 	//0~10 => 0, 11~20 => 1
 	private int showStageIndex = 0;
 	private string SHOW_STAGE_INDEX_KEY = "showStageIndexKey";
 
 	private float unitX;
-	private int count;
 
 	protected override void Initialize() {
 		base.Initialize();

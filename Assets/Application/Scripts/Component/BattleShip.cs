@@ -17,6 +17,9 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 	[SerializeField]private Corner[] bulletSpawnCorner = new Corner[5];
 
+	[SerializeField]private GameObject skillButton;
+	private bool activeGatling;
+
 	protected override void Initialize() {
 		base.Initialize();
 		#if UNITY_EDITOR
@@ -44,7 +47,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		bulletStock = maxBulletStock;
 		intervalCount = 0;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-	}
+    }
 
 	void Update() {
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
@@ -69,7 +72,9 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		if (bulletStock == 0 || !GameManager.I.CheckGameStatus(GameStatus.PLAY) || bulletSpawnCorner[_entryX + 2] == null) {
 			return;
 		}
-		bulletStock--;
+		if (activeGatling == false) {
+			bulletStock--;
+		}
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		Bullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -4f, 0.0f)).GetComponent<Bullet> ();
 		if (bulletSpawnCorner [_entryX + 2].CheckCurve (MoveDir.UP, 1, bullet.moveMode)) {
@@ -110,5 +115,35 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 	public float bulletRate{
 		get { return (bulletInterval - intervalCount) / bulletInterval; }
+	}
+
+	public void SetSkill(GameObject prefab) {
+		if(bulletStock != maxBulletStock) {
+			intervalCount = 0;
+			bulletStock = maxBulletStock;
+        }
+
+        bulletPrefab = prefab;
+
+		StartCoroutine("EndSkill");
+	}
+
+	public void SetGatling() {
+		if (bulletStock != maxBulletStock) {
+			intervalCount = 0;
+			bulletStock = maxBulletStock;
+		}
+
+		activeGatling = true;
+
+		StartCoroutine("EndSkill");
+	}
+
+	public IEnumerator EndSkill() {
+		yield return new WaitForSeconds(5.0f);
+
+		bulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
+		bulletStock = maxBulletStock;
+		activeGatling = false;
 	}
 }
