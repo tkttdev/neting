@@ -37,7 +37,7 @@ public class Laser : MonoBehaviour {
 		ObjectPool.I.Release(gameObject);
 	}
 
-	public void OnTriggerEnter2D(Collider2D _other) {
+	void OnTriggerEnter2D(Collider2D _other) {
 		if (_other.tag == "Enemy") {
 			_other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
 		}
