@@ -11,7 +11,7 @@ public enum SkillMode : int {
 public class Bullet : MoveObjectBase {
 
 	private int damage = 1;
-	[SerializeField] private bool activeSkill;
+
 	[SerializeField] private SkillMode skillMode;
 
 	protected override void Initialize() {
@@ -38,7 +38,6 @@ public class Bullet : MoveObjectBase {
 		}
 
 		if (skillMode == SkillMode.NORMAL) {
-			base.OnTriggerEnter2D(_other);
 			if (_other.tag == "Enemy") {
 				if (_other.GetComponent<MoveObjectBase>().lineId.Equals(lineId)) {
 					_other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
