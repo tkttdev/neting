@@ -27,7 +27,6 @@ public class MoveObjectBase : MonoBehaviour {
 	public MoveMode moveMode = MoveMode.NORMAL;
 	[HideInInspector]public string lineId = "";
 	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
-	//[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
 	[HideInInspector]public Transform[] bezerPoints = new Transform[4];
 	[HideInInspector]public float[] lengthOfBezerSection = new float[(Corner.bezerFineness + 1)];
 	[HideInInspector]public float onLineLength = 0.0f;
@@ -118,7 +117,7 @@ public class MoveObjectBase : MonoBehaviour {
 			effectMode = EffectMode.HIGH_SPEED;
 		}
 			
-		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner"))) {
+		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner") {
 			moveT = 0.0f;
 			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveMode.ToString() + moveDesMode.ToString();
 			if (cornerCashe.straightPurposeData.ContainsKey (key)) {

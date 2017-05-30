@@ -36,7 +36,6 @@ public class CornerEditor : Editor {
 	}
 
 	public override void OnInspectorGUI (){
-		base.OnInspectorGUI ();
 		serializedObject.Update ();
 		EditorGUI.BeginChangeCheck ();
 		for (int i = 0; i < 4; i++) {

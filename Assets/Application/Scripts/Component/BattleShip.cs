@@ -90,6 +90,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (bullet.moveMode, 1, ref bullet.moveDir, ref bullet.lineId, ref bullet.onLineLength, ref bullet.lengthOfBezerSection);
 		} else {
 			bullet.endPos = bulletSpawnCorner [_entryX + 2].ChangePurposeStraight (bullet.moveMode, 1, ref bullet.moveDir, ref bullet.lineId, ref bullet.onLineLength);
+			bullet.onLineLength -= Mathf.Abs (-4f - bulletSpawnCorner [_entryX + 2].transform.position.y); // TODO:このコード無しで初期速度を正常にするよう変更
 		}
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
