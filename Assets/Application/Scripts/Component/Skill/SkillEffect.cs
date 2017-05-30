@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lucus : MonoBehaviour {
+public class SkillEffect : MonoBehaviour {
 
-	private int damage = 1;
+	[Range(1.0f, 10.0f)]
+	public int damage = 1;
 
 	// Use this for initialization
 	void Start () {

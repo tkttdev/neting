@@ -41,7 +41,7 @@ public class MoveObjectBase : MonoBehaviour {
 	// player to enemy : 1 enemy to player : -1
 	protected int moveDesMode = 1;
 	protected bool afterWarp = false;
-	[Range(1.0f,100.0f)]
+	[Range(0.0f,100.0f)]
 	[SerializeField] protected float moveSpeed = 3.0f;
 	protected EffectMode effectMode = EffectMode.NORMAL_SPEED;
 	#endregion

@@ -6,6 +6,7 @@ public enum Skill : int {
 	BOMB = 0,
 	THUNDER = 1,
 	GATLING = 2,
+	LASER = 3,
 }
 
 public class SkillButton : MonoBehaviour {
@@ -27,7 +28,7 @@ public class SkillButton : MonoBehaviour {
 		if (gameObject.activeSelf == true) {
 			switch (skill) {
 				case Skill.BOMB:
-					Instantiate(skillPrefab[0], new Vector3(0, -5, 0), transform.rotation);
+					ObjectPool.I.Instantiate(skillPrefab[0], new Vector3(0, -5, 0));
 					break;
 				case Skill.THUNDER:
 					BattleShip.I.SetSkill(skillPrefab[1]);
@@ -35,6 +36,9 @@ public class SkillButton : MonoBehaviour {
 				case Skill.GATLING:
 					BattleShip.I.SetGatling();
                     break;
+				case Skill.LASER:
+					BattleShip.I.SetSkill(skillPrefab[2]);
+					break;
 			}
 			gameObject.SetActive(false);
 		}

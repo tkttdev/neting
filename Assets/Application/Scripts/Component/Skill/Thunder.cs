@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Thunder : MonoBehaviour {
+public class Thunder : MoveObjectBase {
 
 	[SerializeField] private GameObject locus;
 
@@ -11,7 +11,7 @@ public class Thunder : MonoBehaviour {
 	private GameObject[] prefab = new GameObject[100];
 
 	// Use this for initialization
-	public void Start() {
+	protected override void Initialize() {
 		i = 0;
 		zero = gameObject.transform.position;
 		StartCoroutine("EndThunder");
@@ -23,10 +23,12 @@ public class Thunder : MonoBehaviour {
 	}
 
 	void OnEnable() {
-		Start();
+		Initialize();
 	}
 
-	void OnTriggerEnter2D(Collider2D _other) {
+	protected override void OnTriggerEnter2D(Collider2D _other) {
+		base.OnTriggerEnter2D(_other);
+
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || _other.tag == "Warp" || _other.tag == "DestroyZone")) {
 			Vector3 one = gameObject.transform.position;
 			Vector3 dif = one - zero;
