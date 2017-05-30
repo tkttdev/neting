@@ -27,14 +27,14 @@ public class MoveObjectBase : MonoBehaviour {
 	public MoveMode moveMode = MoveMode.NORMAL;
 	[HideInInspector]public string lineId = "";
 	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
-	[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
+	//[HideInInspector]public Vector2 slope = new Vector2(0.0f, 1f);
 	[HideInInspector]public Transform[] bezerPoints = new Transform[4];
 	[HideInInspector]public float[] lengthOfBezerSection = new float[(Corner.bezerFineness + 1)];
-	[HideInInspector]public float onCurveLength = 0.0f;
+	[HideInInspector]public float onLineLength = 0.0f;
 	[HideInInspector]public bool isCurve = false;
-	[HideInInspector]public float bezerT = 0.0f;
-	//For Copy Flag TODO:IMPREMENT COPY WITHOUT THIS FLAG
-	//[HideInInspector] public bool isInCorner = false;
+	[HideInInspector]public float moveT = 0.0f;
+	[HideInInspector]public Vector3 startPos;
+	[HideInInspector]public Vector3 endPos;
 	#endregion
 
 	#region ProtectedField
@@ -68,8 +68,9 @@ public class MoveObjectBase : MonoBehaviour {
 		moveDir = initMoveDir;
 		moveMode = initMoveMode;
 		effectMode = EffectMode.NORMAL_SPEED;
-		bezerT = 0.0f;
+		moveT = 0.0f;
 		isCurve = false;
+		startPos = transform.position;
 	}
 
 	/// <summary>
@@ -98,11 +99,13 @@ public class MoveObjectBase : MonoBehaviour {
 	protected virtual void FixedUpdate(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			if (isCurve) {
-				bezerT += Time.deltaTime * (moveSpeed / onCurveLength);
-				bezerT = Mathf.Clamp (bezerT, 0.0f, 1.0f);
-				gameObject.transform.position = Bezer3Interpolate (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, bezerT);
+				moveT += Time.deltaTime * (moveSpeed / onLineLength);
+				moveT = Mathf.Clamp (moveT, 0.0f, 1.0f);
+				gameObject.transform.position = Bezer3Interpolate (bezerPoints [0].position, bezerPoints [1].position, bezerPoints [2].position, bezerPoints [3].position, moveT);
 			} else {
-				gameObject.transform.position += (Vector3)slope * (int)effectMode * 0.1f * Time.deltaTime * moveSpeed;
+				moveT += Time.deltaTime * (moveSpeed / onLineLength);
+				moveT = Mathf.Clamp (moveT, 0.0f, 1.0f);
+				gameObject.transform.position = Vector3.Lerp (startPos, endPos, moveT);
 			}
 		}
 	}
@@ -116,40 +119,42 @@ public class MoveObjectBase : MonoBehaviour {
 		}
 			
 		if ((_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || (moveMode == MoveMode.IGNORE && _other.tag == "PassCorner"))) {
+			moveT = 0.0f;
 			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveMode.ToString() + moveDesMode.ToString();
-			if (cornerCashe.slopeData.ContainsKey (key)) {
+			if (cornerCashe.straightPurposeData.ContainsKey (key)) {
 				isCurve = false;
-				slope = cornerCashe.slopeData [key];
+				endPos = cornerCashe.straightPurposeData [key];
+				onLineLength = cornerCashe.lengthData [key];
 				lineId = cornerCashe.lineIdData [key];
 				moveDir = cornerCashe.moveDirData [key];
 			} else if (cornerCashe.curveData.ContainsKey (key)) { 
 				isCurve = true;
-				bezerT = 0.0f;
 				bezerPoints = cornerCashe.curveData [key];
-				onCurveLength = cornerCashe.curveLengthData [key];
+				onLineLength = cornerCashe.lengthData [key];
 				lengthOfBezerSection = cornerCashe.curveSectionLengthData [key];
 				lineId = cornerCashe.lineIdData [key];
 				moveDir = cornerCashe.moveDirData [key];
 			} else {
 				Corner corner = _other.GetComponent<Corner> ();
 				if (corner.CheckCurve(moveDir, moveDesMode, moveMode)) {
-					bezerT = 0.0f;
 					isCurve = true;
-					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onCurveLength, ref lengthOfBezerSection, moveMode);
+					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onLineLength, ref lengthOfBezerSection, moveMode);
 					cornerCashe.curveData.Add (key, bezerPoints);
-					cornerCashe.curveLengthData.Add (key, onCurveLength);
+					cornerCashe.lengthData.Add (key, onLineLength);
 					cornerCashe.curveSectionLengthData.Add (key, lengthOfBezerSection);
 					cornerCashe.lineIdData.Add (key, lineId);
 					cornerCashe.moveDirData.Add (key, moveDir);
 				} else {
 					isCurve = false;
-					slope = corner.ChangePurposeStraight (ref moveDir, moveDesMode, ref lineId, moveMode);
-					cornerCashe.slopeData.Add (key, slope);
+					endPos = corner.ChangePurposeStraight (ref moveDir, moveDesMode, ref lineId, ref onLineLength , moveMode);
+					cornerCashe.straightPurposeData.Add (key, endPos);
+					cornerCashe.lengthData.Add (key, onLineLength);
 					cornerCashe.lineIdData.Add (key, lineId);
 					cornerCashe.moveDirData.Add (key, moveDir);
 				}
 			}
 			transform.position = _other.transform.position;
+			startPos = _other.transform.position;
 		} 
 
 		if (_other.tag == "Warp" && moveMode != MoveMode.IGNORE) {

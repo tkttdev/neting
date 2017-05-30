@@ -138,6 +138,10 @@ public class Enemy : MoveObjectBase {
 		ObjectPool.I.Release (gameObject);
 	}
 
+	private void OnEnable(){
+		base.Initialize ();
+	}
+
 	private IEnumerator DamageRendering(){
 		if (gameObject.GetComponent<SpriteRenderer> ().enabled) {
 			gameObject.GetComponent<SpriteRenderer> ().enabled = false;

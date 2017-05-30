@@ -96,9 +96,9 @@ public class EnemySpawner : MonoBehaviour {
 		Enemy enemy = ObjectPool.I.Instantiate (enemyPrefabs [enemySpawnInfo.id[0]], enemySpawnCorner [enemySpawnInfo.spawnPos[0]].transform.position).GetComponent<Enemy> ();
 		if (enemySpawnCorner [enemySpawnInfo.spawnPos[0]].CheckCurve (MoveDir.DOWN, -1, enemy.moveMode)) {
 			enemy.isCurve = true;
-			enemy.bezerPoints = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeCurve (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onCurveLength, ref enemy.lengthOfBezerSection, enemy.moveMode);
+			enemy.bezerPoints = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeCurve (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onLineLength, ref enemy.lengthOfBezerSection, enemy.moveMode);
 		} else {
-			enemy.slope = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeStraight (ref enemy.moveDir, -1, ref enemy.lineId, enemy.moveMode);
+			enemy.endPos = enemySpawnCorner [enemySpawnInfo.spawnPos[0]].ChangePurposeStraight (ref enemy.moveDir, -1, ref enemy.lineId, ref enemy.onLineLength , enemy.moveMode);
 		}
 		enemySpawnInfo.RemoveFirstElement ();
 	}

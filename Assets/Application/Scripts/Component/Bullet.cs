@@ -12,6 +12,10 @@ public class Bullet : MoveObjectBase {
         SetMoveToEnemy();
     }
 
+	private void OnEnable(){
+		base.Initialize ();
+	}
+
     protected override void FixedUpdate() {
         base.FixedUpdate();
 		float scale = Mathf.PingPong (Time.time*2.0f, 1.0f) + 3.0f;
@@ -34,7 +38,6 @@ public class Bullet : MoveObjectBase {
     }
 
 	private void DestroyOwn(){
-		base.Initialize ();
 		ObjectPool.I.Release (gameObject);
 	}
 }

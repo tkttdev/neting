@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class StageManager : SingletonBehaviour<StageManager> {
 
 	#region PublicField
-	public List<Transform> enemySpawnPos = new List<Transform>();
+	[HideInInspector]public List<Transform> enemySpawnPos = new List<Transform>();
 	public Corner[] bulletSpawnCorner = new Corner[5];
 	public bool isBossStage = false;
 	public static readonly float[] regularSpawnPosX = new float[5];

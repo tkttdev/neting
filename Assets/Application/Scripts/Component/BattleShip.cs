@@ -79,9 +79,9 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		Bullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -4f, 0.0f)).GetComponent<Bullet> ();
 		if (bulletSpawnCorner [_entryX + 2].CheckCurve (MoveDir.UP, 1, bullet.moveMode)) {
 			bullet.isCurve = true;
-			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (ref bullet.moveDir, 1, ref bullet.lineId, ref bullet.onCurveLength, ref bullet.lengthOfBezerSection, bullet.moveMode);
+			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (ref bullet.moveDir, 1, ref bullet.lineId, ref bullet.onLineLength, ref bullet.lengthOfBezerSection, bullet.moveMode);
 		} else {
-			bullet.slope = bulletSpawnCorner [_entryX + 2].ChangePurposeStraight (ref bullet.moveDir, 1, ref bullet.lineId, bullet.moveMode);
+			bullet.endPos = bulletSpawnCorner [_entryX + 2].ChangePurposeStraight (ref bullet.moveDir, 1, ref bullet.lineId, ref bullet.onLineLength, bullet.moveMode);
 		}
 		SoundManager.I.SoundSE (SE.SHOOT);
 	}
