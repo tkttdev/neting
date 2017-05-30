@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 
 public class Corner : MonoBehaviour {
+	#region public_field
 	[NamedArrayAttribute(new string[] { "UP", "RIGHT", "DOWN", "LEFT" })]
 	public Transform[] purposeTransform = new Transform[4];
 	[NamedArrayAttribute(new string[] { "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END", "START", "POS1", "POS2", "END"})]
@@ -13,14 +14,16 @@ public class Corner : MonoBehaviour {
 	public float[] lineLength = new float[4];
 	public float[] lengthOfBezerSection = new float[4 * (bezerFineness + 1)];
 	public const int bezerFineness = 50;
+	#endregion
 
-	//private Vector2[] slope = new Vector2[4];
-	private string[] lineId = new string[5];
-	[SerializeField] private bool onlyEnemy;
-	[SerializeField] private bool onlyBullet;
-	[SerializeField] private bool onlyForward;
+	#region protected_field
+	protected string[] lineId = new string[5];
+	[SerializeField] protected bool onlyEnemy;
+	[SerializeField] protected bool onlyBullet;
+	[SerializeField] protected bool onlyForward;
+	#endregion
 
-	private void Awake(){
+	protected virtual void Awake(){
 		int id = gameObject.GetInstanceID ();
 		for (int i = 0; i < 4; i++) {
 			if (isCurve [i]) {
@@ -66,7 +69,7 @@ public class Corner : MonoBehaviour {
 		lineLength [_index] = length;
 	}
 
-	private Vector3 Bezer3(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
+	protected Vector3 Bezer3(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
 		var oneMinusT = 1f - t;
 		return oneMinusT * oneMinusT * oneMinusT * p0 +
 			3f * oneMinusT * oneMinusT * t * p1 +
@@ -75,15 +78,15 @@ public class Corner : MonoBehaviour {
 	}
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
-	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector3 ChangePurposeStraight(MoveMode _moveMode ,int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength){
+	// TODO : より良いコードで実装し直し(Vector3の参照渡しがなぜできない？)
+	public virtual Vector3 ChangePurposeStraight(MoveMode _moveMode ,int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength){
 		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode, _moveMode);
 		_lineId = lineId [(int)_moveDir];
 		_lineLength = lineLength [(int)_moveDir];
 		return purposeTransform [(int)_moveDir].position;
 	}
 
-	public Transform[] ChangePurposeCurve(MoveMode _moveMode, int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength, ref float[] _lengthOfBezerSection) {
+	public virtual Transform[] ChangePurposeCurve(MoveMode _moveMode, int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength, ref float[] _lengthOfBezerSection) {
 		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode, _moveMode);
 		_lineId = lineId [(int)_moveDir];
 		_lineLength = lineLength [(int)_moveDir];
@@ -93,7 +96,7 @@ public class Corner : MonoBehaviour {
 		return points;
 	}
 
-	private MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode, MoveMode _moveMode){
+	protected MoveDir GetNextMoveDir(MoveDir _moveDir, int _moveDesMode, MoveMode _moveMode){
 		if (onlyForward || _moveMode == MoveMode.IGNORE) {
 			if (_moveDesMode == 1) {
 				return MoveDir.UP;
@@ -132,7 +135,7 @@ public class Corner : MonoBehaviour {
 			return MoveDir.RIGHT;
 		} else if (transform.tag == "LeftCorner") {
 			return MoveDir.LEFT;
-		} else if (transform.tag == "PassCorner") {
+		} else if (transform.tag == "PassCorner" || transform.tag == "Warp") {
 			bool isChangeDir = false;
 			for (int i = 0; i < 4; i++) {
 				isChangeDir = (!isCurve [i] && !isCurve [(i + 1) % 4]) || (purposeTransform [i] != null && purposeTransform [(i + 1) % 4] != null);

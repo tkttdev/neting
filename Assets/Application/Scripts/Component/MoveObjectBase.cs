@@ -116,8 +116,23 @@ public class MoveObjectBase : MonoBehaviour {
 		} else if (_other.tag == "HighSpeedZone") {
 			effectMode = EffectMode.HIGH_SPEED;
 		}
+
+		if (_other.tag == "Warp" && moveMode != MoveMode.IGNORE) {
+			int objKey = GetInstanceID ();
+			moveT = 0.0f;
+			if (!Warp.warpObjectsKey.Contains (objKey)) {
+				//Debug.Log ("contain");
+				Warp.warpObjectsKey.Add (objKey);
+				gameObject.transform.position = _other.gameObject.GetComponent<Warp> ().warpPurposePos;
+				startPos = _other.gameObject.GetComponent<Warp> ().warpPurposePos;
+				return;
+			} else {
+				//Debug.Log ("not contain");
+				Warp.warpObjectsKey.Remove (objKey);
+			}
+		}
 			
-		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner") {
+		if (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || _other.tag == "Warp") {
 			moveT = 0.0f;
 			string key = _other.GetInstanceID ().ToString () + moveDir.ToString() + moveMode.ToString() + moveDesMode.ToString();
 			if (cornerCashe.straightPurposeData.ContainsKey (key)) {
@@ -155,18 +170,6 @@ public class MoveObjectBase : MonoBehaviour {
 			transform.position = _other.transform.position;
 			startPos = _other.transform.position;
 		} 
-
-		if (_other.tag == "Warp" && moveMode != MoveMode.IGNORE) {
-			if (afterWarp) {
-				afterWarp = false;
-				return;
-			}
-			SoundManager.I.SoundSE (SE.WARP);
-			Warp warp = _other.GetComponent<Warp> ();
-			gameObject.transform.position = warp.warpPos;
-			lineId = warp.afterWarpLineId;
-			afterWarp = true;
-		}
 	}
 
 	private Vector3 Bezer3Interpolate (Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t){
@@ -192,11 +195,6 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 
 	protected virtual void OnTriggerExit2D(Collider2D _other){
-		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner" || _other.tag == "PassCorner" || _other.tag == "CurveCorner");
-		if (isCorner) {
-			//isInCorner = false;
-		}
-
 		if (_other.tag == "LowSpeedZone" || _other.tag == "HighSpeedZone") {
 			effectMode = EffectMode.NORMAL_SPEED;
 		}
