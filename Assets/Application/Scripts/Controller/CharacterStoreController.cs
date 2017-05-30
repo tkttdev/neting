@@ -27,12 +27,21 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	//new
 	private float posx = 0;
 	private int tposx = 0;
-	[SerializeField] private GameObject CharacterLocation;
+	private int loop = 0;
+	private bool ignoreLoopFlag1 = false;
+	private bool ignoreLoopFlag2 = true;
+	private bool dirFlag = true;
+	private int PurchaseButtonId;
+	private bool loopflag = true;
+	[SerializeField] private GameObject TopCharacterLocation;
+	[SerializeField] private GameObject CharacterLocation1;
+	[SerializeField] private GameObject CharacterLocation2;
 	[SerializeField] private Text purchaseButtonMoneyText;
 	[SerializeField] private Button truePurchaseButton;
 	[SerializeField] private Text levelText;
 	[SerializeField] private Text purchaseButtonText;
-	private int PurchaseButtonId;
+
+
 
 
 	// Use this for initialization
@@ -143,23 +152,87 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	public void DirButton(int _dir){
 		//CharacterLocation.gameObject.transform.position -= new Vector3(100/10, 0, 0);
-		if((_dir == -1 && PurchaseButtonId == 0)||(_dir == 1 && PurchaseButtonId == CHARACTER_DEFINE.characterVarietyNum - 1)) return;
+		//if((_dir == -1 && PurchaseButtonId == 0)||(_dir == 1 && PurchaseButtonId == CHARACTER_DEFINE.characterVarietyNum - 1)) return;
 
 
 
-		posx = CharacterLocation.transform.position.x - (100 / 10) * _dir;
+
+
+		posx = TopCharacterLocation.transform.position.x - 10 * _dir;
 		tposx = Mathf.RoundToInt (posx / 10);
-		iTween.MoveTo (CharacterLocation, iTween.Hash ("x", tposx * 10, "time", 2));
+		iTween.MoveTo (TopCharacterLocation, iTween.Hash ("x", tposx * 10, "time", 2));
 
-		Debug.Log (tposx * 10);
+		Debug.Log ("tposx*10 = " + tposx * 10);
 
-		PurchaseButtonId = -tposx;
+		PurchaseButtonId = -tposx - loop * 10;
+		//Debug.Log ("PrePurchaseButtonId =" + PurchaseButtonId + "-tposx = " + (-tposx));
+
+		//loop1
+		if (_dir == 1 && PurchaseButtonId == CHARACTER_DEFINE.characterVarietyNum) {
+				
+			if (loopflag == true && dirFlag == true) {
+				Vector3 pos = CharacterLocation2.transform.position;
+				Vector3 pos2 = CharacterLocation1.transform.position;
+				pos.x = pos2.x + 100f;
+				CharacterLocation2.transform.position = pos;
+				Debug.Log ("loopflag1" + loopflag);
+				loopflag = false;
+			} else if (loopflag == false && dirFlag == true) {
+				Vector3 pos = CharacterLocation1.transform.position;
+				Vector3 pos2 = CharacterLocation2.transform.position;
+				pos.x = pos2.x + 100f;
+				CharacterLocation1.transform.position = pos;
+				Debug.Log ("loopflag2" + loopflag);
+				loopflag = true;
+			} else if (dirFlag == false) {
+				dirFlag = true;
+			}
+				//初期化
+			PurchaseButtonId = 0;
+			loop += 1;
+			ignoreLoopFlag1 = true;
+			//CharacterLocation2.transform.position = new Vector3 (100f, 0, 0);
+			Debug.Log ("looped , PurchaseNButtonID =" + PurchaseButtonId + "loop = " + loop);
+		}
+
+		//loop2
+		if (_dir == -1 && PurchaseButtonId == -1) {
+			if (loopflag == true && dirFlag == false) {
+				Vector3 pos = CharacterLocation1.transform.position;
+				Vector3 pos2 = CharacterLocation2.transform.position;
+				pos.x = pos2.x - 100f;
+				CharacterLocation1.transform.position = pos;
+				Debug.Log ("loopflag3" + loopflag);
+				loopflag = false;
+					
+					
+			} else if (loopflag == false && dirFlag == false) {
+				Vector3 pos = CharacterLocation2.transform.position;
+				Vector3 pos2 = CharacterLocation1.transform.position;
+				pos.x = pos2.x - 100f;
+				CharacterLocation2.transform.position = pos;
+				Debug.Log ("loopflag4" + loopflag);
+				loopflag = true;
+			} else if (dirFlag == true) {
+				dirFlag = false;
+			}
+			//初期化
+
+			PurchaseButtonId = 9;
+			loop -= 1;
+			//CharacterLocation2.transform.position = new Vector3 (100f, 0, 0);
+			//Debug.Log ("looped , PurchaseNButtonID =" + PurchaseButtonId + "loop = " + loop);
+		}
+			
+
 
 		if ((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ())/*|| (UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == true)*/) {
 			truePurchaseButton.interactable = false;
 		} else {
 			truePurchaseButton.interactable = true;
 		}
+
+
 
 		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true) {
 			purchaseButtonText.text = "Grade UP";
@@ -171,7 +244,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 		ShowLevelText();
 		//levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
-		Debug.Log ("CharacterLevel = " + UserDataManager.I.GetCharacterLevel(PurchaseButtonId).ToString());
+		//Debug.Log ("CharacterLevel = " + UserDataManager.I.GetCharacterLevel(PurchaseButtonId).ToString());
 
 		purchaseButtonMoneyText.text = CHARACTER_DEFINE.MONEY [PurchaseButtonId].ToString ();
 		Debug.Log ("PurchaseButtonId ="+PurchaseButtonId);
@@ -181,6 +254,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 
 	}
+		
 
 	public void ShowLevelText(){
 		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
