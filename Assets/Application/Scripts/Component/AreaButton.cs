@@ -35,7 +35,6 @@ public class AreaButton : MonoBehaviour {
 	}
 
 	public void PushAreaButton() {
-		GameObject[] stageButtons = GameObject.FindGameObjectsWithTag("StageButton");
 		var dis = pos - chara.transform.position;
 		iTween.MoveBy(chara, iTween.Hash("x", dis.x, "y", dis.y, "time", 5.0f));
 	}

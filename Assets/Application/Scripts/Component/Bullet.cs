@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : MoveObjectBase {
 
 	private int damage = 1;
+	[SerializeField] private bool activeSkill;
 
 	protected override void Initialize() {
 		base.Initialize ();
@@ -24,16 +25,18 @@ public class Bullet : MoveObjectBase {
 
     protected override void OnTriggerEnter2D(Collider2D _other) {
         base.OnTriggerEnter2D(_other);
-		if (_other.tag == "Enemy") {
-			if (_other.GetComponent<MoveObjectBase> ().lineId.Equals (lineId)) {
-				_other.gameObject.GetComponent<Enemy> ().TakeDamage (damage);
-				DestroyOwn ();
+		if (activeSkill == false) {
+			if (_other.tag == "Enemy") {
+				if (_other.GetComponent<MoveObjectBase>().lineId.Equals(lineId)) {
+					_other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+					DestroyOwn();
+				}
+			} else if (_other.tag == "Boss") {
+				_other.gameObject.GetComponent<BossBase>().TakeDamage(damage);
+				DestroyOwn();
+			} else if (_other.tag == "DestroyZone") {
+				DestroyOwn();
 			}
-		} else if (_other.tag == "Boss") { 
-			_other.gameObject.GetComponent<BossBase> ().TakeDamage (damage);
-			DestroyOwn ();
-		} else if (_other.tag == "DestroyZone") {
-			DestroyOwn ();
 		}
     }
 

@@ -23,12 +23,12 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 
 	protected override void Initialize() {
 		base.Initialize();
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 		if (GameObject.Find("Systems") == null) {
 			GameObject obj = Resources.Load("Prefabs/Systems") as GameObject;
 			Instantiate(obj).name = "Systems";
 		}
-#endif
+		#endif
 		unitX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x * 2.0f;
 		moneyText.text = string.Format("{0}", UserDataManager.I.GetMoney().ToString());
 		characterImage.sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.IMAGE_RESOURCES_PATH[UserDataManager.I.GetUseCharacterIndex()]);
@@ -37,19 +37,18 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 		}
 		for (int i = 0; i < stageButtonImage.Length; i++) {
 			if (UserDataManager.I.IsClearStage(i)) {
-				stageButtonImage[i].sprite = Resources.Load<Sprite>("Images/Circle/stageicon2");
+				stageButtonImage[i].sprite = Resources.Load<Sprite>("Images/Line2");
 			}
 		}
 		showStageIndex = PlayerPrefs.GetInt(SHOW_STAGE_INDEX_KEY, 0);
         for (int i = 0; i < stageButtonRoot.Length; i++) {
 			stageButtonRoot[i].transform.position += new Vector3(-showStageIndex * unitX, stageButtonRoot[i].transform.position.y);
 		}
-		stageButtonRoot[0].transform.localPosition = new Vector3(0, 0, 0);
+		gameObject.transform.localPosition = new Vector3(0, 0, 0);
 	}
 
 	void Update() {
 		moneyText.text = string.Format("{0}", UserDataManager.I.GetMoney().ToString());
-		MoveMap();
 	}
 
 	public void ShowGetMoneyDialog() {
@@ -104,50 +103,5 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 			coverPanel[i].SetActive(false);
 		}
 		yield break;
-	}
-
-	public void MoveMap() {
-		float scale = stageButtonRoot[0].transform.localScale.x;
-
-		if (Input.touchCount == 1) {
-			Touch tap = Input.GetTouch(0);
-			Vector3 deltaPos = tap.deltaPosition;
-
-			iTween.MoveBy(stageButtonRoot[0], iTween.Hash("x", deltaPos.x / 10, "y", deltaPos.y / 20));
-		}
-
-		if (Input.touchCount == 2) {
-			Touch zero = Input.GetTouch(0);
-			Touch one = Input.GetTouch(1);
-
-			Vector2 zeroPre = zero.position - zero.deltaPosition;
-			Vector2 onePre = one.position - one.deltaPosition;
-
-			float magPre = (zeroPre - onePre).magnitude;
-			float mag = (zero.position - one.position).magnitude;
-
-			float deltaScale = magPre - mag;
-
-			stageButtonRoot[0].transform.localScale -= new Vector3(deltaScale / 1000, deltaScale / 1000, 0);
-		}
-
-		if (stageButtonRoot[0].transform.localPosition.x <= -700 + (1 - scale) * 800) {
-			stageButtonRoot[0].transform.localPosition = new Vector3(-700 + (1 - scale) * 800, stageButtonRoot[0].transform.localPosition.y, 0);
-		}
-		if (stageButtonRoot[0].transform.localPosition.x >= 0 - (1 - scale) * 120) {
-			stageButtonRoot[0].transform.localPosition = new Vector3(0 - (1 - scale) * 120, stageButtonRoot[0].transform.localPosition.y, 0);
-		}
-		if (stageButtonRoot[0].transform.localPosition.y <= -300 + (1 - scale) * 500) {
-			stageButtonRoot[0].transform.localPosition = new Vector3(stageButtonRoot[0].transform.localPosition.x, -300 + (1 - scale) * 500, 0);
-		}
-		if (stageButtonRoot[0].transform.localPosition.y >= 0 - (1 - scale) * 100) {
-			stageButtonRoot[0].transform.localPosition = new Vector3(stageButtonRoot[0].transform.localPosition.x, 0 - (1 - scale) * 100, 0);
-		}
-		if (stageButtonRoot[0].transform.localScale.x <= 0.5) {
-			stageButtonRoot[0].transform.localScale = new Vector3(0.5f, 0.5f, 1);
-		}
-		if (stageButtonRoot[0].transform.localScale.x >= 1) {
-			stageButtonRoot[0].transform.localScale = new Vector3(1, 1, 1);
-		}
 	}
 }

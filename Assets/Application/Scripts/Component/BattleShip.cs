@@ -18,6 +18,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	[SerializeField]private Corner[] bulletSpawnCorner = new Corner[5];
 
 	[SerializeField]private GameObject skillButton;
+	private bool activeSkill;
 	private bool activeGatling;
 
 	protected override void Initialize() {
@@ -51,21 +52,28 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 	void Update() {
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
-			if (bulletStock < maxBulletStock && intervalCount == 0) {
-				intervalCount = bulletInterval;
-			}
-		
-			if (intervalCount > 0.0f) {
-				intervalCount -= Time.deltaTime;
-				if (intervalCount <= 0.0f) {
-					intervalCount = 0.0f;
-					bulletStock += 1;
+			if (activeSkill == false) {
+				if (bulletStock < maxBulletStock && intervalCount == 0) {
+					intervalCount = bulletInterval;
+				}
+
+				if (intervalCount > 0.0f) {
+					intervalCount -= Time.deltaTime;
+					if (intervalCount <= 0.0f) {
+						intervalCount = 0.0f;
+						bulletStock += 1;
+					}
+				}
+			} else {
+				if (bulletStock < 1) {
+					bulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
+					bulletStock = maxBulletStock;
+					activeSkill = false;
 				}
 			}
-
-			UIManager.I.UpdateCharacterInfo (life, bulletStock);
 		}
 
+		UIManager.I.UpdateCharacterInfo(life, bulletStock);
 	}
 
 	public void Shoot(int _entryX) {
@@ -124,8 +132,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
         }
 
         bulletPrefab = prefab;
-
-		StartCoroutine("EndSkill");
+		activeSkill = true;
 	}
 
 	public void SetGatling() {

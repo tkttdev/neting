@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillBomb : MonoBehaviour {
+public class Bomb : MonoBehaviour {
 
 	private int damage = 10;
 
