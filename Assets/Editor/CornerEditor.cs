@@ -21,6 +21,8 @@ public class CornerEditor : Editor {
 	private SerializedProperty isCurve;
 	private bool[] curveFoldOut = new bool[4];
 
+
+
 	void OnEnable(){
 		corner = target as Corner;
 		for (int i = 0; i < 4; i++) {
