@@ -138,7 +138,7 @@ public class MoveObjectBase : MonoBehaviour {
 				Corner corner = _other.GetComponent<Corner> ();
 				if (corner.CheckCurve(moveDir, moveDesMode, moveMode)) {
 					isCurve = true;
-					bezerPoints = corner.ChangePurposeCurve (ref moveDir, moveDesMode, ref lineId, ref onLineLength, ref lengthOfBezerSection, moveMode);
+					bezerPoints = corner.ChangePurposeCurve (moveMode, moveDesMode, ref moveDir, ref lineId, ref onLineLength, ref lengthOfBezerSection);
 					cornerCashe.curveData.Add (key, bezerPoints);
 					cornerCashe.lengthData.Add (key, onLineLength);
 					cornerCashe.curveSectionLengthData.Add (key, lengthOfBezerSection);
@@ -146,7 +146,7 @@ public class MoveObjectBase : MonoBehaviour {
 					cornerCashe.moveDirData.Add (key, moveDir);
 				} else {
 					isCurve = false;
-					endPos = corner.ChangePurposeStraight (ref moveDir, moveDesMode, ref lineId, ref onLineLength , moveMode);
+					endPos = corner.ChangePurposeStraight (moveMode, moveDesMode, ref moveDir, ref lineId, ref onLineLength);
 					cornerCashe.straightPurposeData.Add (key, endPos);
 					cornerCashe.lengthData.Add (key, onLineLength);
 					cornerCashe.lineIdData.Add (key, lineId);

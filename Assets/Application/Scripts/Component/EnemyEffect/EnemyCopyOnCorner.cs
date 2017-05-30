@@ -20,9 +20,9 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 
 			if (corner.CheckCurve (original.moveDir, -1, original.moveMode)) {
 				copy.isCurve = true;
-				copy.bezerPoints = corner.ChangePurposeCurve (ref copy.moveDir, -1, ref copy.lineId, ref copy.onLineLength, ref copy.lengthOfBezerSection, copy.moveMode);
+				copy.bezerPoints = corner.ChangePurposeCurve (copy.moveMode, -1, ref copy.moveDir, ref copy.lineId, ref copy.onLineLength, ref copy.lengthOfBezerSection);
 			} else {
-				copy.endPos = corner.ChangePurposeStraight (ref copy.moveDir, -1, ref copy.lineId,ref copy.onLineLength, copy.moveMode);
+				copy.endPos = corner.ChangePurposeStraight (copy.moveMode, -1, ref copy.moveDir, ref copy.lineId,ref copy.onLineLength);
 			}
 
 			StageManager.I.AddAllEnemyNum(1);

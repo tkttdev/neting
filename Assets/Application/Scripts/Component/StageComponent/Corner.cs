@@ -76,14 +76,14 @@ public class Corner : MonoBehaviour {
 
 	// corner tag : RightCorner, LeftCorner, PassCorner, CurveCorner
 	// TODO : より良いコードで実装し直し(Vector2の参照渡しがなぜできない？)
-	public Vector3 ChangePurposeStraight(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _lineLength , MoveMode _moveMode){
+	public Vector3 ChangePurposeStraight(MoveMode _moveMode ,int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength){
 		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode, _moveMode);
 		_lineId = lineId [(int)_moveDir];
 		_lineLength = lineLength [(int)_moveDir];
 		return purposeTransform [(int)_moveDir].position;
 	}
 
-	public Transform[] ChangePurposeCurve(ref MoveDir _moveDir, int _moveDesMode, ref string _lineId, ref float _lineLength, ref float[] _lengthOfBezerSection, MoveMode _moveMode) {
+	public Transform[] ChangePurposeCurve(MoveMode _moveMode, int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength, ref float[] _lengthOfBezerSection) {
 		_moveDir = GetNextMoveDir (_moveDir, _moveDesMode, _moveMode);
 		_lineId = lineId [(int)_moveDir];
 		_lineLength = lineLength [(int)_moveDir];
