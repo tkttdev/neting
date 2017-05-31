@@ -41,6 +41,7 @@ public class Thunder : MonoBehaviour {
 				prefab[i] = ObjectPool.I.Instantiate(locus, zero) as GameObject;
 				prefab[i].transform.localScale = new Vector3(0.05f, dis / 1.45f, 0);
 				prefab[i].transform.Rotate(new Vector3(0, 0, angle));
+				i++;
 			}
 
 			if (_other.tag == "Warp" && warp == false) {
@@ -49,7 +50,6 @@ public class Thunder : MonoBehaviour {
 				warp = false;
 			}
 
-			i++;
 			zero = gameObject.transform.position;
 		}
 	}
