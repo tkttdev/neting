@@ -22,4 +22,13 @@ public class Warp : Corner {
 	public override Transform[] ChangePurposeCurve (MoveMode _moveMode, int _moveDesMode, ref MoveDir _moveDir, ref string _lineId, ref float _lineLength, ref float[] _lengthOfBezerSection) {
 		return base.ChangePurposeCurve (_moveMode, _moveDesMode, ref _moveDir, ref _lineId, ref _lineLength, ref _lengthOfBezerSection);
 	}
+
+	protected override void OnDrawGizmos () {
+		base.OnDrawGizmos ();
+		if (warpPurpose == null) {
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine (transform.position + new Vector3 (0.3f, 0.3f, 0), transform.position + new Vector3 (-0.3f, -0.3f, 0));
+			Gizmos.DrawLine (transform.position + new Vector3 (-0.3f, 0.3f, 0), transform.position + new Vector3 (0.3f, -0.3f, 0));
+		}
+	}
 }

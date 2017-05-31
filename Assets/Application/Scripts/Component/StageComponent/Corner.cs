@@ -171,7 +171,7 @@ public class Corner : MonoBehaviour {
 	}
 
 	#if UNITY_EDITOR
-	private void OnDrawGizmos(){
+	protected virtual void OnDrawGizmos(){
 		UnityEditor.Handles.Label(transform.position, name);
 		bool isConnected = false;
 		for (int i = 0; i < 4; i++) {
