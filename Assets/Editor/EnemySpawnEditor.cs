@@ -79,14 +79,22 @@ public class EnemySpawnEditor : EditorWindow {
 			for (int i = 0; i < enemyDefine.varietyNum; i++) {
 				bool flag = GUILayout.Toggle (targetEnemyIndex == i, "ENEMY" + i.ToString (), "OL Elem");
 				if (flag != (targetEnemyIndex == i)) {
-					targetEnemyIndex = i;
-					targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
+					if (targetEnemyIndex == i) {
+						targetEnemyIndex = - 1;
+						targetEnemy = null;
+					} else {
+						targetEnemyIndex = i;
+						targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
+					}
 				}
 			}
 		}
 	}
 
 	private void CheckKeyMoveAtEnemyList(){
+		if (targetEnemyIndex < 0 || targetEnemyIndex > enemyDefine.varietyNum - 1) {
+			return;
+		}
 		if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.DownArrow) {
 			targetEnemyIndex = targetEnemyIndex < enemyDefine.varietyNum - 1 ? targetEnemyIndex + 1 : targetEnemyIndex;
 			targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
