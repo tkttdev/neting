@@ -12,11 +12,12 @@ public enum CharacterID : int {
 public static class CHARACTER_DEFINE {
 
     public const int characterVarietyNum = 10;
-	public static readonly ReadOnlyCollection<string> NAME                = Array.AsReadOnly(new string[] { "TYPE-ALPHA","TYPE-BETA","TYPE-GAMMA","TYPE-DELTA","TYPE-EPSILON","TYPE-ZETA","TYPE-ETA","TYPE-THETA","TYPE-IOTA","TYPE-KAPPA"});
+	public static readonly ReadOnlyCollection<string> NAME                = Array.AsReadOnly(new string[] { "ATLANTA","BISMARCK","CHESTER","TYPE-DELTA","TYPE-EPSILON","TYPE-ZETA","TYPE-ETA","TYPE-THETA","TYPE-IOTA","TYPE-KAPPA"});
 	public static readonly ReadOnlyCollection<int>    MONEY               = Array.AsReadOnly(new int[]    {    0,   2000,   4000,   6500,   9000,   11500,   14000,   18000,   25000,   50000 });
     public static readonly ReadOnlyCollection<int>    MAX_BULLET_STOCK    = Array.AsReadOnly(new int[]    {    3,    2,    5,    2,    1,    4,    3,    5,    4,    1 });
     public static readonly ReadOnlyCollection<float>  BULLET_INTERVAL     = Array.AsReadOnly(new float[]  { 2.0f, 1.6f, 2.0f, 2.2f, 1.2f, 2.0f, 1.6f, 2.0f, 2.0f, 1.0f });
     public static readonly ReadOnlyCollection<int>    BULLET_DAMAGE       = Array.AsReadOnly(new int[]    {    1,    1,    1,    2,    1,    2,    1,    2,    3,    1 });
+	public static readonly ReadOnlyCollection<string> SKILLNAME           = Array.AsReadOnly(new string[] { "LASER","THUNDER","BOMB","","","","","","",""});
     public static readonly ReadOnlyCollection<string> BULLET_PREFAB_PATH  = Array.AsReadOnly(new string[] { "Prefabs/Bullet/CharacterBullet0",
                                                                                                             "Prefabs/Bullet/CharacterBullet1",
                                                                                                             "Prefabs/Bullet/CharacterBullet2",
@@ -27,6 +28,7 @@ public static class CHARACTER_DEFINE {
                                                                                                             "Prefabs/Bullet/CharacterBullet7",
                                                                                                             "Prefabs/Bullet/CharacterBullet8",
                                                                                                             "Prefabs/Bullet/CharacterBullet9"});
+	
 	public static readonly ReadOnlyCollection<string> IMAGE_RESOURCES_PATH  = Array.AsReadOnly(new string[]{ "Images/Chara/Alpha",
 		"Images/Chara/Beta",
 		"Images/Chara/Gamma",
