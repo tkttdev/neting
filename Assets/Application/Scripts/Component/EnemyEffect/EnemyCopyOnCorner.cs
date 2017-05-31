@@ -12,11 +12,12 @@ public class EnemyCopyOnCorner : EnemyEffectBase {
 
 	public override void OnTrriger2DEffect (Collider2D _other, int _enemyId){
 		bool isCorner = (_other.tag == "LeftCorner" || _other.tag == "RightCorner");
-		if (!afterCopy) {
+		if (!afterCopy && isCorner) {
 			afterCopy = true;
 			Corner corner = _other.gameObject.GetComponent<Corner> ();
 			GameObject copyObj = Instantiate (gameObject, gameObject.transform.position, Quaternion.identity) as GameObject;
 			Enemy copy = copyObj.GetComponent<Enemy> ();
+			Debug.Log (_other.transform.name);
 
 			if (corner.CheckCurve (original.moveDir, -1, original.moveMode)) {
 				copy.isCurve = true;
