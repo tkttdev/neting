@@ -123,7 +123,7 @@ public class Corner : MonoBehaviour {
 			}
 		}
 
-		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && tag != "PassCorner") {
+		if ((_moveDir == MoveDir.RIGHT || _moveDir == MoveDir.LEFT) && (tag != "PassCorner" && tag != "Warp")) {
 			if (_moveDesMode == 1) {
 				return MoveDir.UP;
 			} else {
@@ -136,14 +136,17 @@ public class Corner : MonoBehaviour {
 		} else if (transform.tag == "LeftCorner") {
 			return MoveDir.LEFT;
 		} else if (transform.tag == "PassCorner" || transform.tag == "Warp") {
+			if (transform.tag == "Warp")
+				Debug.Log (_moveDir);
 			bool isChangeDir = false;
 			for (int i = 0; i < 4; i++) {
-				isChangeDir = (!isCurve [i] && !isCurve [(i + 1) % 4]) || (purposeTransform [i] != null && purposeTransform [(i + 1) % 4] != null);
+				isChangeDir = (isCurve [i] && isCurve [(i + 1) % 4]) || (purposeTransform [i] != null && purposeTransform [(i + 1) % 4] != null);
 				if (isChangeDir) {
 					break;
 				}
 			}
 			if (isChangeDir) {
+				Debug.Log ("CHANGE");
 				int nextMoveDir = ((int)_moveDir + 2) % 4;
 				for (int i = 1; i < 4; i++) {
 					nextMoveDir = (nextMoveDir + i) % 4;

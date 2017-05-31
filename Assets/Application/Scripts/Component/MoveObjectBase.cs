@@ -120,15 +120,15 @@ public class MoveObjectBase : MonoBehaviour {
 		if (_other.tag == "Warp" && moveMode != MoveMode.IGNORE) {
 			int objKey = GetInstanceID ();
 			moveT = 0.0f;
-			if (!Warp.warpObjectsKey.Contains (objKey)) {
-				//Debug.Log ("contain");
+			if (!Warp.warpObjectsKey.Contains(objKey)) {
 				Warp.warpObjectsKey.Add (objKey);
 				gameObject.transform.position = _other.gameObject.GetComponent<Warp> ().warpPurposePos;
 				startPos = _other.gameObject.GetComponent<Warp> ().warpPurposePos;
+				endPos = _other.gameObject.GetComponent<Warp> ().warpPurposePos;
 				return;
 			} else {
-				//Debug.Log ("not contain");
 				Warp.warpObjectsKey.Remove (objKey);
+				//return;
 			}
 		}
 			

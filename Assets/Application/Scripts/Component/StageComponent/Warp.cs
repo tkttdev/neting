@@ -6,7 +6,7 @@ public class Warp : Corner {
 
 	#region public_field
 	public static List<int> warpObjectsKey = new List<int> ();
-	[SerializeField] private Transform warpPurpose;
+	public Transform warpPurpose;
 	[HideInInspector] public Vector3 warpPurposePos;
 	#endregion
 
