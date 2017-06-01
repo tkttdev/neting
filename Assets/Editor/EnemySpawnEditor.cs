@@ -6,7 +6,8 @@ using System.IO;
 
 public class EnemySpawnEditor : EditorWindow {
 
-	private Texture[] enemyTextures;
+	private Texture2D[] enemyTextures;
+	private Texture2D[] moveEnemyTextures;
 	private static EnemyDefine enemyDefine;
 	private GameObject placeTargetEnemy;
 	private int placeTargetEnemyId = 0;
@@ -33,7 +34,8 @@ public class EnemySpawnEditor : EditorWindow {
 
 	void OnEnable(){
 		placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
-		enemyTextures = new Texture[enemyDefine.varietyNum];
+		enemyTextures = new Texture2D[enemyDefine.varietyNum];
+		moveEnemyTextures = new Texture2D[enemyDefine.varietyNum];
 	}
 
 	void OnGUI () {
@@ -172,8 +174,15 @@ public class EnemySpawnEditor : EditorWindow {
 	private void DisplayTargetEnemy(){
 		if (placeTargetEnemy != null) {
 			if (enemyTextures [placeTargetEnemyId] == null) {
-				Texture t = placeTargetEnemy.GetComponent<SpriteRenderer> ().sprite.texture;
+				Texture2D t = placeTargetEnemy.GetComponent<SpriteRenderer> ().sprite.texture;
 				enemyTextures [placeTargetEnemyId] = t;
+				/*moveEnemyTextures [placeTargetEnemyId] = t;
+				Color[] colors = t.GetPixels ();
+				for (int y = 0; y < moveEnemyTextures [placeTargetEnemyId].height; y++) {
+					for (int x = 0; x < moveEnemyTextures [placeTargetEnemyId].width; x++) {
+						moveEnemyTextures [placeTargetEnemyId].SetPixel (x, y, colors [y * moveEnemyTextures [placeTargetEnemyId].height + x] / 2f);
+					}
+				}*/
 			} 
 			GUILayout.Box (enemyTextures [placeTargetEnemyId], GUILayout.Width (30), GUILayout.Height (30));
 		}
