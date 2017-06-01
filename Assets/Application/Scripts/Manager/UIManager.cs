@@ -13,7 +13,8 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private Text waveText;
 	[SerializeField] private GameObject batteryGage;
 
-	[SerializeField] private GameObject[] life;
+	[SerializeField] private GameObject lifeGauge;
+	[SerializeField] private GameObject damageGauge;
 	[SerializeField] private Image[] bullet;
 	[SerializeField] private Image characterFace;
 
@@ -25,10 +26,19 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private GameObject pauseButton;
 	[SerializeField] private GameObject resumeButton;
 
+	[HideInInspector] public int useCharaIndex;
+	[HideInInspector] public int useCharaLv;
+
 	protected override void Initialize (){
 		base.Initialize ();
-		characterFace.GetComponent<Image> ().sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH[UserDataManager.I.GetUseCharacterIndex()]);
-		for (int i = CHARACTER_DEFINE.MAX_BULLET_STOCK [UserDataManager.I.GetUseCharacterIndex ()]; i < 5; i++) {
+		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
+		useCharaLv = UserDataManager.I.GetCharacterLevel(useCharaIndex);
+		string charaName = CHARACTER_DEFINE.NAME[useCharaIndex];
+		CharacterStatusManager.I.ParseStatusInfoText(charaName);
+
+		characterFace.GetComponent<Image> ().sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH[useCharaIndex]);
+		damageGauge.transform.localScale = new Vector3(25, CharacterStatusManager.I.GetCharacterHealth(useCharaLv) * 40, 0);
+        for (int i = CharacterStatusManager.I.GetCharacterBulletNum(useCharaLv); i < bullet.Length; i++) {
 			bullet [i].enabled = false;
 		}
 	}
@@ -40,12 +50,8 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	}
 
 	public void UpdateCharacterInfo(float _life,int _bulletStock){
-		for (int i = 0; i < life.Length; i++) {
-			life [i].SetActive (false);
-		}
-		if (_life > 0) {
-			//life [_life - 1].SetActive (true);
-		}
+		lifeGauge.transform.localScale = new Vector3(25, _life * 40, 0);
+
 		for (int i = 0; i < bullet.Length; i++) {
 			if (i < _bulletStock) {
 				bullet [i].GetComponent<Image> ().sprite = chargeBulletSprite;

@@ -45,10 +45,8 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	}
 
 	private void LoadCharaStatus() {
-		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
-		useCharaLv = UserDataManager.I.GetCharacterLevel(useCharaIndex) + 1;
-		charaName = CHARACTER_DEFINE.NAME[useCharaIndex];
-		CharacterStatusManager.I.ParseStatusInfoText(charaName);
+		useCharaIndex = UIManager.I.useCharaIndex;
+		useCharaLv = UIManager.I.useCharaLv;
 
 		bulletDamage = CharacterStatusManager.I.GetCharacterAttack(useCharaLv);
 		bulletInterval = CharacterStatusManager.I.GetCharacterCharageSpeed(useCharaLv);
@@ -61,11 +59,6 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		bulletStock = maxBulletStock;
 		intervalCount = 0;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-
-		Debug.Log(useCharaLv);
-		Debug.Log(bulletDamage);
-		Debug.Log(maxBulletStock);
-		Debug.Log(bulletSpeed);
     }
 
 	void Update() {
