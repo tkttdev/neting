@@ -31,10 +31,20 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 		StatusInfoText = Resources.Load ("CharacterStatus/" + characterName) as TextAsset;
 		StringReader reader = new StringReader (StatusInfoText.text);
 
+		//初期化
+		level.Clear();
+		attack.Clear ();
+		health.Clear ();
+		speed.Clear ();
+		bulletNum.Clear ();
+		chargeSpeed.Clear ();
+		money.Clear ();
 
 		while (reader.Peek () > -1) {
 			string line = reader.ReadLine ();
 			string[] values = line.Split (',');
+
+
 
 			//変換
 			level.Add (int.Parse (values [0]));
@@ -81,7 +91,8 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 
 	public int GetCharacterMoney(int charaId,int lv){
 		ParseStatusInfoText (CHARACTER_DEFINE.NAME[charaId]);
-		return money[lv - 1];
+		Debug.Log (CHARACTER_DEFINE.NAME[charaId]);
+		return money[lv];
 	}
 
 

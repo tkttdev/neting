@@ -59,9 +59,13 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		//
 		//truePurchaseButton.interactable = false;
 		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (0).ToString();
+		ReloadMoneyText ();
+
+		HideLvMaxButton ();
 		if (UserDataManager.I.GetMoney () < GetPrice ()) {
 			truePurchaseButton.interactable = false;
 		}
+
 	}
 
 	private void DesignCharacterButton(){
@@ -157,7 +161,8 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		//CharacterLocation.gameObject.transform.position -= new Vector3(100/10, 0, 0);
 		//if((_dir == -1 && PurchaseButtonId == 0)||(_dir == 1 && PurchaseButtonId == CHARACTER_DEFINE.characterVarietyNum - 1)) return;
 
-
+		//LV MAX時ボタン非表示
+		//HideLvMaxButton();
 
 
 
@@ -169,6 +174,8 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 		PurchaseButtonId = -tposx - loop * 10;
 		//Debug.Log ("PrePurchaseButtonId =" + PurchaseButtonId + "-tposx = " + (-tposx));
+
+
 
 		//loop1
 		if (_dir == 1 && PurchaseButtonId == CHARACTER_DEFINE.characterVarietyNum) {
@@ -228,8 +235,10 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		}
 			
 
+		Debug.Log ("PurchaseButtonId2 ="+PurchaseButtonId);
 
-		if (((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ()) && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == false)||GetPrice() > UserDataManager.I.GetMoney() && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId)) {
+		//購入金額＞所持金かつキャラ持ってない　か　アップグレード代＞所持金かつキャラ持ってる
+		if (((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ()) && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == false)||GetPrice() > UserDataManager.I.GetMoney() && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == true) {
 			truePurchaseButton.interactable = false;
 		} else {
 			truePurchaseButton.interactable = true;
@@ -246,13 +255,14 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 
 		ShowLevelText();
+
 		//levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
 		//Debug.Log ("CharacterLevel = " + UserDataManager.I.GetCharacterLevel(PurchaseButtonId).ToString());
 
 		//PurchaseButtonのテキスト更新
 		ReloadMoneyText();
 		Debug.Log ("PurchaseButtonId ="+PurchaseButtonId);
-
+		HideLvMaxButton ();
 
 
 
@@ -262,6 +272,10 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	private void ReloadMoneyText(){
 		//PurchaseButtonのテキスト更新
 		if(UserDataManager.I.GetCharacterLevel(PurchaseButtonId) >= 20) return;
+		if (UserDataManager.I.GetCharacterLevel (PurchaseButtonId) == 1 && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == false) {
+			purchaseButtonMoneyText.text = CHARACTER_DEFINE.MONEY [PurchaseButtonId].ToString ();
+			return;
+		}
 		purchaseButtonMoneyText.text = GetPrice().ToString ();
 	}
 
@@ -283,16 +297,13 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			UserDataManager.I.AddCharacterLevel (PurchaseButtonId);
 			ShowMoneyText();
 			ShowLevelText ();
-			if (UserDataManager.I.GetCharacterLevel (PurchaseButtonId) >= 20) {
-				truePurchaseButton.interactable = false;
-				purchaseButtonText.text = "Lv MAX";
-			}
+			//HideLvMaxButton ();
 			HideTruePurchaseButton ();
 		}
 
 		//Purchase
 		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == false && UserDataManager.I.GetMoney() >= CHARACTER_DEFINE.MONEY[PurchaseButtonId]) {
-			UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [PurchaseButtonId]);
+			UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY[PurchaseButtonId]);
 			UserDataManager.I.GetCharacter (PurchaseButtonId);
 
 		}
@@ -311,7 +322,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 
 		HideTruePurchaseButton ();
-
+		HideLvMaxButton ();
 	}
 
 	/*
@@ -325,12 +336,14 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	*/
 
 	private int GetPrice(){
-		CharacterStatusManager.I.ParseStatusInfoText ("ATLANTA");
+		//CharacterStatusManager.I.ParseStatusInfoText (CHARACTER_DEFINE.NAME[PurchaseButtonId]);
+		if(UserDataManager.I.GetCharacterLevel(PurchaseButtonId) == 20)return 999999;
 		return CharacterStatusManager.I.GetCharacterMoney (PurchaseButtonId,UserDataManager.I.GetCharacterLevel (PurchaseButtonId));
 	}
 
 	public void ShowDebugLog(){
 		Debug.Log ("Price = " + GetPrice());
+		Debug.Log ("Lv = " + UserDataManager.I.GetCharacterLevel(PurchaseButtonId));
 	}
 
 	public void AddMoney(){
@@ -355,6 +368,15 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	public void HideTruePurchaseButton(){
 		if (UserDataManager.I.GetMoney() < GetPrice() ){
 			truePurchaseButton.interactable = false;
+		}
+	}
+
+	public void HideLvMaxButton(){
+		if (UserDataManager.I.GetCharacterLevel (PurchaseButtonId) >= 20) {
+			truePurchaseButton.interactable = false;
+			purchaseButtonText.text = "Lv MAX";
+			purchaseButtonMoneyText.text = "---";
+			Debug.Log ("chara" + PurchaseButtonId + " is LvMax");
 		}
 	}
 }
