@@ -59,6 +59,9 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		//
 		//truePurchaseButton.interactable = false;
 		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (0).ToString();
+		if (UserDataManager.I.GetMoney () < GetMoneyPattern ()) {
+			truePurchaseButton.interactable = false;
+		}
 	}
 
 	private void DesignCharacterButton(){
@@ -226,7 +229,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			
 
 
-		if ((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ())/*|| (UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == true)*/) {
+		if (((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ()) && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == false)||GetMoneyPattern() > UserDataManager.I.GetMoney() && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId)) {
 			truePurchaseButton.interactable = false;
 		} else {
 			truePurchaseButton.interactable = true;
@@ -246,7 +249,8 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		//levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
 		//Debug.Log ("CharacterLevel = " + UserDataManager.I.GetCharacterLevel(PurchaseButtonId).ToString());
 
-		purchaseButtonMoneyText.text = CHARACTER_DEFINE.MONEY [PurchaseButtonId].ToString ();
+		//PurchaseButtonのテキスト更新
+		ReloadMoneyText();
 		Debug.Log ("PurchaseButtonId ="+PurchaseButtonId);
 
 
@@ -255,6 +259,11 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	}
 		
+	private void ReloadMoneyText(){
+		//PurchaseButtonのテキスト更新
+		if(UserDataManager.I.GetCharacterLevel(PurchaseButtonId) >= 20) return;
+		purchaseButtonMoneyText.text = CHARACTER_DEFINE.MONEYPATTERN [UserDataManager.I.GetCharacterLevel(PurchaseButtonId)].ToString ();
+	}
 
 	public void ShowLevelText(){
 		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (PurchaseButtonId).ToString();
@@ -265,30 +274,52 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	}
 
 	public void NewPurchaseButton(){
-		
 
-		UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [PurchaseButtonId]);
-		SoundManager.I.SoundSE (SE.PURCHASE);
 
-		if ((UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true) && (UserDataManager.I.GetMoney() >= 0 /*CHARACTER_DEFINE.MONEY[PurchaseButtonId]*/)) {
+		//Upgrade
+		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true && UserDataManager.I.GetMoney() >= GetMoneyPattern()){
+			//LVに応じて金額変動
+			UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEYPATTERN [UserDataManager.I.GetCharacterLevel (PurchaseButtonId)]);
 			UserDataManager.I.AddCharacterLevel (PurchaseButtonId);
-			//moneyText.text = UserDataManager.I.GetMoney ().ToString ();
 			ShowMoneyText();
 			ShowLevelText ();
+			if (UserDataManager.I.GetCharacterLevel (PurchaseButtonId) >= 20) {
+				truePurchaseButton.interactable = false;
+				purchaseButtonText.text = "Lv MAX";
+			}
 			HideTruePurchaseButton ();
 		}
 
+		//Purchase
+		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == false && UserDataManager.I.GetMoney() >= CHARACTER_DEFINE.MONEY[PurchaseButtonId]) {
+			UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEY [PurchaseButtonId]);
+			UserDataManager.I.GetCharacter (PurchaseButtonId);
 
-		UserDataManager.I.GetCharacter (PurchaseButtonId);
+		}
+
+		SoundManager.I.SoundSE (SE.PURCHASE);
+	
+
+
+
 		moneyText.text = UserDataManager.I.GetMoney ().ToString ();
+		ReloadMoneyText ();
 
-		UserDataManager.I.GetCharacter (PurchaseButtonId);
-		Debug.Log ("You bought it");
+		//UserDataManager.I.GetCharacter (PurchaseButtonId);
+		//Debug.Log ("You bought it");
 		purchaseButtonText.text = "Grade UP";
 
 
 		HideTruePurchaseButton ();
 
+	}
+
+	private int GetMoneyPattern(){
+		if (UserDataManager.I.GetCharacterLevel (PurchaseButtonId) >= 20) {
+			
+			return 99999;
+		}
+		return CHARACTER_DEFINE.MONEYPATTERN [UserDataManager.I.GetCharacterLevel (PurchaseButtonId)];
 	}
 
 	public void AddMoney(){
@@ -311,7 +342,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	}
 
 	public void HideTruePurchaseButton(){
-		if ((UserDataManager.I.GetMoney() < CHARACTER_DEFINE.MONEY [PurchaseButtonId])) {
+		if (UserDataManager.I.GetMoney() < GetMoneyPattern() ){
 			truePurchaseButton.interactable = false;
 		}
 	}
