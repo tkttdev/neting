@@ -51,14 +51,24 @@ public class EnemySpawnEditor : EditorWindow {
 			sw.Flush();
 			sw.Close();
 		}
+
 		if (editMode == EditMode.NONE) {
-		
-		} else if (editMode == EditMode.PLACE) {
-			if (curEvent.type == EventType.MouseMove) {
+			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= 490) {
-					DisplayEnemyAtPos (curEvent.mousePosition, placeTargetEnemyId);
-					Repaint ();
+					int index = GetPlacedEnemyListIndexAtPos (curEvent.mousePosition);
+					if (index > -1) {
+						replaceTargetEnemyId = placedEnemyid [index];
+						placedEnemyid.RemoveAt (index);
+						placedEnemyPos.RemoveAt (index);
+						editMode = EditMode.REPLACE;
+						Repaint ();
+					}
 				}
+			}
+		} else if (editMode == EditMode.PLACE) {
+			if (curEvent.mousePosition.x <= 490) {
+				DisplayEnemyAtPos (curEvent.mousePosition, placeTargetEnemyId);
+				Repaint ();
 			}
 			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= 490) {
@@ -68,7 +78,18 @@ public class EnemySpawnEditor : EditorWindow {
 				}
 			}
 		} else if (editMode == EditMode.REPLACE) {
-		
+			if (curEvent.mousePosition.x <= 490) {
+				DisplayEnemyAtPos (curEvent.mousePosition, replaceTargetEnemyId);
+				Repaint ();
+			}
+			if (curEvent.type == EventType.MouseDown) {
+				if (curEvent.mousePosition.x <= 490) {
+					placedEnemyPos.Add (curEvent.mousePosition);
+					placedEnemyid.Add (replaceTargetEnemyId);
+					editMode = EditMode.NONE;
+					Repaint ();
+				}
+			}
 		}
 
 		DisplayPlacedEnemy ();
@@ -90,8 +111,23 @@ public class EnemySpawnEditor : EditorWindow {
 		editMode = SetNowEditMode ();
 	}
 
+
+	/// <summary>
+	/// if doesn't exist enemy at pos, return -1
+	/// else this func return #INDEX OF PLACED ENEMY LIST#
+	/// </summary>
+	/// <param name="_pos">Position.</param>
+	private int GetPlacedEnemyListIndexAtPos(Vector2 _pos){
+		for (int i = 0; i < placedEnemyPos.Count; i++) {
+			if (_pos.x >= placedEnemyPos [i].x - 10 && _pos.x <= placedEnemyPos [i].x + 10 && _pos.y >= placedEnemyPos [i].y - 10 && _pos.y <= placedEnemyPos [i].y + 10) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private void DisplayEnemyAtPos(Vector2 _pos, int _id){
-		GUI.Box (new Rect (_pos.x - 10, _pos.y - 10, 20, 20), enemyTextures [_id]);
+		GUI.Box (new Rect (_pos.x - 10, _pos.y - 10, 20, 20), enemyTextures[_id]);
 	}
 
 	private void DisplayPlacedEnemy(){
@@ -109,6 +145,7 @@ public class EnemySpawnEditor : EditorWindow {
 						placeTargetEnemyId = - 1;
 						placeTargetEnemy = null;
 					} else {
+						editMode = EditMode.PLACE;
 						placeTargetEnemyId = i;
 						placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
 					}
