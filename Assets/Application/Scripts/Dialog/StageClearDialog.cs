@@ -22,7 +22,7 @@ public class StageClearDialog : DialogBase {
 		base.Show();
 		StartCoroutine (ShowAnimation ());
 		coinText.text = GetItemManager.I.GetEarnMoney ().ToString ();
-		switch (BattleShip.I.GetLife ()) {
+		switch ((int)BattleShip.I.GetLife ()) {
 		case 3:
 			rankText.text = "RANK : S";
 			break;

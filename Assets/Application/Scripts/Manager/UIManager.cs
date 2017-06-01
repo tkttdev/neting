@@ -39,12 +39,12 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		}
 	}
 
-	public void UpdateCharacterInfo(int _life,int _bulletStock){
+	public void UpdateCharacterInfo(float _life,int _bulletStock){
 		for (int i = 0; i < life.Length; i++) {
 			life [i].SetActive (false);
 		}
 		if (_life > 0) {
-			life [_life - 1].SetActive (true);
+			//life [_life - 1].SetActive (true);
 		}
 		for (int i = 0; i < bullet.Length; i++) {
 			if (i < _bulletStock) {

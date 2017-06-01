@@ -8,14 +8,19 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 	private float intervalCount = 0;
 	private int useCharaIndex = 0;
+	private int useCharaLv = 1;
+
 	private float bulletInterval = 2;
 	private int bulletStock = 0;
 	private int maxBulletStock = 0;
-	private int life = 3;
-	[SerializeField] private TextAsset bulletSpawnerInfo;
-	private GameObject bulletPrefab;
+	private float life = 3;
+	private int bulletDamage = 1;
+	private float bulletSpeed = 3;
+	private string charaName = "ATLANTA";
 
-	[SerializeField]private Corner[] bulletSpawnCorner = new Corner[5];
+	[SerializeField] private TextAsset bulletSpawnerInfo;
+	[SerializeField] private Corner[] bulletSpawnCorner = new Corner[5];
+	private GameObject bulletPrefab;
 
 	private bool activeSkill;
 	private bool activeGatling;
@@ -41,13 +46,26 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 	private void LoadCharaStatus() {
 		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
-		bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
-		maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
-		SkillButton.I.skill= (Skill)useCharaIndex;
+		useCharaLv = UserDataManager.I.GetCharacterLevel(useCharaIndex) + 1;
+		charaName = CHARACTER_DEFINE.NAME[useCharaIndex];
+		CharacterStatusManager.I.ParseStatusInfoText(charaName);
+
+		bulletDamage = CharacterStatusManager.I.GetCharacterAttack(useCharaLv);
+		bulletInterval = CharacterStatusManager.I.GetCharacterCharageSpeed(useCharaLv);
+		maxBulletStock = CharacterStatusManager.I.GetCharacterBulletNum(useCharaLv);
+		life = CharacterStatusManager.I.GetCharacterHealth(useCharaLv);
+		bulletSpeed = CharacterStatusManager.I.GetCharacterSpeed(useCharaLv);
+		SkillButton.I.skill = (Skill)useCharaIndex;
+
 		bulletPrefab = Resources.Load (CHARACTER_DEFINE.BULLET_PREFAB_PATH [useCharaIndex]) as GameObject;
 		bulletStock = maxBulletStock;
 		intervalCount = 0;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
+
+		Debug.Log(useCharaLv);
+		Debug.Log(bulletDamage);
+		Debug.Log(maxBulletStock);
+		Debug.Log(bulletSpeed);
     }
 
 	void Update() {
@@ -118,7 +136,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		yield return new WaitForSeconds (0.05f);
 	}
 
-	public int GetLife(){
+	public float GetLife(){
 		return life;
 	}
 
