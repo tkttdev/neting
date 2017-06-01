@@ -326,7 +326,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	private int GetPrice(){
 		CharacterStatusManager.I.ParseStatusInfoText ("ATLANTA");
-		return CharacterStatusManager.I.GetCharacterMoney (UserDataManager.I.GetCharacterLevel (PurchaseButtonId));
+		return CharacterStatusManager.I.GetCharacterMoney (PurchaseButtonId,UserDataManager.I.GetCharacterLevel (PurchaseButtonId));
 	}
 
 	public void ShowDebugLog(){
