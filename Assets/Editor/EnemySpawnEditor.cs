@@ -8,19 +8,21 @@ public class EnemySpawnEditor : EditorWindow {
 
 	private Texture[] enemyTextures;
 	private static EnemyDefine enemyDefine;
-	private GameObject targetEnemy;
-	private int targetEnemyIndex = 0;
+	private GameObject placeTargetEnemy;
+	private int placeTargetEnemyId = 0;
+	private int replaceTargetEnemyId = 0;
 	private Vector2 scroll;
 	private TextAsset stageCsv;
 	private Editor enemyEditor;
 	private Event curEvent;
-	private List<Vector2> displayEnemyPos = new List<Vector2>();
-	private List<int> displayEnemyIndex = new List<int>();
+	private List<Vector2> placedEnemyPos = new List<Vector2>();
+	private List<int> placedEnemyid = new List<int>();
 	private enum EditMode : int {
-		NOT_SELECT = 0,
-		SELECT_OBJ = 1,
+		NONE = 0,
+		PLACE = 1,
+		REPLACE = 2,
 	}
-	EditMode editMode = EditMode.NOT_SELECT;
+	EditMode editMode = EditMode.NONE;
 
 	[MenuItem("Window/EnemySpawnEdit")]
 	static void Open(){
@@ -30,8 +32,8 @@ public class EnemySpawnEditor : EditorWindow {
 	}
 
 	void OnEnable(){
-		targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
-		enemyTextures = new Texture2D[enemyDefine.varietyNum];
+		placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
+		enemyTextures = new Texture[enemyDefine.varietyNum];
 	}
 
 	void OnGUI () {
@@ -49,70 +51,104 @@ public class EnemySpawnEditor : EditorWindow {
 			sw.Flush();
 			sw.Close();
 		}
-		if (curEvent.type == EventType.MouseDown) {
-			if (curEvent.mousePosition.x <= 490) {
-				displayEnemyPos.Add (curEvent.mousePosition);
-				displayEnemyIndex.Add (targetEnemyIndex);
-				Repaint ();
+		if (editMode == EditMode.NONE) {
+		
+		} else if (editMode == EditMode.PLACE) {
+			if (curEvent.type == EventType.MouseMove) {
+				if (curEvent.mousePosition.x <= 490) {
+					DisplayEnemyAtPos (curEvent.mousePosition, placeTargetEnemyId);
+					Repaint ();
+				}
 			}
+			if (curEvent.type == EventType.MouseDown) {
+				if (curEvent.mousePosition.x <= 490) {
+					placedEnemyPos.Add (curEvent.mousePosition);
+					placedEnemyid.Add (placeTargetEnemyId);
+					Repaint ();
+				}
+			}
+		} else if (editMode == EditMode.REPLACE) {
+		
 		}
-		for (int i = 0; i < displayEnemyPos.Count; i++) {
-			GUI.Box (new Rect (displayEnemyPos [i].x - 10, displayEnemyPos [i].y - 10, 20, 20), enemyTextures [displayEnemyIndex[i]]);
-		}
+
+		DisplayPlacedEnemy ();
+
 		EditorGUILayout.EndVertical ();
 
 		EditorGUILayout.BeginVertical ();
 		scroll = EditorGUILayout.BeginScrollView(scroll);
 
 		DisplayEnemyList ();
-		CheckKeyMoveAtEnemyList ();
+		UpdateMoveOnEnemyList ();
 		DisplayTargetEnemy ();
 
 
 		EditorGUILayout.EndScrollView();
 		EditorGUILayout.EndVertical ();
 		EditorGUILayout.EndHorizontal ();
+
+		editMode = SetNowEditMode ();
+	}
+
+	private void DisplayEnemyAtPos(Vector2 _pos, int _id){
+		GUI.Box (new Rect (_pos.x - 10, _pos.y - 10, 20, 20), enemyTextures [_id]);
+	}
+
+	private void DisplayPlacedEnemy(){
+		for (int i = 0; i < placedEnemyPos.Count; i++) {
+			GUI.Box (new Rect (placedEnemyPos [i].x - 10, placedEnemyPos [i].y - 10, 20, 20), enemyTextures [placedEnemyid[i]]);
+		}
 	}
 
 	private void DisplayEnemyList(){
 		if (enemyDefine != null) {
 			for (int i = 0; i < enemyDefine.varietyNum; i++) {
-				bool flag = GUILayout.Toggle (targetEnemyIndex == i, "ENEMY" + i.ToString (), "OL Elem");
-				if (flag != (targetEnemyIndex == i)) {
-					if (targetEnemyIndex == i) {
-						targetEnemyIndex = - 1;
-						targetEnemy = null;
+				bool flag = GUILayout.Toggle (placeTargetEnemyId == i, "ENEMY" + i.ToString (), "OL Elem");
+				if (flag != (placeTargetEnemyId == i)) {
+					if (placeTargetEnemyId == i) {
+						placeTargetEnemyId = - 1;
+						placeTargetEnemy = null;
 					} else {
-						targetEnemyIndex = i;
-						targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
+						placeTargetEnemyId = i;
+						placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
 					}
 				}
 			}
 		}
 	}
 
-	private void CheckKeyMoveAtEnemyList(){
-		if (targetEnemyIndex < 0 || targetEnemyIndex > enemyDefine.varietyNum - 1) {
+	private void UpdateMoveOnEnemyList(){
+		if (placeTargetEnemyId < 0 || placeTargetEnemyId > enemyDefine.varietyNum - 1) {
 			return;
 		}
 		if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.DownArrow) {
-			targetEnemyIndex = targetEnemyIndex < enemyDefine.varietyNum - 1 ? targetEnemyIndex + 1 : targetEnemyIndex;
-			targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
+			placeTargetEnemyId = placeTargetEnemyId < enemyDefine.varietyNum - 1 ? placeTargetEnemyId + 1 : placeTargetEnemyId;
+			placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
 			Repaint ();
 		} else if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.UpArrow) {
-			targetEnemyIndex = targetEnemyIndex > 0 ? targetEnemyIndex - 1 : targetEnemyIndex;
-			targetEnemy = Resources.Load (enemyDefine.enemy [targetEnemyIndex].PATH) as GameObject;
+			placeTargetEnemyId = placeTargetEnemyId > 0 ? placeTargetEnemyId - 1 : placeTargetEnemyId;
+			placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
 			Repaint ();
 		}
 	}
 
 	private void DisplayTargetEnemy(){
-		if (targetEnemy != null) {
-			if (enemyTextures [targetEnemyIndex] == null) {
-				Texture t = targetEnemy.GetComponent<SpriteRenderer> ().sprite.texture;
-				enemyTextures [targetEnemyIndex] = t;
+		if (placeTargetEnemy != null) {
+			if (enemyTextures [placeTargetEnemyId] == null) {
+				Texture t = placeTargetEnemy.GetComponent<SpriteRenderer> ().sprite.texture;
+				enemyTextures [placeTargetEnemyId] = t;
 			} 
-			GUILayout.Box (enemyTextures [targetEnemyIndex], GUILayout.Width (30), GUILayout.Height (30));
+			GUILayout.Box (enemyTextures [placeTargetEnemyId], GUILayout.Width (30), GUILayout.Height (30));
 		}
+	}
+
+	private EditMode SetNowEditMode(){
+		if (editMode == EditMode.REPLACE) {
+			return EditMode.REPLACE;
+		}
+		if (placeTargetEnemyId < 0 || placeTargetEnemyId > enemyDefine.varietyNum - 1) {
+			return EditMode.NONE;
+		}
+		return EditMode.PLACE;
 	}
 }
