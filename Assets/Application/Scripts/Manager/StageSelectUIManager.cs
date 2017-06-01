@@ -12,6 +12,7 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 
 	[SerializeField] private GameObject[] coverPanel;
 	[SerializeField] private Image characterImage;
+	[SerializeField] private GameObject moveCharacterImage;
 
 	[SerializeField] private GameObject getMoneyDialog;
 
@@ -32,7 +33,8 @@ public class StageSelectUIManager : SingletonBehaviour<StageSelectUIManager> {
 		unitX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x * 2.0f;
 		moneyText.text = string.Format("{0}", UserDataManager.I.GetMoney().ToString());
 		characterImage.sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.IMAGE_RESOURCES_PATH[UserDataManager.I.GetUseCharacterIndex()]);
-		for (int i = 0; i < stageButtonRoot.Length; i++) {
+		moveCharacterImage.GetComponent<SpriteRenderer>().sprite = characterImage.sprite;
+        for (int i = 0; i < stageButtonRoot.Length; i++) {
 			stageButtonRoot[i].transform.localPosition = new Vector3(i * unitX, 0, 0);
 		}
 		for (int i = 0; i < stageButtonImage.Length; i++) {

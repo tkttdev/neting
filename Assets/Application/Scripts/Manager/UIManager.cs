@@ -13,7 +13,8 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private Text waveText;
 	[SerializeField] private GameObject batteryGage;
 
-	[SerializeField] private GameObject lifeGauge;
+	[SerializeField] private GameObject lifeGauge1;
+	[SerializeField] private GameObject lifeGauge2;
 	[SerializeField] private GameObject damageGauge;
 	[SerializeField] private Image[] bullet;
 	[SerializeField] private Image characterFace;
@@ -37,7 +38,12 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		CharacterStatusManager.I.ParseStatusInfoText(charaName);
 
 		characterFace.GetComponent<Image> ().sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH[useCharaIndex]);
-		damageGauge.transform.localScale = new Vector3(25, CharacterStatusManager.I.GetCharacterHealth(useCharaLv) * 40, 0);
+		float maxLife = CharacterStatusManager.I.GetCharacterHealth(useCharaLv);
+		if (maxLife <= 5) {
+			damageGauge.transform.localScale = new Vector3(25, maxLife % 6 * 80, 0);
+		} else {
+			damageGauge.transform.localScale = new Vector3(25, maxLife % 6 + 1 * 80, 0);
+		}
         for (int i = CharacterStatusManager.I.GetCharacterBulletNum(useCharaLv); i < bullet.Length; i++) {
 			bullet [i].enabled = false;
 		}
@@ -50,7 +56,13 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	}
 
 	public void UpdateCharacterInfo(float _life,int _bulletStock){
-		lifeGauge.transform.localScale = new Vector3(25, _life * 40, 0);
+		if (_life <= 5) {
+			lifeGauge1.transform.localScale = new Vector3(25, _life * 80, 0);
+			lifeGauge2.transform.localScale = new Vector3(25, 0, 0);
+		} else {
+			lifeGauge1.transform.localScale = new Vector3(25, 400, 0);
+			lifeGauge2.transform.localScale = new Vector3(25, (_life - 5) * 80, 0);
+		}
 
 		for (int i = 0; i < bullet.Length; i++) {
 			if (i < _bulletStock) {
