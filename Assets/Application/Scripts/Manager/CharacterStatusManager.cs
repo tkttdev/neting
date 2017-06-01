@@ -60,27 +60,28 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 	*/
 
 	public int GetCharacterAttack(int lv){
-		return attack [lv + 1];
+		return attack [lv - 1];
 	}
 
 	public float GetCharacterHealth(int lv){
-		return health [lv + 1];
+		return health [lv - 1];
 	}
 
 	public float GetCharacterSpeed(int lv){
-		return speed [lv + 1];
+		return speed [lv - 1];
 	}
 
 	public int GetCharacterBulletNum(int lv){
-		return bulletNum [lv + 1];
+		return bulletNum [lv - 1];
 	}
 
 	public float GetCharacterCharageSpeed(int lv){
-		return chargeSpeed [lv + 1];
+		return chargeSpeed [lv - 1];
 	}
 
-	public int GetCharacterMoney(int lv){
-		return money[lv + 1];
+	public int GetCharacterMoney(int charaId,int lv){
+		ParseStatusInfoText (CHARACTER_DEFINE.NAME[charaId]);
+		return money[lv - 1];
 	}
 
 

@@ -59,7 +59,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 		//
 		//truePurchaseButton.interactable = false;
 		levelText.text = "Lv:" + UserDataManager.I.GetCharacterLevel (0).ToString();
-		if (UserDataManager.I.GetMoney () < GetMoneyPattern ()) {
+		if (UserDataManager.I.GetMoney () < GetPrice ()) {
 			truePurchaseButton.interactable = false;
 		}
 	}
@@ -229,7 +229,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 			
 
 
-		if (((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ()) && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == false)||GetMoneyPattern() > UserDataManager.I.GetMoney() && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId)) {
+		if (((CHARACTER_DEFINE.MONEY [PurchaseButtonId] > UserDataManager.I.GetMoney ()) && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId) == false)||GetPrice() > UserDataManager.I.GetMoney() && UserDataManager.I.IsPermitUseCharacter(PurchaseButtonId)) {
 			truePurchaseButton.interactable = false;
 		} else {
 			truePurchaseButton.interactable = true;
@@ -262,7 +262,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	private void ReloadMoneyText(){
 		//PurchaseButtonのテキスト更新
 		if(UserDataManager.I.GetCharacterLevel(PurchaseButtonId) >= 20) return;
-		purchaseButtonMoneyText.text = CHARACTER_DEFINE.MONEYPATTERN [UserDataManager.I.GetCharacterLevel(PurchaseButtonId)].ToString ();
+		purchaseButtonMoneyText.text = GetPrice().ToString ();
 	}
 
 	public void ShowLevelText(){
@@ -277,9 +277,9 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 
 		//Upgrade
-		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true && UserDataManager.I.GetMoney() >= GetMoneyPattern()){
+		if (UserDataManager.I.IsPermitUseCharacter (PurchaseButtonId) == true && UserDataManager.I.GetMoney() >= GetPrice()){
 			//LVに応じて金額変動
-			UserDataManager.I.ReduceMoney (CHARACTER_DEFINE.MONEYPATTERN [UserDataManager.I.GetCharacterLevel (PurchaseButtonId)]);
+			UserDataManager.I.ReduceMoney (GetPrice());
 			UserDataManager.I.AddCharacterLevel (PurchaseButtonId);
 			ShowMoneyText();
 			ShowLevelText ();
@@ -314,12 +314,23 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 
 	}
 
+	/*
 	private int GetMoneyPattern(){
 		if (UserDataManager.I.GetCharacterLevel (PurchaseButtonId) >= 20) {
 			
 			return 99999;
 		}
 		return CHARACTER_DEFINE.MONEYPATTERN [UserDataManager.I.GetCharacterLevel (PurchaseButtonId)];
+	}
+	*/
+
+	private int GetPrice(){
+		CharacterStatusManager.I.ParseStatusInfoText ("ATLANTA");
+		return CharacterStatusManager.I.GetCharacterMoney (UserDataManager.I.GetCharacterLevel (PurchaseButtonId));
+	}
+
+	public void ShowDebugLog(){
+		Debug.Log ("Price = " + GetPrice());
 	}
 
 	public void AddMoney(){
@@ -342,7 +353,7 @@ public class CharacterStoreController : SingletonBehaviour<CharacterStoreControl
 	}
 
 	public void HideTruePurchaseButton(){
-		if (UserDataManager.I.GetMoney() < GetMoneyPattern() ){
+		if (UserDataManager.I.GetMoney() < GetPrice() ){
 			truePurchaseButton.interactable = false;
 		}
 	}
