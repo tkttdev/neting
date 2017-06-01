@@ -17,7 +17,6 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 	[SerializeField]private Corner[] bulletSpawnCorner = new Corner[5];
 
-	[SerializeField]private GameObject skillButton;
 	private bool activeSkill;
 	private bool activeGatling;
 
@@ -44,6 +43,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
 		bulletInterval = CHARACTER_DEFINE.BULLET_INTERVAL[useCharaIndex];
 		maxBulletStock = CHARACTER_DEFINE.MAX_BULLET_STOCK[useCharaIndex];
+		SkillButton.I.skill= (Skill)useCharaIndex;
 		bulletPrefab = Resources.Load (CHARACTER_DEFINE.BULLET_PREFAB_PATH [useCharaIndex]) as GameObject;
 		bulletStock = maxBulletStock;
 		intervalCount = 0;

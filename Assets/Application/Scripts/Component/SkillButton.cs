@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum Skill : int {
-	BOMB = 0,
+	LASER = 0,
 	THUNDER = 1,
-	GATLING = 2,
-	LASER = 3,
+	BOMB = 2,
+	GATLING = 3,
 }
 
-public class SkillButton : MonoBehaviour {
+public class SkillButton : SingletonBehaviour<SkillButton> {
 
-	[SerializeField] private Skill skill;
+	public Skill skill;
 	public GameObject[] skillPrefab;
 
 	// Use this for initialization
-	void Start () {
-		
+	protected override void Initialize() {
+		base.Initialize();
 	}
 	
 	// Update is called once per frame
@@ -27,18 +27,18 @@ public class SkillButton : MonoBehaviour {
 	public void PushSkillButon() {
 		if (gameObject.activeSelf == true) {
 			switch (skill) {
-				case Skill.BOMB:
-					ObjectPool.I.Instantiate(skillPrefab[0], new Vector3(0, -5, 0));
+				case Skill.LASER:
+					BattleShip.I.SetSkill(skillPrefab[0]);
 					break;
 				case Skill.THUNDER:
 					BattleShip.I.SetSkill(skillPrefab[1]);
-                    break;
+					break;
+				case Skill.BOMB:
+					ObjectPool.I.Instantiate(skillPrefab[2], new Vector3(0, -5, 0));
+					break;
 				case Skill.GATLING:
 					BattleShip.I.SetGatling();
                     break;
-				case Skill.LASER:
-					BattleShip.I.SetSkill(skillPrefab[2]);
-					break;
 			}
 			gameObject.SetActive(false);
 		}

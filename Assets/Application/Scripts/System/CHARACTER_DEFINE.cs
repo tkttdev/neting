@@ -17,7 +17,6 @@ public static class CHARACTER_DEFINE {
     public static readonly ReadOnlyCollection<int>    MAX_BULLET_STOCK    = Array.AsReadOnly(new int[]    {    3,    2,    5,    2,    1,    4,    3,    5,    4,    1 });
     public static readonly ReadOnlyCollection<float>  BULLET_INTERVAL     = Array.AsReadOnly(new float[]  { 2.0f, 1.6f, 2.0f, 2.2f, 1.2f, 2.0f, 1.6f, 2.0f, 2.0f, 1.0f });
     public static readonly ReadOnlyCollection<int>    BULLET_DAMAGE       = Array.AsReadOnly(new int[]    {    1,    1,    1,    2,    1,    2,    1,    2,    3,    1 });
-	public static readonly ReadOnlyCollection<string> SKILLNAME           = Array.AsReadOnly(new string[] { "LASER","THUNDER","BOMB","","","","","","",""});
     public static readonly ReadOnlyCollection<string> BULLET_PREFAB_PATH  = Array.AsReadOnly(new string[] { "Prefabs/Bullet/CharacterBullet0",
                                                                                                             "Prefabs/Bullet/CharacterBullet1",
                                                                                                             "Prefabs/Bullet/CharacterBullet2",
