@@ -45,8 +45,10 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	}
 
 	private void LoadCharaStatus() {
-		useCharaIndex = UIManager.I.useCharaIndex;
-		useCharaLv = UIManager.I.useCharaLv;
+		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
+		useCharaLv = UserDataManager.I.GetCharacterLevel(useCharaIndex);
+		charaName = CHARACTER_DEFINE.NAME[useCharaIndex];
+		CharacterStatusManager.I.ParseStatusInfoText(charaName);
 
 		bulletDamage = CharacterStatusManager.I.GetCharacterAttack(useCharaLv);
 		bulletInterval = CharacterStatusManager.I.GetCharacterCharageSpeed(useCharaLv);
