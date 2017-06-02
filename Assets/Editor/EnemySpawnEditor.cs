@@ -12,7 +12,8 @@ public class EnemySpawnEditor : EditorWindow {
 	private GameObject placeTargetEnemy;
 	private int placeTargetEnemyId = 0;
 	private int replaceTargetEnemyId = 0;
-	private Vector2 scroll;
+	private Vector2 enemyListScroll;
+	private Vector2 stageLineScroll;
 	private TextAsset stageCsv;
 	private Editor enemyEditor;
 	private Event curEvent;
@@ -53,6 +54,10 @@ public class EnemySpawnEditor : EditorWindow {
 		if (GUILayout.Button ("Vol1")) {
 		}
 
+		stageLineScroll = EditorGUILayout.BeginScrollView (stageLineScroll, GUILayout.MaxHeight(450));
+		DrawStageLine ();
+		EditorGUILayout.EndScrollView ();
+
 		if (editMode == EditMode.NONE) {
 			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= enemyPlaceAreaWidth - 10) {
@@ -91,6 +96,9 @@ public class EnemySpawnEditor : EditorWindow {
 					Repaint ();
 				}
 			}
+			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
+				DeleteReplaceEnemy ();
+			}
 		}
 
 		DisplayPlacedEnemy ();
@@ -100,7 +108,7 @@ public class EnemySpawnEditor : EditorWindow {
 
 		//Begin EnemyListArea
 		EditorGUILayout.BeginVertical ();
-		scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.MaxHeight(400));
+		enemyListScroll = EditorGUILayout.BeginScrollView(enemyListScroll, GUILayout.MaxHeight(400));
 
 		DisplayEnemyList ();
 		UpdateMoveOnEnemyList ();
@@ -113,6 +121,12 @@ public class EnemySpawnEditor : EditorWindow {
 		EditorGUILayout.EndHorizontal ();
 
 		editMode = SetNowEditMode ();
+	}
+
+	private void DrawStageLine(){
+		for(int i = 0; i < 5; i++){
+			GUI.Box (new Rect (80 + i * 100, 100, 1, 800), "");
+		}
 	}
 
 
@@ -138,6 +152,12 @@ public class EnemySpawnEditor : EditorWindow {
 		for (int i = 0; i < placedEnemyPos.Count; i++) {
 			GUI.Box (new Rect (placedEnemyPos [i].x - 10, placedEnemyPos [i].y - 10, 20, 20), enemyTextures [placedEnemyid[i]]);
 		}
+	}
+
+	private void DeleteReplaceEnemy(){
+		editMode = EditMode.NONE;
+		replaceTargetEnemyId = -1;
+		Repaint ();
 	}
 
 	private void DisplayEnemyList(){
