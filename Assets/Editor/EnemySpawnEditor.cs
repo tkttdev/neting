@@ -18,6 +18,10 @@ public class EnemySpawnEditor : EditorWindow {
 	private Event curEvent;
 	private List<Vector2> placedEnemyPos = new List<Vector2>();
 	private List<int> placedEnemyid = new List<int>();
+	private float enemyPlaceAreaWidth = 500;
+	private float placeEnemyTextureWidth = 20;
+	private float placeEnemyTextureHeight = 20;
+
 	private enum EditMode : int {
 		NONE = 0,
 		PLACE = 1,
@@ -44,19 +48,14 @@ public class EnemySpawnEditor : EditorWindow {
 		stageCsv = EditorGUILayout.ObjectField ("EnemySpawnCsv", stageCsv, typeof(TextAsset), false) as TextAsset;
 		EditorGUILayout.BeginHorizontal ();
 
-		EditorGUILayout.BeginVertical (GUILayout.MinWidth (500));
-		if (GUILayout.Button ("TEST", GUILayout.ExpandWidth(false))) {
-			StreamWriter sw;
-			sw = new StreamWriter (Application.dataPath + "/Test.csv");
-			sw.WriteLine ("a, b, c");
-			sw.Write ("a, b, c");
-			sw.Flush();
-			sw.Close();
+		//Begin EnemyPlaceArea
+		EditorGUILayout.BeginVertical (GUILayout.MinWidth(enemyPlaceAreaWidth), GUILayout.MaxWidth(enemyPlaceAreaWidth));
+		if (GUILayout.Button ("Vol1")) {
 		}
 
 		if (editMode == EditMode.NONE) {
 			if (curEvent.type == EventType.MouseDown) {
-				if (curEvent.mousePosition.x <= 490) {
+				if (curEvent.mousePosition.x <= enemyPlaceAreaWidth - 10) {
 					int index = GetPlacedEnemyListIndexAtPos (curEvent.mousePosition);
 					if (index > -1) {
 						replaceTargetEnemyId = placedEnemyid [index];
@@ -97,17 +96,20 @@ public class EnemySpawnEditor : EditorWindow {
 		DisplayPlacedEnemy ();
 
 		EditorGUILayout.EndVertical ();
+		//End EnemyPlaceArea
 
+		//Begin EnemyListArea
 		EditorGUILayout.BeginVertical ();
-		scroll = EditorGUILayout.BeginScrollView(scroll);
+		scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.MaxHeight(400));
 
 		DisplayEnemyList ();
 		UpdateMoveOnEnemyList ();
-		DisplayTargetEnemy ();
-
 
 		EditorGUILayout.EndScrollView();
+		DisplayTargetEnemy ();
 		EditorGUILayout.EndVertical ();
+		//End EnemyListArea
+
 		EditorGUILayout.EndHorizontal ();
 
 		editMode = SetNowEditMode ();
