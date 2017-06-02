@@ -83,6 +83,9 @@ public class EnemySpawnEditor : EditorWindow {
 					Repaint ();
 				}
 			}
+			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
+				SetEditModeNone ();
+			}
 		} else if (editMode == EditMode.REPLACE) {
 			if (curEvent.mousePosition.x <= 490) {
 				DisplayEnemyAtPos (curEvent.mousePosition, replaceTargetEnemyId);
@@ -97,7 +100,7 @@ public class EnemySpawnEditor : EditorWindow {
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
-				DeleteReplaceEnemy ();
+				SetEditModeNone ();
 			}
 		}
 
@@ -154,9 +157,11 @@ public class EnemySpawnEditor : EditorWindow {
 		}
 	}
 
-	private void DeleteReplaceEnemy(){
+	private void SetEditModeNone(){
 		editMode = EditMode.NONE;
 		replaceTargetEnemyId = -1;
+		placeTargetEnemyId = -1;
+		placeTargetEnemy = null;
 		Repaint ();
 	}
 
