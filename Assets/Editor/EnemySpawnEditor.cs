@@ -82,12 +82,6 @@ public class EnemySpawnEditor : EditorWindow {
 
 		stageCsv = EditorGUILayout.ObjectField ("EnemySpawnCsv", stageCsv, typeof(TextAsset), false) as TextAsset;
 
-		/*
-		GUILayout.BeginArea (new Rect (400, 400, 100, 100));
-		GUILayout.Label ("a");
-		GUILayout.EndArea ();
-		*/
-
 		EditorGUILayout.BeginHorizontal ();
 		EditorGUILayout.BeginVertical (GUILayout.MinWidth (enemyPlaceAreaWidth), GUILayout.MaxWidth (enemyPlaceAreaWidth));
 		EditorGUI.BeginChangeCheck ();
@@ -114,8 +108,6 @@ public class EnemySpawnEditor : EditorWindow {
 		GUI.Box (new Rect (30, 65, 450, 600), "");
 		GUILayout.BeginArea(new Rect (30, 65, 450, 600));
 		DrawStage ();
-
-
 
 		if (editMode == EditMode.NONE) {
 			if (curEvent.type == EventType.MouseDown) {
@@ -185,7 +177,8 @@ public class EnemySpawnEditor : EditorWindow {
 		EditorGUILayout.EndScrollView ();
 		DisplayTargetEnemy ();
 		if (GUI.Button(new Rect(620,670,75,25), "SAVE")) {
-			isEdited = false;
+			bool isSaved = SaveStageCsv ();
+			isEdited = isSaved;
 		}
 		EditorGUILayout.EndVertical ();
 		//End EnemyListArea
@@ -246,10 +239,45 @@ public class EnemySpawnEditor : EditorWindow {
 	private bool SaveStageCsv(){
 		string path = EditorUtility.SaveFilePanel ("", directoryPath, "", "csv");
 		if (!string.IsNullOrEmpty(path)) {
-			Debug.Log (path);
+			StreamWriter sw = new StreamWriter(path);
+			SortPlacedElementByBubble ();
+			for (int i = 0; i < spawnVarietyNum; i++) {
+				for (int j = 0; j < placedEnemyId[i].Count; j++) {
+					if (!useStageLine [placedEnemySpawnLineIndex [i][j]]) {
+						continue;
+					}
+					sw.WriteLine (string.Format ("{0},{1},{2}", placedEnemyId [i] [j], placedEnemySpawnTime [i] [j], placedEnemySpawnLineIndex [i] [j]));
+				}
+				if (spawnVarietyNum > 1) {
+					sw.WriteLine ("0");
+				}
+			}
+			sw.Close ();
 			return true;
 		}
 		return false;
+	}
+
+	private void SortPlacedElementByBubble(){
+		for (int i = 0; i < spawnVarietyNum; i++) {
+			for (int j = 0; j < placedEnemyId [i].Count; j++) {
+				for (int k = 0; k < placedEnemyId [i].Count - 1 - j; k++) {
+					if (placedEnemySpawnTime [i] [k] > placedEnemySpawnTime [i] [k + 1]) {
+						int ti;
+						float tf;
+						ti = placedEnemyId [i] [k];
+						placedEnemyId [i] [k] = placedEnemyId [i] [k + 1];
+						placedEnemyId [i] [k + 1] = ti;
+						ti = placedEnemySpawnLineIndex [i] [k];
+						placedEnemySpawnLineIndex [i] [k] = placedEnemySpawnLineIndex [i] [k + 1];
+						placedEnemySpawnLineIndex [i] [k + 1] = ti;
+						tf = placedEnemySpawnTime [i] [k];
+						placedEnemySpawnTime [i] [k] = placedEnemySpawnTime [i] [k + 1];
+						placedEnemySpawnTime [i] [k + 1] = tf;
+					}
+				}
+			}
+		}
 	}
 
 	private void DrawStage(){
