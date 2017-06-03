@@ -6,13 +6,13 @@ using System.IO;
 
 public class EnemySpawnEditor : EditorWindow {
 
-	//private List<Vector2> placedEnemyPos = new List<Vector2>();
 	private List<int> placedEnemySpawnLineIndex = new List<int> ();
 	private List<int> placedEnemyId = new List<int>();
 	private List<float> placedEnemySpawnTime = new List<float>();
 
 	private Texture2D[] enemyTextures;
 	private Texture2D[] moveEnemyTextures;
+	private bool[] useStageLine = new bool[5]{ true, true, true, true, true };
 	private static EnemyDefine enemyDefine;
 	private GameObject placeTargetEnemy;
 	private int placeTargetEnemyId = 0;
@@ -190,15 +190,12 @@ public class EnemySpawnEditor : EditorWindow {
 	private void DrawStage(){
 		GUILayout.BeginHorizontal ();
 		for (int i = 0; i < 5; i++) {
-			GUI.Toggle (new Rect (80 * i + 63, 5, 10, 10), false, "");
-			EditorGUI.DrawRect (new Rect (80 * i + 70, 30, 2, 550), Color.black);
+			useStageLine[i] = GUI.Toggle (new Rect (80 * i + 63, 5, 10, 10), useStageLine[i], "");
+			if (useStageLine [i]) {
+				EditorGUI.DrawRect (new Rect (80 * i + 70, 30, 2, 550), Color.black);
+			}
 		}
 		for (int i = 0; i < 7; i++) {
-			/*float time = i * 5 + ((int)editStartTime/5)*5;
-			float drawY = culcDrawPosY (time);
-			if (drawY >= 30 && drawY <= 580) {
-				EditorGUI.LabelField (new Rect (35, 572 - 550 / 6 * i, 30, 30), (i * 5 + editStartTime).ToString ());
-			}*/
 			EditorGUI.LabelField (new Rect (35, 572 - 550 / 6 * i, 30, 30), (i * 5 + editStartTime).ToString ());
 		}
 		GUILayout.EndHorizontal ();
@@ -251,6 +248,9 @@ public class EnemySpawnEditor : EditorWindow {
 
 	private void PlaceEnemy(int _id, float _spawnTime, int _lineIndex){
 		//placedEnemyPos.Add (_pos);
+		if (!useStageLine [_lineIndex]) {
+			return;
+		}
 		placedEnemyId.Add (_id);
 		placedEnemySpawnTime.Add (_spawnTime);
 		placedEnemySpawnLineIndex.Add (_lineIndex);
@@ -271,13 +271,16 @@ public class EnemySpawnEditor : EditorWindow {
 
 	private void DrawRedPointOnNearestLine(Vector2 _pos){
 		int index = culcSpawnLineIndex (_pos);
+		if (!useStageLine [index]) {
+			return;
+		}
 		float drawX = culcDrawPosX (index);
 		EditorGUI.DrawRect (new Rect (drawX - 1f, _pos.y - 1f, 4, 4), Color.red);
 	}
 
 	private void DisplayPlacedEnemy(){
 		for (int i = 0; i < placedEnemyId.Count; i++) {
-			if (placedEnemySpawnTime [i] < editStartTime) {
+			if (placedEnemySpawnTime [i] < editStartTime || !useStageLine[placedEnemySpawnLineIndex[i]]) {
 				continue;
 			}
 			float x = culcDrawPosX (placedEnemySpawnLineIndex [i]);
