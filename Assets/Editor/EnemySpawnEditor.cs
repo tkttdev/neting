@@ -13,7 +13,7 @@ public class EnemySpawnEditor : EditorWindow {
 	private int placeTargetEnemyId = 0;
 	private int replaceTargetEnemyId = 0;
 	private Vector2 enemyListScroll;
-	private Vector2 stageLineScroll;
+	private Vector2 stageLineScroll = new Vector2 (0f, 1200f);
 	private TextAsset stageCsv;
 	private Editor enemyEditor;
 	private Event curEvent;
@@ -22,6 +22,10 @@ public class EnemySpawnEditor : EditorWindow {
 	private float enemyPlaceAreaWidth = 500;
 	private float placeEnemyTextureWidth = 20;
 	private float placeEnemyTextureHeight = 20;
+	private bool isEdited = false;
+	private TextAsset beforeStageCsv = null;
+
+	private const string directoryPath = "Assets/Application/Resources/SpawnInfoCsv";
 
 	private enum EditMode : int {
 		NONE = 0,
@@ -29,11 +33,11 @@ public class EnemySpawnEditor : EditorWindow {
 		REPLACE = 2,
 	}
 	EditMode editMode = EditMode.NONE;
-
+	public static EditorWindow window;
 	[MenuItem("Window/EnemySpawnEdit")]
 	static void Open(){
 		enemyDefine = Resources.Load ("ScriptableObjects/EnemyDefineData") as EnemyDefine;
-		var window = GetWindow<EnemySpawnEditor> ();
+		window = GetWindow<EnemySpawnEditor> ();
 		window.maxSize = window.minSize = new Vector2 (700, 700);
 	}
 
@@ -46,17 +50,20 @@ public class EnemySpawnEditor : EditorWindow {
 	void OnGUI () {
 		curEvent = Event.current;
 		wantsMouseMove = true;
+
 		stageCsv = EditorGUILayout.ObjectField ("EnemySpawnCsv", stageCsv, typeof(TextAsset), false) as TextAsset;
+
 		EditorGUILayout.BeginHorizontal ();
 
 		//Begin EnemyPlaceArea
-		EditorGUILayout.BeginVertical (GUILayout.MinWidth(enemyPlaceAreaWidth), GUILayout.MaxWidth(enemyPlaceAreaWidth));
+		EditorGUILayout.BeginVertical (GUILayout.MinWidth (enemyPlaceAreaWidth), GUILayout.MaxWidth (enemyPlaceAreaWidth));
 		if (GUILayout.Button ("Vol1")) {
 		}
 
-		stageLineScroll = EditorGUILayout.BeginScrollView (stageLineScroll, GUILayout.MaxHeight(450));
+		stageLineScroll = EditorGUILayout.BeginScrollView (stageLineScroll);
 		DrawStageLine ();
 		EditorGUILayout.EndScrollView ();
+
 
 		if (editMode == EditMode.NONE) {
 			if (curEvent.type == EventType.MouseDown) {
@@ -74,13 +81,10 @@ public class EnemySpawnEditor : EditorWindow {
 		} else if (editMode == EditMode.PLACE) {
 			if (curEvent.mousePosition.x <= 490) {
 				DisplayEnemyAtPos (curEvent.mousePosition, placeTargetEnemyId);
-				Repaint ();
 			}
 			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= 490) {
-					placedEnemyPos.Add (curEvent.mousePosition);
-					placedEnemyid.Add (placeTargetEnemyId);
-					Repaint ();
+					PlaceEnemy (curEvent.mousePosition, placeTargetEnemyId);
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
@@ -89,14 +93,11 @@ public class EnemySpawnEditor : EditorWindow {
 		} else if (editMode == EditMode.REPLACE) {
 			if (curEvent.mousePosition.x <= 490) {
 				DisplayEnemyAtPos (curEvent.mousePosition, replaceTargetEnemyId);
-				Repaint ();
 			}
 			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= 490) {
-					placedEnemyPos.Add (curEvent.mousePosition);
-					placedEnemyid.Add (replaceTargetEnemyId);
 					editMode = EditMode.NONE;
-					Repaint ();
+					PlaceEnemy (curEvent.mousePosition, replaceTargetEnemyId);
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
@@ -111,24 +112,39 @@ public class EnemySpawnEditor : EditorWindow {
 
 		//Begin EnemyListArea
 		EditorGUILayout.BeginVertical ();
-		enemyListScroll = EditorGUILayout.BeginScrollView(enemyListScroll, GUILayout.MaxHeight(400));
+		enemyListScroll = EditorGUILayout.BeginScrollView (enemyListScroll, GUILayout.MaxHeight (300));
 
 		DisplayEnemyList ();
 		UpdateMoveOnEnemyList ();
 
-		EditorGUILayout.EndScrollView();
+		EditorGUILayout.EndScrollView ();
 		DisplayTargetEnemy ();
+		if (GUILayout.Button ("SAVE")) {
+		}
 		EditorGUILayout.EndVertical ();
 		//End EnemyListArea
 
 		EditorGUILayout.EndHorizontal ();
 
-		editMode = SetNowEditMode ();
+		editMode = GetNowEditMode ();
+	}
+
+	private void OnFocus(){
+		if (stageCsv != beforeStageCsv && isEdited) {
+			Debug.Log ("編集内容が保存されていません");
+
+		} else if(stageCsv != beforeStageCsv && !isEdited) {
+			Debug.Log ("新たなステージcsvをロードします");
+		}
+	}
+
+	private void OnLostFocus(){
+		beforeStageCsv = stageCsv;
 	}
 
 	private void DrawStageLine(){
 		for(int i = 0; i < 5; i++){
-			GUI.Box (new Rect (80 + i * 100, 100, 1, 800), "");
+			EditorGUI.DrawRect (new Rect (80 + i * 100, 100, 2, 800), Color.black);
 		}
 	}
 
@@ -147,8 +163,16 @@ public class EnemySpawnEditor : EditorWindow {
 		return -1;
 	}
 
+	private void PlaceEnemy(Vector2 _pos, int _id){
+		placedEnemyPos.Add (_pos);
+		placedEnemyid.Add (_id);
+		isEdited = true;
+		Repaint ();
+	}
+
 	private void DisplayEnemyAtPos(Vector2 _pos, int _id){
 		GUI.Box (new Rect (_pos.x - 10, _pos.y - 10, 20, 20), enemyTextures[_id]);
+		Repaint ();
 	}
 
 	private void DisplayPlacedEnemy(){
@@ -203,19 +227,13 @@ public class EnemySpawnEditor : EditorWindow {
 			if (enemyTextures [placeTargetEnemyId] == null) {
 				Texture2D t = placeTargetEnemy.GetComponent<SpriteRenderer> ().sprite.texture;
 				enemyTextures [placeTargetEnemyId] = t;
-				/*moveEnemyTextures [placeTargetEnemyId] = t;
-				Color[] colors = t.GetPixels ();
-				for (int y = 0; y < moveEnemyTextures [placeTargetEnemyId].height; y++) {
-					for (int x = 0; x < moveEnemyTextures [placeTargetEnemyId].width; x++) {
-						moveEnemyTextures [placeTargetEnemyId].SetPixel (x, y, colors [y * moveEnemyTextures [placeTargetEnemyId].height + x] / 2f);
-					}
-				}*/
 			} 
-			GUILayout.Box (enemyTextures [placeTargetEnemyId], GUILayout.Width (30), GUILayout.Height (30));
+			//GUILayout.Box (enemyTextures [placeTargetEnemyId], GUILayout.Width (30), GUILayout.Height (30));
+			EditorGUI.DrawTextureTransparent(new Rect(550,400,50,50), enemyTextures [placeTargetEnemyId]);
 		}
 	}
 
-	private EditMode SetNowEditMode(){
+	private EditMode GetNowEditMode(){
 		if (editMode == EditMode.REPLACE) {
 			return EditMode.REPLACE;
 		}
@@ -223,5 +241,14 @@ public class EnemySpawnEditor : EditorWindow {
 			return EditMode.NONE;
 		}
 		return EditMode.PLACE;
+	}
+
+	private bool SaveStageCsv(){
+		string path = EditorUtility.SaveFilePanel ("", directoryPath, "", "csv");
+		if (!string.IsNullOrEmpty(path)) {
+			Debug.Log (path);
+			return true;
+		}
+		return false;
 	}
 }
