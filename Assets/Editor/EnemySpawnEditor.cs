@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -10,8 +11,7 @@ public class EnemySpawnEditor : EditorWindow {
 	private static List<List<int>> placedEnemyId = new List<List<int>>();
 	private static List<List<float>> placedEnemySpawnTime = new List<List<float>>();
 
-	private Texture2D[] enemyTextures;
-	private Texture2D[] moveEnemyTextures;
+	private static Texture2D[] enemyTextures;
 	private bool[] useStageLine = new bool[5]{ true, true, true, true, true };
 	private static EnemyDefine enemyDefine;
 	private GameObject placeTargetEnemy;
@@ -27,6 +27,7 @@ public class EnemySpawnEditor : EditorWindow {
 	private float placeEnemyTextureWidth = 20;
 	private float placeEnemyTextureHeight = 20;
 	private bool isEdited = false;
+	private bool isLoading = false;
 	private TextAsset beforeStageCsv = null;
 	private int spawnVarietyNum = 1;
 	private int spawnVarietyIndex = 0;
@@ -57,12 +58,27 @@ public class EnemySpawnEditor : EditorWindow {
 	void OnEnable(){
 		placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
 		enemyTextures = new Texture2D[enemyDefine.varietyNum];
-		moveEnemyTextures = new Texture2D[enemyDefine.varietyNum];
+	}
+
+	void OnDisable(){
+		for (int i = 0; i < 5; i++) {
+			placedEnemyId [i].Clear ();
+			placedEnemySpawnLineIndex [i].Clear ();
+			placedEnemySpawnTime [i].Clear ();
+		}
+		stageCsv = null;
+		beforeStageCsv = null;
+		spawnVarietyNum = 1;
+		isEdited = false;
+		isLoading = false;
 	}
 
 	void OnGUI () {
 		curEvent = Event.current;
 		wantsMouseMove = true;
+		if (isLoading) {
+			return;
+		}
 
 		stageCsv = EditorGUILayout.ObjectField ("EnemySpawnCsv", stageCsv, typeof(TextAsset), false) as TextAsset;
 
@@ -169,6 +185,7 @@ public class EnemySpawnEditor : EditorWindow {
 		EditorGUILayout.EndScrollView ();
 		DisplayTargetEnemy ();
 		if (GUI.Button(new Rect(620,670,75,25), "SAVE")) {
+			isEdited = false;
 		}
 		EditorGUILayout.EndVertical ();
 		//End EnemyListArea
@@ -179,16 +196,60 @@ public class EnemySpawnEditor : EditorWindow {
 	}
 
 	private void OnFocus(){
+		if (stageCsv != null) {
+			if (!stageCsv.name.Contains ("Stage")) {
+				stageCsv = null;
+			}
+		}
 		if (stageCsv != beforeStageCsv && isEdited) {
 			Debug.Log ("編集内容が保存されていません");
-
 		} else if(stageCsv != beforeStageCsv && !isEdited) {
+			isLoading = true;
 			Debug.Log ("新たなステージcsvをロードします");
+			beforeStageCsv = stageCsv;
+			isEdited = false;
+			LoadStageCsv ();
 		}
 	}
 
 	private void OnLostFocus(){
 		beforeStageCsv = stageCsv;
+	}
+
+	private void LoadStageCsv(){
+		StringReader sr = new StringReader(stageCsv.text);
+		spawnVarietyNum = 1;
+		for (int i = 0; i < 5; i++) {
+			placedEnemyId [i].Clear ();
+			placedEnemySpawnLineIndex [i].Clear ();
+			placedEnemySpawnTime [i].Clear ();
+			useStageLine [i] = false;
+		}
+		while (sr.Peek() > -1) {
+			string[] value = sr.ReadLine ().Split (',');
+			if (value.Length == 1) {
+				spawnVarietyNum++;
+			} else if (value.Length == 3) {
+				int lineIndex = int.Parse (value [2]);
+				placedEnemyId[spawnVarietyNum - 1].Add(int.Parse (value [0]));
+				placedEnemySpawnTime[spawnVarietyNum - 1].Add (float.Parse (value [1]));
+				placedEnemySpawnLineIndex[spawnVarietyNum - 1].Add (lineIndex);
+				useStageLine [lineIndex] = true;
+			}
+		}
+		if (spawnVarietyNum > 1) {
+			spawnVarietyNum--;
+		}
+		isLoading = false;
+	}
+
+	private bool SaveStageCsv(){
+		string path = EditorUtility.SaveFilePanel ("", directoryPath, "", "csv");
+		if (!string.IsNullOrEmpty(path)) {
+			Debug.Log (path);
+			return true;
+		}
+		return false;
 	}
 
 	private void DrawStage(){
@@ -287,6 +348,11 @@ public class EnemySpawnEditor : EditorWindow {
 			if (placedEnemySpawnTime [spawnVarietyIndex][i] < editStartTime || !useStageLine[placedEnemySpawnLineIndex[spawnVarietyIndex][i]]) {
 				continue;
 			}
+			if (enemyTextures [placedEnemyId[spawnVarietyIndex][i]] == null) {
+				GameObject obj = Resources.Load (enemyDefine.enemy [placedEnemyId [spawnVarietyIndex][i]].PATH) as GameObject;
+				Texture2D t = obj.GetComponent<SpriteRenderer> ().sprite.texture;
+				enemyTextures [placedEnemyId[spawnVarietyIndex][i]] = t;
+			} 
 			float x = culcDrawPosX (placedEnemySpawnLineIndex[spawnVarietyIndex] [i]);
 			float y = culcDrawPosY (placedEnemySpawnTime[spawnVarietyIndex] [i]);
 			if (y >= 30f) {
@@ -355,14 +421,5 @@ public class EnemySpawnEditor : EditorWindow {
 			return EditMode.NONE;
 		}
 		return EditMode.PLACE;
-	}
-
-	private bool SaveStageCsv(){
-		string path = EditorUtility.SaveFilePanel ("", directoryPath, "", "csv");
-		if (!string.IsNullOrEmpty(path)) {
-			Debug.Log (path);
-			return true;
-		}
-		return false;
 	}
 }
