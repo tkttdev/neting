@@ -6,9 +6,9 @@ using System.IO;
 
 public class EnemySpawnEditor : EditorWindow {
 
-	private List<int> placedEnemySpawnLineIndex = new List<int> ();
-	private List<int> placedEnemyId = new List<int>();
-	private List<float> placedEnemySpawnTime = new List<float>();
+	private static List<List<int>> placedEnemySpawnLineIndex = new List<List<int>> ();
+	private static List<List<int>> placedEnemyId = new List<List<int>>();
+	private static List<List<float>> placedEnemySpawnTime = new List<List<float>>();
 
 	private Texture2D[] enemyTextures;
 	private Texture2D[] moveEnemyTextures;
@@ -45,6 +45,11 @@ public class EnemySpawnEditor : EditorWindow {
 	[MenuItem("Window/EnemySpawnEdit")]
 	static void Open(){
 		enemyDefine = Resources.Load ("ScriptableObjects/EnemyDefineData") as EnemyDefine;
+		for (int i = 0; i < 5; i++) {
+			placedEnemyId.Add (new List<int> ());
+			placedEnemySpawnLineIndex.Add (new List<int> ());
+			placedEnemySpawnTime.Add (new List<float> ());
+		}
 		window = GetWindow<EnemySpawnEditor> ();
 		window.maxSize = window.minSize = new Vector2 (700, 700);
 	}
@@ -78,7 +83,7 @@ public class EnemySpawnEditor : EditorWindow {
 
 		EditorGUILayout.EndHorizontal ();
 		if (EditorGUI.EndChangeCheck ()) {
-			spawnVarietyIndex = Mathf.Clamp (spawnVarietyIndex, 1, spawnVarietyNum - 1);
+			spawnVarietyIndex = Mathf.Clamp (spawnVarietyIndex, 0, spawnVarietyNum - 1);
 		}
 		EditorGUILayout.BeginHorizontal (GUILayout.MinWidth (enemyPlaceAreaWidth));
 		for(int i = 0; i < spawnVarietyNum; i++){
@@ -101,11 +106,10 @@ public class EnemySpawnEditor : EditorWindow {
 				if (curEvent.mousePosition.x <= enemyPlaceAreaWidth - 10) {
 					int index = GetPlacedEnemyListIndexAtPos (curEvent.mousePosition);
 					if (index > -1) {
-						replaceTargetEnemyId = placedEnemyId [index];
-						placedEnemyId.RemoveAt (index);
-						//placedEnemyPos.RemoveAt (index);
-						placedEnemySpawnTime.RemoveAt (index);
-						placedEnemySpawnLineIndex.RemoveAt (index);
+						replaceTargetEnemyId = placedEnemyId[spawnVarietyIndex][index];
+						placedEnemyId[spawnVarietyIndex].RemoveAt (index);
+						placedEnemySpawnTime[spawnVarietyIndex].RemoveAt (index);
+						placedEnemySpawnLineIndex[spawnVarietyIndex].RemoveAt (index);
 						editMode = EditMode.REPLACE;
 						Repaint ();
 					}
@@ -208,9 +212,9 @@ public class EnemySpawnEditor : EditorWindow {
 	/// </summary>
 	/// <param name="_pos">Position.</param>
 	private int GetPlacedEnemyListIndexAtPos(Vector2 _pos){
-		for (int i = 0; i < placedEnemyId.Count; i++) {
-			float x = culcDrawPosX(placedEnemySpawnLineIndex[i]);
-			float y = culcDrawPosY (placedEnemySpawnTime [i]);
+		for (int i = 0; i < placedEnemyId[spawnVarietyIndex].Count; i++) {
+			float x = culcDrawPosX(placedEnemySpawnLineIndex[spawnVarietyIndex][i]);
+			float y = culcDrawPosY (placedEnemySpawnTime [spawnVarietyIndex][i]);
 			if (_pos.x >= x - 9 && _pos.x <= x + 9 && _pos.y >= y - 9 && _pos.y <= y + 9) {
 				return i;
 			}
@@ -251,9 +255,9 @@ public class EnemySpawnEditor : EditorWindow {
 		if (!useStageLine [_lineIndex]) {
 			return;
 		}
-		placedEnemyId.Add (_id);
-		placedEnemySpawnTime.Add (_spawnTime);
-		placedEnemySpawnLineIndex.Add (_lineIndex);
+		placedEnemyId[spawnVarietyIndex].Add (_id);
+		placedEnemySpawnTime[spawnVarietyIndex].Add (_spawnTime);
+		placedEnemySpawnLineIndex[spawnVarietyIndex].Add (_lineIndex);
 		isEdited = true;
 		Repaint ();
 	}
@@ -279,14 +283,14 @@ public class EnemySpawnEditor : EditorWindow {
 	}
 
 	private void DisplayPlacedEnemy(){
-		for (int i = 0; i < placedEnemyId.Count; i++) {
-			if (placedEnemySpawnTime [i] < editStartTime || !useStageLine[placedEnemySpawnLineIndex[i]]) {
+		for (int i = 0; i < placedEnemyId[spawnVarietyIndex].Count; i++) {
+			if (placedEnemySpawnTime [spawnVarietyIndex][i] < editStartTime || !useStageLine[placedEnemySpawnLineIndex[spawnVarietyIndex][i]]) {
 				continue;
 			}
-			float x = culcDrawPosX (placedEnemySpawnLineIndex [i]);
-			float y = culcDrawPosY (placedEnemySpawnTime [i]);
+			float x = culcDrawPosX (placedEnemySpawnLineIndex[spawnVarietyIndex] [i]);
+			float y = culcDrawPosY (placedEnemySpawnTime[spawnVarietyIndex] [i]);
 			if (y >= 30f) {
-				GUI.Box (new Rect (x - 9, y - 9, 18, 18), enemyTextures [placedEnemyId [i]]);
+				GUI.Box (new Rect (x - 9, y - 9, 18, 18), enemyTextures [placedEnemyId[spawnVarietyIndex] [i]]);
 			}
 		}
 	}
