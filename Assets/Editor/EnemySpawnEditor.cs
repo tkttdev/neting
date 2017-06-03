@@ -53,6 +53,12 @@ public class EnemySpawnEditor : EditorWindow {
 
 		stageCsv = EditorGUILayout.ObjectField ("EnemySpawnCsv", stageCsv, typeof(TextAsset), false) as TextAsset;
 
+		GUIStyle gsTest = new GUIStyle();
+		gsTest.normal.background = Color.red;
+		GUILayout.BeginArea (new Rect (400, 400, 100, 100));
+		GUILayout.Label ("a");
+		GUILayout.EndArea ();
+
 		EditorGUILayout.BeginHorizontal ();
 
 		//Begin EnemyPlaceArea
