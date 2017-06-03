@@ -6,19 +6,22 @@ using System.IO;
 
 public class EnemySpawnEditor : EditorWindow {
 
+	private List<Vector2> placedEnemyPos = new List<Vector2>();
+	private List<int> placedEnemyid = new List<int>();
+	private List<float> placedEnemySpawnTime = new List<float>();
+
 	private Texture2D[] enemyTextures;
 	private Texture2D[] moveEnemyTextures;
 	private static EnemyDefine enemyDefine;
 	private GameObject placeTargetEnemy;
 	private int placeTargetEnemyId = 0;
 	private int replaceTargetEnemyId = 0;
+	private float enemySpawnTime = 0f;
 	private Vector2 enemyListScroll;
 	private Vector2 stageLineScroll = new Vector2 (0f, 1200f);
 	private TextAsset stageCsv;
 	private Editor enemyEditor;
 	private Event curEvent;
-	private List<Vector2> placedEnemyPos = new List<Vector2>();
-	private List<int> placedEnemyid = new List<int>();
 	private float enemyPlaceAreaWidth = 500;
 	private float placeEnemyTextureWidth = 20;
 	private float placeEnemyTextureHeight = 20;
@@ -26,7 +29,7 @@ public class EnemySpawnEditor : EditorWindow {
 	private TextAsset beforeStageCsv = null;
 	private int spawnVarietyNum = 1;
 	private int spawnVarietyIndex = 0;
-	private float stageTotalTime = 60f;
+	private float editStartTime = 0f;
 	private float stageSliderValue = 0f;
 
 	private const string directoryPath = "Assets/Application/Resources/SpawnInfoCsv";
@@ -69,8 +72,8 @@ public class EnemySpawnEditor : EditorWindow {
 		EditorGUILayout.BeginHorizontal ();
 		spawnVarietyNum = EditorGUILayout.IntField ("Spawn Variety : ", spawnVarietyNum);
 		spawnVarietyNum = Mathf.Clamp (spawnVarietyNum, 1, 5);
-		stageTotalTime = EditorGUILayout.FloatField ("Total Time : ", stageTotalTime);
-		stageTotalTime = Mathf.Clamp (stageTotalTime, 20, 100);
+		editStartTime = EditorGUILayout.FloatField ("Edit Start Time : ", editStartTime);
+		editStartTime = Mathf.Clamp (editStartTime, 0, 70);
 
 		EditorGUILayout.EndHorizontal ();
 		if (EditorGUI.EndChangeCheck ()) {
@@ -99,6 +102,7 @@ public class EnemySpawnEditor : EditorWindow {
 						replaceTargetEnemyId = placedEnemyid [index];
 						placedEnemyid.RemoveAt (index);
 						placedEnemyPos.RemoveAt (index);
+						placedEnemySpawnTime.RemoveAt (index);
 						editMode = EditMode.REPLACE;
 						Repaint ();
 					}
@@ -106,11 +110,12 @@ public class EnemySpawnEditor : EditorWindow {
 			}
 		} else if (editMode == EditMode.PLACE) {
 			if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 94) {
+				enemySpawnTime = culcSpawnPos (curEvent.mousePosition);
 				DisplayEnemyAtPos (curEvent.mousePosition, placeTargetEnemyId);
 			}
 			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 94) {
-					PlaceEnemy (curEvent.mousePosition, placeTargetEnemyId);
+					PlaceEnemy (curEvent.mousePosition, placeTargetEnemyId,enemySpawnTime);
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
@@ -118,12 +123,13 @@ public class EnemySpawnEditor : EditorWindow {
 			}
 		} else if (editMode == EditMode.REPLACE) {
 			if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 94) {
+				enemySpawnTime = culcSpawnPos (curEvent.mousePosition);
 				DisplayEnemyAtPos (curEvent.mousePosition, replaceTargetEnemyId);
 			}
 			if (curEvent.type == EventType.MouseDown && curEvent.mousePosition.y >= 94) {
 				if (curEvent.mousePosition.x <= 490) {
 					editMode = EditMode.NONE;
-					PlaceEnemy (curEvent.mousePosition, replaceTargetEnemyId);
+					PlaceEnemy (curEvent.mousePosition, replaceTargetEnemyId,enemySpawnTime);
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
@@ -176,7 +182,7 @@ public class EnemySpawnEditor : EditorWindow {
 			EditorGUI.DrawRect (new Rect (80 * i + 70, 30, 2, 550), Color.black);
 		}
 		for (int i = 0; i < 7; i++) {
-			EditorGUI.LabelField (new Rect (35, 572 - 550/6 * i, 30, 30), (i * 5).ToString ());
+			EditorGUI.LabelField (new Rect (35, 572 - 550/6 * i, 30, 30), (i * 5 + editStartTime).ToString ());
 		}
 		GUILayout.EndHorizontal ();
 	}
@@ -196,18 +202,22 @@ public class EnemySpawnEditor : EditorWindow {
 		return -1;
 	}
 
-	private void PlaceEnemy(Vector2 _pos, int _id){
+	private float culcSpawnPos(Vector2 _pos){
+		float y = Mathf.Clamp (_pos.y, 95f, 645);
+		return ((1f - ((y - 95f) / 550f)) * 30f + editStartTime);
+	}
+
+	private void PlaceEnemy(Vector2 _pos, int _id, float _spawnTime){
 		placedEnemyPos.Add (_pos);
 		placedEnemyid.Add (_id);
+		placedEnemySpawnTime.Add (_spawnTime);
 		isEdited = true;
 		Repaint ();
 	}
 
 	private void DisplayEnemyAtPos(Vector2 _pos, int _id){
 		GUI.Box (new Rect (_pos.x - 9, _pos.y - 9, 18, 18), enemyTextures[_id]);
-		float y_ = Mathf.Clamp (_pos.y, 95f, 645);
-		float time = (1f - ((y_ - 95f) / 550f)) * 30f;
-		GUI.Label (new Rect (_pos.x - 15, _pos.y + 13, 30, 18), string.Format("{0:f1}", time));
+		GUI.Label (new Rect (_pos.x - 15, _pos.y + 13, 30, 18), string.Format("{0:f1}", enemySpawnTime));
 		Repaint ();
 	}
 
