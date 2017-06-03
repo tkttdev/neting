@@ -6,8 +6,9 @@ using System.IO;
 
 public class EnemySpawnEditor : EditorWindow {
 
-	private List<Vector2> placedEnemyPos = new List<Vector2>();
-	private List<int> placedEnemyid = new List<int>();
+	//private List<Vector2> placedEnemyPos = new List<Vector2>();
+	private List<int> placedEnemySpawnLineIndex = new List<int> ();
+	private List<int> placedEnemyId = new List<int>();
 	private List<float> placedEnemySpawnTime = new List<float>();
 
 	private Texture2D[] enemyTextures;
@@ -17,8 +18,8 @@ public class EnemySpawnEditor : EditorWindow {
 	private int placeTargetEnemyId = 0;
 	private int replaceTargetEnemyId = 0;
 	private float enemySpawnTime = 0f;
+	private int enemySpawnLineIndex = 0;
 	private Vector2 enemyListScroll;
-	private Vector2 stageLineScroll = new Vector2 (0f, 1200f);
 	private TextAsset stageCsv;
 	private Editor enemyEditor;
 	private Event curEvent;
@@ -92,30 +93,34 @@ public class EnemySpawnEditor : EditorWindow {
 		GUI.Box (new Rect (30, 65, 450, 600), "");
 		GUILayout.BeginArea(new Rect (30, 65, 450, 600));
 		DrawStage ();
-		GUILayout.EndArea ();
+
+
 
 		if (editMode == EditMode.NONE) {
 			if (curEvent.type == EventType.MouseDown) {
 				if (curEvent.mousePosition.x <= enemyPlaceAreaWidth - 10) {
 					int index = GetPlacedEnemyListIndexAtPos (curEvent.mousePosition);
 					if (index > -1) {
-						replaceTargetEnemyId = placedEnemyid [index];
-						placedEnemyid.RemoveAt (index);
-						placedEnemyPos.RemoveAt (index);
+						replaceTargetEnemyId = placedEnemyId [index];
+						placedEnemyId.RemoveAt (index);
+						//placedEnemyPos.RemoveAt (index);
 						placedEnemySpawnTime.RemoveAt (index);
+						placedEnemySpawnLineIndex.RemoveAt (index);
 						editMode = EditMode.REPLACE;
 						Repaint ();
 					}
 				}
 			}
 		} else if (editMode == EditMode.PLACE) {
-			if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 94) {
-				enemySpawnTime = culcSpawnPos (curEvent.mousePosition);
+			if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 30 && curEvent.mousePosition.y <= 580) {
+				enemySpawnTime = culcSpawnTime (curEvent.mousePosition);
+				enemySpawnLineIndex = culcSpawnLineIndex (curEvent.mousePosition);
 				DisplayEnemyAtPos (curEvent.mousePosition, placeTargetEnemyId);
+				DrawRedPointOnNearestLine (curEvent.mousePosition);
 			}
 			if (curEvent.type == EventType.MouseDown) {
-				if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 94) {
-					PlaceEnemy (curEvent.mousePosition, placeTargetEnemyId,enemySpawnTime);
+				if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 30 && curEvent.mousePosition.y <= 580) {
+					PlaceEnemy (placeTargetEnemyId, enemySpawnTime, enemySpawnLineIndex);
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
@@ -123,30 +128,30 @@ public class EnemySpawnEditor : EditorWindow {
 			}
 			if (curEvent.type == EventType.ScrollWheel) {
 				MoveStageByScroll (curEvent.delta.y);
-				Debug.Log (curEvent.delta);
 			}
 		} else if (editMode == EditMode.REPLACE) {
-			if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 94) {
-				enemySpawnTime = culcSpawnPos (curEvent.mousePosition);
+			if (curEvent.mousePosition.x <= 490 && curEvent.mousePosition.y >= 30 && curEvent.mousePosition.y <= 580) {
+				enemySpawnTime = culcSpawnTime (curEvent.mousePosition);
+				enemySpawnLineIndex = culcSpawnLineIndex (curEvent.mousePosition);
 				DisplayEnemyAtPos (curEvent.mousePosition, replaceTargetEnemyId);
+				DrawRedPointOnNearestLine (curEvent.mousePosition);
 			}
-			if (curEvent.type == EventType.MouseDown && curEvent.mousePosition.y >= 94) {
+			if (curEvent.type == EventType.MouseDown && curEvent.mousePosition.y >= 30 && curEvent.mousePosition.y <= 580) {
 				if (curEvent.mousePosition.x <= 490) {
 					editMode = EditMode.NONE;
-					PlaceEnemy (curEvent.mousePosition, replaceTargetEnemyId,enemySpawnTime);
+					PlaceEnemy (replaceTargetEnemyId, enemySpawnTime, enemySpawnLineIndex);
 				}
 			}
 			if (curEvent.type == EventType.KeyDown && curEvent.keyCode == KeyCode.Backspace) {
 				SetEditModeNone ();
 			}
 			if (curEvent.type == EventType.ScrollWheel) {
-				Debug.Log (curEvent.delta);
 				MoveStageByScroll (curEvent.delta.y);
 			}
 		}
 
 		DisplayPlacedEnemy ();
-
+		GUILayout.EndArea ();
 		EditorGUILayout.EndVertical ();
 		//End EnemyPlaceArea
 
@@ -184,13 +189,17 @@ public class EnemySpawnEditor : EditorWindow {
 
 	private void DrawStage(){
 		GUILayout.BeginHorizontal ();
-		stageSliderValue = GUILayout.VerticalSlider (stageSliderValue, 0, 60);
 		for (int i = 0; i < 5; i++) {
 			GUI.Toggle (new Rect (80 * i + 63, 5, 10, 10), false, "");
 			EditorGUI.DrawRect (new Rect (80 * i + 70, 30, 2, 550), Color.black);
 		}
 		for (int i = 0; i < 7; i++) {
-			EditorGUI.LabelField (new Rect (35, 572 - 550/6 * i, 30, 30), (i * 5 + editStartTime).ToString ());
+			/*float time = i * 5 + ((int)editStartTime/5)*5;
+			float drawY = culcDrawPosY (time);
+			if (drawY >= 30 && drawY <= 580) {
+				EditorGUI.LabelField (new Rect (35, 572 - 550 / 6 * i, 30, 30), (i * 5 + editStartTime).ToString ());
+			}*/
+			EditorGUI.LabelField (new Rect (35, 572 - 550 / 6 * i, 30, 30), (i * 5 + editStartTime).ToString ());
 		}
 		GUILayout.EndHorizontal ();
 	}
@@ -202,23 +211,49 @@ public class EnemySpawnEditor : EditorWindow {
 	/// </summary>
 	/// <param name="_pos">Position.</param>
 	private int GetPlacedEnemyListIndexAtPos(Vector2 _pos){
-		for (int i = 0; i < placedEnemyPos.Count; i++) {
-			if (_pos.x >= placedEnemyPos [i].x - 10 && _pos.x <= placedEnemyPos [i].x + 10 && _pos.y >= placedEnemyPos [i].y - 10 && _pos.y <= placedEnemyPos [i].y + 10) {
+		for (int i = 0; i < placedEnemyId.Count; i++) {
+			float x = culcDrawPosX(placedEnemySpawnLineIndex[i]);
+			float y = culcDrawPosY (placedEnemySpawnTime [i]);
+			if (_pos.x >= x - 9 && _pos.x <= x + 9 && _pos.y >= y - 9 && _pos.y <= y + 9) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	private float culcSpawnPos(Vector2 _pos){
-		float y = Mathf.Clamp (_pos.y, 95f, 645);
-		return ((1f - ((y - 95f) / 550f)) * 30f + editStartTime);
+	private float culcSpawnTime(Vector2 _pos){
+		float y = _pos.y;
+		return ((1f - ((y - 30f)/ 550f)) * 30f + editStartTime);
 	}
 
-	private void PlaceEnemy(Vector2 _pos, int _id, float _spawnTime){
-		placedEnemyPos.Add (_pos);
-		placedEnemyid.Add (_id);
+	private int culcSpawnLineIndex(Vector2 _pos){
+		float drawX = _pos.x;
+		int index = 0;
+		if (drawX <= 70) {
+			index = 0;
+		} else if (drawX >= 390) {
+			index = 4;
+		} else {
+			int lowIndex = (int)(drawX - 70) / 80;
+			float dis = (drawX - 70) - lowIndex * 80;
+			index = dis < 40 ? lowIndex : lowIndex + 1;
+		}
+		return index;
+	}
+
+	private float culcDrawPosY(float _time){
+		return (1f - (_time - editStartTime) / 30f) * 550f + 30f;
+	}
+
+	private float culcDrawPosX(int _index){
+		return _index * 80 + 70;
+	}
+
+	private void PlaceEnemy(int _id, float _spawnTime, int _lineIndex){
+		//placedEnemyPos.Add (_pos);
+		placedEnemyId.Add (_id);
 		placedEnemySpawnTime.Add (_spawnTime);
+		placedEnemySpawnLineIndex.Add (_lineIndex);
 		isEdited = true;
 		Repaint ();
 	}
@@ -234,14 +269,21 @@ public class EnemySpawnEditor : EditorWindow {
 		Repaint ();
 	}
 
+	private void DrawRedPointOnNearestLine(Vector2 _pos){
+		int index = culcSpawnLineIndex (_pos);
+		float drawX = culcDrawPosX (index);
+		EditorGUI.DrawRect (new Rect (drawX - 1f, _pos.y - 1f, 4, 4), Color.red);
+	}
+
 	private void DisplayPlacedEnemy(){
-		for (int i = 0; i < placedEnemyPos.Count; i++) {
+		for (int i = 0; i < placedEnemyId.Count; i++) {
 			if (placedEnemySpawnTime [i] < editStartTime) {
 				continue;
 			}
-			float y = (1f - (placedEnemySpawnTime [i] - editStartTime) / 30f) * 550f + 95f;
-			if (y >= 94f) {
-				GUI.Box (new Rect (placedEnemyPos [i].x - 9, y - 9, 18, 18), enemyTextures [placedEnemyid [i]]);
+			float x = culcDrawPosX (placedEnemySpawnLineIndex [i]);
+			float y = culcDrawPosY (placedEnemySpawnTime [i]);
+			if (y >= 30f) {
+				GUI.Box (new Rect (x - 9, y - 9, 18, 18), enemyTextures [placedEnemyId [i]]);
 			}
 		}
 	}
