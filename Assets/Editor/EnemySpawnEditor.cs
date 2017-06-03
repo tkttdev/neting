@@ -223,7 +223,11 @@ public class EnemySpawnEditor : EditorWindow {
 
 	private void DisplayPlacedEnemy(){
 		for (int i = 0; i < placedEnemyPos.Count; i++) {
-			GUI.Box (new Rect (placedEnemyPos [i].x - 9, placedEnemyPos [i].y - 9, 18, 18), enemyTextures [placedEnemyid[i]]);
+			if (placedEnemySpawnTime [i] < editStartTime) {
+				continue;
+			}
+			float y = (1f - (placedEnemySpawnTime [i] - editStartTime) / 30f) * 550f + 95f;
+			GUI.Box (new Rect (placedEnemyPos [i].x - 9, y - 9, 18, 18), enemyTextures [placedEnemyid[i]]);
 		}
 	}
 
