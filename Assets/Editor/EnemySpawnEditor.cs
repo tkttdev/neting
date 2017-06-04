@@ -175,11 +175,11 @@ public class EnemySpawnEditor : EditorWindow {
 
 		EditorGUILayout.EndScrollView ();
 		DisplayTargetEnemy ();
-		if (GUI.Button(new Rect(620,670,75,25), "保存")) {
+		if (GUI.Button(new Rect(620,570,75,25), "保存")) {
 			bool isSaved = SaveStageCsv ();
 			isEdited = isSaved;
 		}
-		if (GUI.Button(new Rect(620,630,75,25), "破棄")) {
+		if (GUI.Button(new Rect(620,530,75,25), "破棄")) {
 			isEdited = false;
 			if (stageCsv != null) {
 				isLoading = true;
@@ -189,6 +189,7 @@ public class EnemySpawnEditor : EditorWindow {
 					placedEnemyId [i].Clear ();
 					placedEnemySpawnLineIndex [i].Clear ();
 					placedEnemySpawnTime [i].Clear ();
+					useStageLine [i] = true;
 				}
 				stageCsv = null;
 				beforeStageCsv = null;
@@ -212,6 +213,8 @@ public class EnemySpawnEditor : EditorWindow {
 		}
 		if (stageCsv != beforeStageCsv && isEdited) {
 			Debug.Log ("編集内容が保存されていません");
+			stageCsv = null;
+			beforeStageCsv = null;
 		} else if(stageCsv != beforeStageCsv && !isEdited) {
 			isLoading = true;
 			Debug.Log ("新たなステージcsvをロードします");
