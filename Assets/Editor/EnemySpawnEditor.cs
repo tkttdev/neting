@@ -15,7 +15,7 @@ public class EnemySpawnEditor : EditorWindow {
 	private bool[] useStageLine = new bool[5]{ true, true, true, true, true };
 	private static EnemyDefine enemyDefine;
 	private GameObject placeTargetEnemy;
-	private int placeTargetEnemyId = 0;
+	private static int placeTargetEnemyId = 0;
 	private int replaceTargetEnemyId = 0;
 	private float enemySpawnTime = 0f;
 	private int enemySpawnLineIndex = 0;
@@ -32,7 +32,6 @@ public class EnemySpawnEditor : EditorWindow {
 	private int spawnVarietyNum = 1;
 	private int spawnVarietyIndex = 0;
 	private float editStartTime = 0f;
-	private float stageSliderValue = 0f;
 
 	private const string directoryPath = "Assets/Application/Resources/SpawnInfoCsv";
 
@@ -46,13 +45,13 @@ public class EnemySpawnEditor : EditorWindow {
 	[MenuItem("Window/EnemySpawnEdit")]
 	static void Open(){
 		enemyDefine = Resources.Load ("ScriptableObjects/EnemyDefineData") as EnemyDefine;
+		window = GetWindow<EnemySpawnEditor> ();
+		window.maxSize = window.minSize = new Vector2 (700, 700);
 		for (int i = 0; i < 5; i++) {
 			placedEnemyId.Add (new List<int> ());
 			placedEnemySpawnLineIndex.Add (new List<int> ());
 			placedEnemySpawnTime.Add (new List<float> ());
 		}
-		window = GetWindow<EnemySpawnEditor> ();
-		window.maxSize = window.minSize = new Vector2 (700, 700);
 	}
 
 	void OnEnable(){
@@ -176,9 +175,26 @@ public class EnemySpawnEditor : EditorWindow {
 
 		EditorGUILayout.EndScrollView ();
 		DisplayTargetEnemy ();
-		if (GUI.Button(new Rect(620,670,75,25), "SAVE")) {
+		if (GUI.Button(new Rect(620,670,75,25), "保存")) {
 			bool isSaved = SaveStageCsv ();
 			isEdited = isSaved;
+		}
+		if (GUI.Button(new Rect(620,630,75,25), "破棄")) {
+			isEdited = false;
+			if (stageCsv != null) {
+				isLoading = true;
+				LoadStageCsv ();
+			} else {
+				for (int i = 0; i < 5; i++) {
+					placedEnemyId [i].Clear ();
+					placedEnemySpawnLineIndex [i].Clear ();
+					placedEnemySpawnTime [i].Clear ();
+				}
+				stageCsv = null;
+				beforeStageCsv = null;
+				spawnVarietyNum = 1;
+			}
+			isLoading = false;
 		}
 		EditorGUILayout.EndVertical ();
 		//End EnemyListArea
