@@ -196,7 +196,7 @@ public class EnemySpawnEditor : EditorWindow {
 		}
 		if (GUI.Button(new Rect(620,570,75,25), "保存")) {
 			bool isSaved = SaveStageCsv ();
-			isEdited = isSaved;
+			isEdited = !isSaved;
 		}
 		EditorGUILayout.EndVertical ();
 		//End EnemyListArea
