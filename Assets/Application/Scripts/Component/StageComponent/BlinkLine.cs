@@ -6,9 +6,17 @@ using UnityEngine;
 public class BlinkLine : MonoBehaviour {
 	[SerializeField] private SpriteRenderer[] targetLine;
 	[SerializeField] private GameObject[] targetCorner;
+	private string[] targetCornerTags;
 
 	private List<GameObject> stayMoveObject = new List<GameObject>();
 	private bool isExist = true;
+
+	void Awake(){
+		targetCornerTags = new string[targetCorner.Length];
+		for (int i = 0; i < targetCorner.Length; i++) {
+			targetCornerTags [i] = targetCorner [i].tag;
+		}
+	}
 
 	void Update(){
 		for (int i = 0; i < stayMoveObject.Count; i++) {
@@ -35,7 +43,7 @@ public class BlinkLine : MonoBehaviour {
 					targetLine[i].enabled = false;
 				}
 				for (int i = 0; i < targetCorner.Length; i++) {
-					targetCorner [i].SetActive (false);
+					targetCorner [i].tag = "PassCorner";
 				}
 				isExist = false;
 			} else {
@@ -43,7 +51,8 @@ public class BlinkLine : MonoBehaviour {
 					targetLine[i].enabled = true;
 				}
 				for (int i = 0; i < targetCorner.Length; i++) {
-					targetCorner [i].SetActive (true);
+					//targetCorner [i].SetActive (true);
+					targetCorner [i].tag = targetCornerTags[i];
 				}
 				isExist = true;
 			}

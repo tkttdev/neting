@@ -136,27 +136,16 @@ public class Corner : MonoBehaviour {
 		} else if (transform.tag == "LeftCorner") {
 			return MoveDir.LEFT;
 		} else if (transform.tag == "PassCorner" || transform.tag == "Warp") {
-			if (transform.tag == "Warp")
-				Debug.Log (_moveDir);
-			bool isChangeDir = false;
-			for (int i = 0; i < 4; i++) {
-				isChangeDir = (isCurve [i] && isCurve [(i + 1) % 4]) || (purposeTransform [i] != null && purposeTransform [(i + 1) % 4] != null);
-				if (isChangeDir) {
-					break;
+			if (purposeTransform[(int)_moveDir] != null) {
+				return _moveDir;
+			}
+			int nextMoveDir = ((int)_moveDir + 2) % 4;
+			for (int i = 1; i < 4; i++) {
+				nextMoveDir = (nextMoveDir + i) % 4;
+				if (purposeTransform [nextMoveDir] != null) {
+					return (MoveDir)nextMoveDir;
 				}
 			}
-			if (isChangeDir) {
-				Debug.Log ("CHANGE");
-				int nextMoveDir = ((int)_moveDir + 2) % 4;
-				for (int i = 1; i < 4; i++) {
-					nextMoveDir = (nextMoveDir + i) % 4;
-					if (purposeTransform [nextMoveDir] != null) {
-						return (MoveDir)nextMoveDir;
-					}
-				}
-			}
-
-			return _moveDir;
 		}
 
 		Debug.Log ("Error Case Corner (GetNextMoveDir)");
