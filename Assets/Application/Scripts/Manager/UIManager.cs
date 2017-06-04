@@ -57,7 +57,6 @@ public class UIManager : SingletonBehaviour<UIManager> {
 		}
 
 		bulletNum.text = _bulletStock.ToString();
-		Debug.Log("a");
 	}
 
 	public void PauseButton(){
