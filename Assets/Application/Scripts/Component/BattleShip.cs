@@ -18,6 +18,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	private float bulletSpeed = 3;
 	private string charaName = "ATLANTA";
 
+	[SerializeField] private Text bulletNum;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
 	[SerializeField] private Corner[] bulletSpawnCorner = new Corner[5];
 	private GameObject bulletPrefab;
@@ -66,6 +67,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	void Update() {
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			if (activeSkill == false) {
+				bulletNum.color = Color.white;
 				if (bulletStock < maxBulletStock && intervalCount == 0) {
 					intervalCount = bulletInterval;
 				}
@@ -78,6 +80,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 					}
 				}
 			} else {
+				bulletNum.color = Color.green;
 				if (bulletStock < 1) {
 					bulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
 					bulletStock = maxBulletStock;
@@ -140,23 +143,18 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	}
 
 	public void SetSkill(GameObject prefab) {
-		if(bulletStock != maxBulletStock) {
-			intervalCount = 0;
-			bulletStock = maxBulletStock;
-        }
+		intervalCount = 0;
+		bulletStock = 5;
 
         bulletPrefab = prefab;
 		activeSkill = true;
 	}
 
 	public void SetGatling() {
-		if (bulletStock != maxBulletStock) {
-			intervalCount = 0;
-			bulletStock = maxBulletStock;
-		}
+		intervalCount = 0;
+		bulletStock = maxBulletStock;
 
 		activeGatling = true;
-
 		StartCoroutine("EndSkill");
 	}
 

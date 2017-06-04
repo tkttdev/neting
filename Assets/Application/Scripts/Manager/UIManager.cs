@@ -16,8 +16,7 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private GameObject lifeGauge1;
 	[SerializeField] private GameObject lifeGauge2;
 	[SerializeField] private GameObject damageGauge;
-	[SerializeField] private Image[] bullet;
-	[SerializeField] private Image characterFace;
+	[SerializeField] private Text bulletNum;
 
 	[SerializeField] private Sprite chargeBulletSprite;
 	[SerializeField] private Sprite emptyBulletSprite;
@@ -27,31 +26,24 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	[SerializeField] private GameObject pauseButton;
 	[SerializeField] private GameObject resumeButton;
 
-	[HideInInspector] public int useCharaIndex;
-	[HideInInspector] public int useCharaLv;
-
 	protected override void Initialize (){
 		base.Initialize ();
-		useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
-		useCharaLv = UserDataManager.I.GetCharacterLevel(useCharaIndex);
+		int useCharaIndex = UserDataManager.I.GetUseCharacterIndex();
+		int useCharaLv = UserDataManager.I.GetCharacterLevel(useCharaIndex);
 		string charaName = CHARACTER_DEFINE.NAME[useCharaIndex];
 		CharacterStatusManager.I.ParseStatusInfoText(charaName);
 
-		characterFace.GetComponent<Image> ().sprite = Resources.Load<Sprite>(CHARACTER_DEFINE.FACE_IMAGE_RESOURCES_PATH[useCharaIndex]);
 		float maxLife = CharacterStatusManager.I.GetCharacterHealth(useCharaLv);
 		if (maxLife <= 5) {
 			damageGauge.transform.localScale = new Vector3(25, maxLife % 6 * 80, 0);
 		} else {
 			damageGauge.transform.localScale = new Vector3(25, maxLife % 6 + 1 * 80, 0);
 		}
-        for (int i = CharacterStatusManager.I.GetCharacterBulletNum(useCharaLv); i < bullet.Length; i++) {
-			bullet [i].enabled = false;
-		}
-	}
+    }
 
 	void Update(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
-			batteryGage.transform.localScale = new Vector3 (BattleShip.I.bulletRate, 1, 1);
+			batteryGage.GetComponent<Image>().fillAmount = BattleShip.I.bulletRate * 0.75f;
 		}
 	}
 
@@ -64,13 +56,8 @@ public class UIManager : SingletonBehaviour<UIManager> {
 			lifeGauge2.transform.localScale = new Vector3(25, (_life - 5) * 80, 0);
 		}
 
-		for (int i = 0; i < bullet.Length; i++) {
-			if (i < _bulletStock) {
-				bullet [i].GetComponent<Image> ().sprite = chargeBulletSprite;
-			} else {
-				bullet [i].GetComponent<Image> ().sprite = emptyBulletSprite;
-			}
-		}
+		bulletNum.text = _bulletStock.ToString();
+		Debug.Log("a");
 	}
 
 	public void PauseButton(){
