@@ -14,7 +14,7 @@ public class EnemySpawnEditor : EditorWindow {
 	private static Texture2D[] enemyTextures;
 	private bool[] useStageLine = new bool[5]{ true, true, true, true, true };
 	private static EnemyDefine enemyDefine;
-	private GameObject placeTargetEnemy;
+	private static GameObject placeTargetEnemy;
 	private static int placeTargetEnemyId = 0;
 	private int replaceTargetEnemyId = 0;
 	private float enemySpawnTime = 0f;
@@ -52,11 +52,12 @@ public class EnemySpawnEditor : EditorWindow {
 			placedEnemySpawnLineIndex.Add (new List<int> ());
 			placedEnemySpawnTime.Add (new List<float> ());
 		}
+		placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
+		enemyTextures = new Texture2D[enemyDefine.varietyNum];
 	}
 
 	void OnEnable(){
-		placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
-		enemyTextures = new Texture2D[enemyDefine.varietyNum];
+		
 	}
 
 	void OnDisable(){
@@ -175,10 +176,6 @@ public class EnemySpawnEditor : EditorWindow {
 
 		EditorGUILayout.EndScrollView ();
 		DisplayTargetEnemy ();
-		if (GUI.Button(new Rect(620,570,75,25), "保存")) {
-			bool isSaved = SaveStageCsv ();
-			isEdited = isSaved;
-		}
 		if (GUI.Button(new Rect(620,530,75,25), "破棄")) {
 			isEdited = false;
 			if (stageCsv != null) {
@@ -197,6 +194,10 @@ public class EnemySpawnEditor : EditorWindow {
 			}
 			isLoading = false;
 		}
+		if (GUI.Button(new Rect(620,570,75,25), "保存")) {
+			bool isSaved = SaveStageCsv ();
+			isEdited = isSaved;
+		}
 		EditorGUILayout.EndVertical ();
 		//End EnemyListArea
 
@@ -211,29 +212,21 @@ public class EnemySpawnEditor : EditorWindow {
 				stageCsv = null;
 			}
 		}
-		if (stageCsv == beforeStageCsv) {
+		if (stageCsv != beforeStageCsv && isEdited) {
+			Debug.Log ("編集内容が保存されていません");
+			stageCsv = null;
+			beforeStageCsv = null;
+		} else if(stageCsv != beforeStageCsv && !isEdited) {
 			if (stageCsv == null) {
+				spawnVarietyNum = 1;
 				for (int i = 0; i < 5; i++) {
 					placedEnemyId [i].Clear ();
 					placedEnemySpawnLineIndex [i].Clear ();
 					placedEnemySpawnTime [i].Clear ();
 					useStageLine [i] = true;
 				}
-				stageCsv = null;
-				beforeStageCsv = null;
-				spawnVarietyNum = 1;
-			} else {
-				isLoading = true;
-				beforeStageCsv = stageCsv;
-				isEdited = false;
-				LoadStageCsv ();
+				return;
 			}
-		}
-		if (stageCsv != beforeStageCsv && isEdited) {
-			Debug.Log ("編集内容が保存されていません");
-			stageCsv = null;
-			beforeStageCsv = null;
-		} else if(stageCsv != beforeStageCsv && !isEdited) {
 			isLoading = true;
 			Debug.Log ("新たなステージcsvをロードします");
 			beforeStageCsv = stageCsv;
