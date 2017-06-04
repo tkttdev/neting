@@ -211,6 +211,24 @@ public class EnemySpawnEditor : EditorWindow {
 				stageCsv = null;
 			}
 		}
+		if (stageCsv == beforeStageCsv) {
+			if (stageCsv == null) {
+				for (int i = 0; i < 5; i++) {
+					placedEnemyId [i].Clear ();
+					placedEnemySpawnLineIndex [i].Clear ();
+					placedEnemySpawnTime [i].Clear ();
+					useStageLine [i] = true;
+				}
+				stageCsv = null;
+				beforeStageCsv = null;
+				spawnVarietyNum = 1;
+			} else {
+				isLoading = true;
+				beforeStageCsv = stageCsv;
+				isEdited = false;
+				LoadStageCsv ();
+			}
+		}
 		if (stageCsv != beforeStageCsv && isEdited) {
 			Debug.Log ("編集内容が保存されていません");
 			stageCsv = null;
@@ -253,6 +271,7 @@ public class EnemySpawnEditor : EditorWindow {
 			spawnVarietyNum--;
 		}
 		isLoading = false;
+		Repaint ();
 	}
 
 	private bool SaveStageCsv(){
