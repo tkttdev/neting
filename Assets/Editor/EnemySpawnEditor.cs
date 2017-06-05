@@ -6,7 +6,14 @@ using UnityEditor;
 using System.IO;
 
 public class EnemySpawnEditor : EditorWindow {
+	private enum EditMode : int {
+		NONE = 0,
+		PLACE = 1,
+		REPLACE = 2,
+	}
 
+	#region private_field
+	//cash placed enemy information
 	private static List<List<int>> placedEnemySpawnLineIndex = new List<List<int>> ();
 	private static List<List<int>> placedEnemyId = new List<List<int>>();
 	private static List<List<float>> placedEnemySpawnTime = new List<List<float>>();
@@ -32,15 +39,11 @@ public class EnemySpawnEditor : EditorWindow {
 	private int spawnVarietyNum = 1;
 	private int spawnVarietyIndex = 0;
 	private float editStartTime = 0f;
-
 	private const string directoryPath = "Assets/Application/Resources/SpawnInfoCsv";
+	private EditMode editMode = EditMode.NONE;
+	private Regex stageRegex = new Regex ("^Stage[Ex]*[1-9]+");
+	#endregion
 
-	private enum EditMode : int {
-		NONE = 0,
-		PLACE = 1,
-		REPLACE = 2,
-	}
-	EditMode editMode = EditMode.NONE;
 	public static EditorWindow window;
 	[MenuItem("Window/EnemySpawnEdit")]
 	static void Open(){
@@ -54,10 +57,6 @@ public class EnemySpawnEditor : EditorWindow {
 		}
 		placeTargetEnemy = Resources.Load (enemyDefine.enemy [placeTargetEnemyId].PATH) as GameObject;
 		enemyTextures = new Texture2D[enemyDefine.varietyNum];
-	}
-
-	void OnEnable(){
-		
 	}
 
 	void OnDisable(){
@@ -208,7 +207,7 @@ public class EnemySpawnEditor : EditorWindow {
 
 	private void OnFocus(){
 		if (stageCsv != null) {
-			if (!stageCsv.name.Contains ("Stage")) {
+			if (!stageRegex.Match(stageCsv.name).Success) {
 				stageCsv = null;
 			}
 		}
