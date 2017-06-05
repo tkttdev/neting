@@ -3,24 +3,25 @@ using System.Collections;
 using UnityEngine.EventSystems;
 
 public class Enemy : MoveObjectBase {
+	public int copyEnemyNum = 0;
 	
 	[SerializeField]private int id;
+	[SerializeField]private SpriteRenderer hpBar;
+	[SerializeField]private GameObject enemyDeadEffect;
 	private float hp;
 	private float maxHP;
 	private int damage;
 	private int money;
-	[SerializeField]private SpriteRenderer hpBar;
-	[SerializeField]private EnemyDefine enemyDefine;
 	private Vector2 hpBarInitLocalScale;
-
-	public int copyEnemyNum = 0;
-
 	private EnemyEffectBase[] enemyEffect;
 
-	[SerializeField] private GameObject enemyDeadEffect;
+	private static EnemyDefine enemyDefine;
 
 	protected override void Initialize (){
 		base.Initialize ();
+		if (enemyDefine == null) {
+			enemyDefine = Resources.Load ("ScriptableObjects/EnemyDefineData") as EnemyDefine;
+		}
 		SetMoveToPlayer ();
 		hp = enemyDefine.enemy[id].HP;
 		maxHP = hp;

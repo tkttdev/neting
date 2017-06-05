@@ -48,9 +48,8 @@ public class MoveObjectBase : MonoBehaviour {
 	#region PrivateField
 	[SerializeField] private MoveDir initMoveDir = MoveDir.UP;
 	[SerializeField] private MoveMode initMoveMode = MoveMode.NORMAL;
-	[SerializeField] private CasheCornerData cornerCashe;
+	private static CasheCornerData cornerCashe;
 	#endregion
-
 
 	/// <summary>
 	/// Don't use this function to initialize.
@@ -64,6 +63,9 @@ public class MoveObjectBase : MonoBehaviour {
 	/// To use initialize this function.
 	/// </summary>
 	protected virtual void Initialize(){
+		if (cornerCashe == null) {
+			cornerCashe = Resources.Load ("ScriptableObjects/CornerData") as CasheCornerData;
+		}
 		moveDir = initMoveDir;
 		moveMode = initMoveMode;
 		effectMode = EffectMode.NORMAL_SPEED;
