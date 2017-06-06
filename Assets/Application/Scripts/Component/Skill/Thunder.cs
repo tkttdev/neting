@@ -18,11 +18,6 @@ public class Thunder : MonoBehaviour {
 		StartCoroutine("EndThunder");
 	}
 
-	// Update is called once per frame
-	void Update() {
-
-	}
-
 	void OnEnable() {
 		Start();
 	}

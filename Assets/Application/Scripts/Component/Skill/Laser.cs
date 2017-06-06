@@ -10,11 +10,6 @@ public class Laser : MonoBehaviour {
 	void Start () {
 		SkillEffect();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	void OnEnable() {
 		Start();

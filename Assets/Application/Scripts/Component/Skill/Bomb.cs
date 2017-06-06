@@ -8,13 +8,8 @@ public class Bomb : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SkillEffect();
-    }
-	
-	// Update is called once per frame
-	void Update () {
-		
-    }
+		SkillEffect ();
+	}
 
 	public void SkillEffect() {
 		iTween.ScaleTo(gameObject, iTween.Hash("x", 8, "y", 8, "time", 5.0f));
