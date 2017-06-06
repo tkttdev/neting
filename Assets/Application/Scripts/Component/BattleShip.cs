@@ -56,7 +56,6 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		maxBulletStock = CharacterStatusManager.I.GetCharacterBulletNum(useCharaLv);
 		life = CharacterStatusManager.I.GetCharacterHealth(useCharaLv);
 		bulletSpeed = CharacterStatusManager.I.GetCharacterSpeed(useCharaLv);
-		SkillButton.I.skill = (Skill)useCharaIndex;
 
 		bulletPrefab = Resources.Load (CHARACTER_DEFINE.BULLET_PREFAB_PATH [useCharaIndex]) as GameObject;
 		bulletStock = maxBulletStock;
