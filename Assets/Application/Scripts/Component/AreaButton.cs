@@ -6,19 +6,15 @@ public class AreaButton : MonoBehaviour {
 
 	[SerializeField]private GameObject[] objectSet;
 
-	private GameObject chara;
+	[SerializeField]private GameObject chara;
 	private Vector3 pos;
 
-	// Use this for initialization
 	void Start () {
-		chara = GameObject.Find("Chara");
-
-		foreach (GameObject n in objectSet) {
-			n.gameObject.SetActive(false);
+		for (int i = 0; i < objectSet.Length; i++) {
+			objectSet [i].SetActive (false);
 		}
 	}
 
-	// Update is called once per frame
 	void Update () {
 		pos = gameObject.transform.position;
 
