@@ -5,7 +5,6 @@ using UnityEngine;
 public class AreaButton : MonoBehaviour {
 
 	[SerializeField]private GameObject[] objectSet;
-
 	[SerializeField]private GameObject chara;
 	private Vector3 pos;
 

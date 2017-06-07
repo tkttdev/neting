@@ -11,8 +11,8 @@ public class SkillButton : MonoBehaviour {
 		GATLING = 3,
 	}
 
-	private SkillType skill;
-	private GameObject[] skillPrefab;
+	[SerializeField] private SkillType skill;
+	[SerializeField] private GameObject[] skillPrefab;
 
 	private void Start(){
 		skill =  (SkillType)UserDataManager.I.GetUseCharacterIndex();
@@ -33,6 +33,7 @@ public class SkillButton : MonoBehaviour {
 				BattleShip.I.SetGatling();
 				break;
 		}
+
 		gameObject.SetActive(false);
 	}
 }
