@@ -23,7 +23,7 @@ public class MoveObjectBase : MonoBehaviour {
 	}
 	#endregion
 
-	#region PubliField
+	#region PublicField
 	public MoveMode moveMode = MoveMode.NORMAL;
 	[HideInInspector]public string lineId = "";
 	[HideInInspector]public MoveDir moveDir = MoveDir.UP;
@@ -119,6 +119,9 @@ public class MoveObjectBase : MonoBehaviour {
 			effectMode = EffectMode.HIGH_SPEED;
 		}
 
+		SetNextMove (_other.gameObject);
+
+		/*
 		if (_other.tag == "Warp" && moveMode != MoveMode.IGNORE) {
 			int objKey = GetInstanceID ();
 			moveT = 0.0f;
@@ -171,6 +174,62 @@ public class MoveObjectBase : MonoBehaviour {
 			}
 			transform.position = _other.transform.position;
 			startPos = _other.transform.position;
+		}*/
+	}
+
+	public void SetNextMove(GameObject _corner){
+		if (_corner.tag == "Warp" && moveMode != MoveMode.IGNORE) {
+			int objKey = GetInstanceID ();
+			moveT = 0.0f;
+			if (!Warp.warpObjectsKey.Contains(objKey)) {
+				Warp.warpObjectsKey.Add (objKey);
+				gameObject.transform.position = _corner.GetComponent<Warp> ().warpPurposePos;
+				startPos = _corner.GetComponent<Warp> ().warpPurposePos;
+				endPos = _corner.GetComponent<Warp> ().warpPurposePos;
+				return;
+			} else {
+				Warp.warpObjectsKey.Remove (objKey);
+				//return;
+			}
+		}
+
+		if (_corner.tag == "LeftCorner" || _corner.tag == "RightCorner" || _corner.tag == "PassCorner" || _corner.tag == "Warp") {
+			moveT = 0.0f;
+			string key = _corner.GetInstanceID ().ToString () + _corner.tag + ((int)moveDir).ToString() + ((int)moveMode).ToString() + moveDesMode.ToString();
+			if (cornerCashe.straightPurposeData.ContainsKey (key)) {
+				isCurve = false;
+				endPos = cornerCashe.straightPurposeData [key];
+				onLineLength = cornerCashe.lengthData [key];
+				lineId = cornerCashe.lineIdData [key];
+				moveDir = cornerCashe.moveDirData [key];
+			} else if (cornerCashe.curveData.ContainsKey (key)) { 
+				isCurve = true;
+				bezerPoints = cornerCashe.curveData [key];
+				onLineLength = cornerCashe.lengthData [key];
+				lengthOfBezerSection = cornerCashe.curveSectionLengthData [key];
+				lineId = cornerCashe.lineIdData [key];
+				moveDir = cornerCashe.moveDirData [key];
+			} else {
+				Corner corner = _corner.GetComponent<Corner> ();
+				if (corner.CheckCurve(moveDir, moveDesMode, moveMode)) {
+					isCurve = true;
+					bezerPoints = corner.ChangePurposeCurve (moveMode, moveDesMode, ref moveDir, ref lineId, ref onLineLength, ref lengthOfBezerSection);
+					cornerCashe.curveData.Add (key, bezerPoints);
+					cornerCashe.lengthData.Add (key, onLineLength);
+					cornerCashe.curveSectionLengthData.Add (key, lengthOfBezerSection);
+					cornerCashe.lineIdData.Add (key, lineId);
+					cornerCashe.moveDirData.Add (key, moveDir);
+				} else {
+					isCurve = false;
+					endPos = corner.ChangePurposeStraight (moveMode, moveDesMode, ref moveDir, ref lineId, ref onLineLength);
+					cornerCashe.straightPurposeData.Add (key, endPos);
+					cornerCashe.lengthData.Add (key, onLineLength);
+					cornerCashe.lineIdData.Add (key, lineId);
+					cornerCashe.moveDirData.Add (key, moveDir);
+				}
+			}
+			transform.position = _corner.transform.position;
+			startPos = _corner.transform.position;
 		} 
 	}
 

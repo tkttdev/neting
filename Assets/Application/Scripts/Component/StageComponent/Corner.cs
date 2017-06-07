@@ -136,7 +136,7 @@ public class Corner : MonoBehaviour {
 		} else if (transform.tag == "LeftCorner") {
 			return MoveDir.LEFT;
 		} else if (transform.tag == "PassCorner" || transform.tag == "Warp") {
-			if (purposeTransform[(int)_moveDir] != null) {
+			if (purposeTransform[(int)_moveDir] != null || isCurve[(int)_moveDir]) {
 				return _moveDir;
 			}
 			int nextMoveDir = ((int)_moveDir + 2) % 4;
