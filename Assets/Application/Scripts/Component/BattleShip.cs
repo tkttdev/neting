@@ -17,7 +17,6 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	private string charaName = "ATLANTA";
 
 	[SerializeField] private Text bulletNum;
-	[SerializeField] private TextAsset bulletSpawnerInfo;
 	[SerializeField] private GameObject characterBullet;
 	[SerializeField] private Corner[] bulletSpawnCorner = new Corner[5];
 
