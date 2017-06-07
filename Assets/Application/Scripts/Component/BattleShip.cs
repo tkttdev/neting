@@ -14,17 +14,16 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 	private int bulletStock = 0;
 	private int maxBulletStock = 0;
 	private float life = 3;
-	private int bulletDamage = 1;
-	private float bulletSpeed = 3;
 	private string charaName = "ATLANTA";
 
 	[SerializeField] private Text bulletNum;
 	[SerializeField] private TextAsset bulletSpawnerInfo;
+	[SerializeField] private GameObject characterBullet;
 	[SerializeField] private Corner[] bulletSpawnCorner = new Corner[5];
-	private GameObject bulletPrefab;
 
 	private bool activeSkill;
 	private bool activeGatling;
+	private GameObject bulletPrefab;
 
 	protected override void Initialize() {
 		base.Initialize();
@@ -51,13 +50,15 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		charaName = CHARACTER_DEFINE.NAME[useCharaIndex];
 		CharacterStatusManager.I.ParseStatusInfoText(charaName);
 
-		bulletDamage = CharacterStatusManager.I.GetCharacterAttack(useCharaLv);
 		bulletInterval = CharacterStatusManager.I.GetCharacterCharageSpeed(useCharaLv);
 		maxBulletStock = CharacterStatusManager.I.GetCharacterBulletNum(useCharaLv);
 		life = CharacterStatusManager.I.GetCharacterHealth(useCharaLv);
-		bulletSpeed = CharacterStatusManager.I.GetCharacterSpeed(useCharaLv);
 
-		bulletPrefab = Resources.Load (CHARACTER_DEFINE.BULLET_PREFAB_PATH [useCharaIndex]) as GameObject;
+		characterBullet.GetComponent<Bullet>().SetDamage(CharacterStatusManager.I.GetCharacterAttack(useCharaLv));
+		characterBullet.GetComponent<Bullet>().SetSpeed(CharacterStatusManager.I.GetCharacterSpeed(useCharaLv));
+		characterBullet.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/Bullet/Bullet" + useCharaIndex);
+		bulletPrefab = characterBullet;
+
 		bulletStock = maxBulletStock;
 		intervalCount = 0;
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
@@ -81,7 +82,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 			} else {
 				bulletNum.color = Color.green;
 				if (bulletStock < 1) {
-					bulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
+					bulletPrefab = characterBullet;
 					bulletStock = maxBulletStock;
 					activeSkill = false;
 				}
@@ -157,10 +158,10 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		StartCoroutine("EndSkill");
 	}
 
-	public IEnumerator EndSkill() {
+	private IEnumerator EndSkill() {
 		yield return new WaitForSeconds(5.0f);
 
-		bulletPrefab = Resources.Load(CHARACTER_DEFINE.BULLET_PREFAB_PATH[useCharaIndex]) as GameObject;
+		bulletPrefab = characterBullet;
 		bulletStock = maxBulletStock;
 		activeGatling = false;
 	}

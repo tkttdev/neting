@@ -6,7 +6,6 @@ public class StageButton : MonoBehaviour {
 
 	private float scale;
 	private Vector3 speed;
-	private static Vector3 TouchPosition = Vector3.zero;
 	private static Vector3 PreviousPosition = Vector3.zero;
 
 	// Use this for initialization
@@ -19,7 +18,7 @@ public class StageButton : MonoBehaviour {
 		MoveCamera();
 	}
 
-	public void MoveCamera() {
+	private void MoveCamera() {
 		scale = gameObject.transform.localScale.x;
 		speed = new Vector3(1, 1, 0);
 		TouchInfo info = GetTouch();
@@ -110,13 +109,13 @@ public class StageButton : MonoBehaviour {
 		}
 		return Vector3.zero;
 	}
-}
 
-public enum TouchInfo {
-	None = 99,
-	Began = 0,
-	Moved = 1,
-	Stationary = 2,
-	Ended = 3,
-	Canceled = 4,
+	public enum TouchInfo {
+		None = 99,
+		Began = 0,
+		Moved = 1,
+		Stationary = 2,
+		Ended = 3,
+		Canceled = 4,
+	}
 }

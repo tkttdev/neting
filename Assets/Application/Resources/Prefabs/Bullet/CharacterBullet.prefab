@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50000012278808134}
   - component: {fileID: 114363889421623152}
   m_Layer: 0
-  m_Name: CharacterBullet4
+  m_Name: CharacterBullet
   m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,7 +80,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.2, y: 0.2}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 0.2, y: 0.2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -164,11 +164,11 @@ MonoBehaviour:
   moveT: 0
   startPos: {x: 0, y: 0, z: 0}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 4
+  moveSpeed: 7
   initMoveDir: 0
   initMoveMode: 0
-  cornerCashe: {fileID: 11400000, guid: 50d46a08176834d058e8d861eae5cc61, type: 2}
   skillMode: 0
+  damage: 4
 --- !u!212 &212000011164961808
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -201,11 +201,11 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 01ab4c522f6ca3b48b158e001547c9e3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ecbe730a21fdd4043a652af09056c730, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0

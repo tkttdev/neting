@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SkillMode : int {
-	NORMAL = 0,
-	MOVE = 1,
-	NOTMOVE = 2,
-}
-
 public class Bullet : MoveObjectBase {
 
-	private int damage = 1;
+	private enum SkillMode : int {
+		NORMAL = 0,
+		MOVE = 1,
+		NOTMOVE = 2,
+	}
 
 	[SerializeField] private SkillMode skillMode;
+	[SerializeField] private int damage = 1;
 
 	protected override void Initialize() {
 		base.Initialize ();
@@ -54,5 +53,13 @@ public class Bullet : MoveObjectBase {
 
 	private void DestroyOwn(){
 		ObjectPool.I.Release (gameObject);
+	}
+
+	public void SetDamage(int _damage) {
+		damage = _damage;
+	}
+
+	public void SetSpeed(float _speed) {
+		moveSpeed = _speed;
 	}
 }

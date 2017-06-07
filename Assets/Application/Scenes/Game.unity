@@ -1720,48 +1720,6 @@ RectTransform:
   m_AnchoredPosition: {x: -150, y: -95}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1001 &610787226
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614933184703706, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: dfbadfd80878c42f2b73198c5129f522, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &649856029
 GameObject:
   m_ObjectHideFlags: 0
@@ -4031,8 +3989,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1619758425}
   - component: {fileID: 1619758424}
-  - component: {fileID: 1619758427}
-  - component: {fileID: 1619758426}
   m_Layer: 0
   m_Name: DestroyZone
   m_TagString: DestroyZone
@@ -4078,56 +4034,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1619758426
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1619758423}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -4.5, y: -5}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 10}
-  m_EdgeRadius: 0
---- !u!61 &1619758427
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1619758423}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 4.5, y: -5}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 10}
-  m_EdgeRadius: 0
 --- !u!1 &1640637218
 GameObject:
   m_ObjectHideFlags: 0
@@ -4965,6 +4871,18 @@ Prefab:
       propertyPath: bulletNum
       value: 
       objectReference: {fileID: 1662136936}
+    - target: {fileID: 114506287850495510, guid: 84c5a1f972e694873b061625af03f9a3,
+        type: 2}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 1000012650380428, guid: f5c43050018cb094095a967311bafb41,
+        type: 2}
+    - target: {fileID: 114506287850495510, guid: 84c5a1f972e694873b061625af03f9a3,
+        type: 2}
+      propertyPath: characterBullet
+      value: 
+      objectReference: {fileID: 1000012650380428, guid: f5c43050018cb094095a967311bafb41,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84c5a1f972e694873b061625af03f9a3, type: 2}
   m_IsPrefabParent: 0
