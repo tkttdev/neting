@@ -99,7 +99,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 			bulletStock--;
 		}
 		UIManager.I.UpdateCharacterInfo (life, bulletStock);
-		Bullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -4f, 0.0f)).GetComponent<Bullet> ();
+		Bullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -5f, 0.0f)).GetComponent<Bullet> ();
 		if (bulletSpawnCorner [_entryX + 2].CheckCurve (MoveDir.UP, 1, bullet.moveMode)) {
 			bullet.isCurve = true;
 			bullet.bezerPoints = bulletSpawnCorner [_entryX + 2].ChangePurposeCurve (bullet.moveMode, 1, ref bullet.moveDir, ref bullet.lineId, ref bullet.onLineLength, ref bullet.lengthOfBezerSection);

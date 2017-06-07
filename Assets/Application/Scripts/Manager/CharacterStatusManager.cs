@@ -6,10 +6,7 @@ using UnityEngine.EventSystems;
 
 public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager> {
 
-
 	[SerializeField]private TextAsset StatusInfoText;
-	private StatusInfo statusInfo = new StatusInfo();
-	private List<StatusInfo> characterInfo = new List<StatusInfo> ();
 	private string characterName = "ATLANTA";
 
 	private List<int> level = new List<int> ();
@@ -24,7 +21,6 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 	protected override void Initialize() {
 		base.Initialize ();
 	}
-
 
 	public void ParseStatusInfoText (string Name) {
 		characterName = Name;
@@ -44,8 +40,6 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 			string line = reader.ReadLine ();
 			string[] values = line.Split (',');
 
-
-
 			//変換
 			level.Add (int.Parse (values [0]));
 			attack.Add (int.Parse (values [1]));
@@ -54,20 +48,8 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 			bulletNum.Add (int.Parse (values [4]));
 			chargeSpeed.Add (float.Parse (values [5]));
 			money.Add (int.Parse (values [6]));
-
 		}
-
-		 
-
 	}
-
-	/*
-	public void ShowDebugText(){
-		Debug.Log(CharacterStatusManager.I.GetCharacterAttack (0));
-
-
-	}
-	*/
 
 	public int GetCharacterAttack(int lv){
 		return attack [lv - 1];
@@ -95,7 +77,6 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 		return money[lv];
 	}
 
-
 	private class StatusInfo{
 		public List<int> level = new List<int>();
 		public List<int> attack = new List<int> ();
@@ -105,5 +86,4 @@ public class CharacterStatusManager : SingletonBehaviour<CharacterStatusManager>
 		public List<float> chargeSpeed = new List<float>();
 		public List<int> money = new List<int>();
 	}
-
 }

@@ -8,21 +8,12 @@ public class UIManager : SingletonBehaviour<UIManager> {
 	public DialogBase gameOverDialog;
 	public DialogBase pauseDialog;
 	public DialogBase stageClearDialog;
-
-	[SerializeField] private GameObject countPanel;
-	[SerializeField] private Text waveText;
+	
+	[SerializeField] private Text bulletNum;
 	[SerializeField] private GameObject batteryGage;
-
 	[SerializeField] private GameObject lifeGauge1;
 	[SerializeField] private GameObject lifeGauge2;
 	[SerializeField] private GameObject damageGauge;
-	[SerializeField] private Text bulletNum;
-
-	[SerializeField] private Sprite chargeBulletSprite;
-	[SerializeField] private Sprite emptyBulletSprite;
-
-	[SerializeField] private WavePanel wavePanel;
-	[SerializeField] private GameObject pausePanel;
 	[SerializeField] private GameObject pauseButton;
 	[SerializeField] private GameObject resumeButton;
 
@@ -65,7 +56,6 @@ public class UIManager : SingletonBehaviour<UIManager> {
 			pauseButton.SetActive (false);
 			StartCoroutine (PauseAnimation ());
 		}
-
 	}
 
 	public void ResumeButton(){

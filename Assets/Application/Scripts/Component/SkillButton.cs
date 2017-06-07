@@ -19,21 +19,23 @@ public class SkillButton : MonoBehaviour {
 	}
 
 	public void PushSkillButon() {
-		switch (skill) {
-			case SkillType.LASER:
-				BattleShip.I.SetSkill(skillPrefab[0]);
-				break;
-			case SkillType.THUNDER:
-				BattleShip.I.SetSkill(skillPrefab[1]);
-				break;
-			case SkillType.BOMB:
-				ObjectPool.I.Instantiate(skillPrefab[2], new Vector3(0, -5, 0));
-				break;
-			case SkillType.GATLING:
-				BattleShip.I.SetGatling();
-				break;
-		}
+		if (GameManager.I.CheckGameStatus(GameStatus.PLAY)) {
+			switch (skill) {
+				case SkillType.LASER:
+					BattleShip.I.SetSkill(skillPrefab[0]);
+					break;
+				case SkillType.THUNDER:
+					BattleShip.I.SetSkill(skillPrefab[1]);
+					break;
+				case SkillType.BOMB:
+					ObjectPool.I.Instantiate(skillPrefab[2], new Vector3(0, -5, 0));
+					break;
+				case SkillType.GATLING:
+					BattleShip.I.SetGatling();
+					break;
+			}
 
-		gameObject.SetActive(false);
+			gameObject.SetActive(false);
+		}
 	}
 }
