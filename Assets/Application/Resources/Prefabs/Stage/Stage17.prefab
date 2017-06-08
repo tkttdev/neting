@@ -3509,7 +3509,7 @@ MonoBehaviour:
   - {fileID: 114131671254779784}
   - {fileID: 114995332423203496}
   - {fileID: 114243637462960024}
-  isBossStage: 0
+  isBossStage: 1
 --- !u!114 &114264742247957988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5515,7 +5515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4078377b91ef049f2bc9eae2f377515c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 5
+  hp: 7
   isExistLine: 0101010101
 --- !u!114 &114576036339742442
 MonoBehaviour:
