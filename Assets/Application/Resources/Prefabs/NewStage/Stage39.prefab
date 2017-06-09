@@ -3169,7 +3169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   purposeTransform:
-  - {fileID: 0}
+  - {fileID: 4980133534655870}
   - {fileID: 0}
   - {fileID: 4161076997404272}
   - {fileID: 4471432714661010}
@@ -4678,7 +4678,7 @@ MonoBehaviour:
   purposeTransform:
   - {fileID: 4354679735446254}
   - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4462792448179634}
   - {fileID: 0}
   bezerPoints:
   - {fileID: 0}
