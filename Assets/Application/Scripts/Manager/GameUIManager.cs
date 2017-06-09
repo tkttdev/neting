@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : SingletonBehaviour<UIManager> {
+public class GameUIManager : SingletonBehaviour<GameUIManager> {
 
 	public DialogBase gameOverDialog;
 	public DialogBase pauseDialog;

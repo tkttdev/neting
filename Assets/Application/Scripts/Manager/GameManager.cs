@@ -72,12 +72,12 @@ public class GameManager : SingletonBehaviour<GameManager> {
 		AdsManager.I.EnableWatch ();
 		UserDataManager.I.AddMoney (GetItemManager.I.GetEarnMoney ());
 		if (BattleShip.I.GetLife() <= 0) {
-			UIManager.I.gameOverDialog.Show ();
+			GameUIManager.I.gameOverDialog.Show ();
 			SoundManager.I.StopBGM ();
 			SoundManager.I.SoundSE (SE.GAME_OVER);
 		} else {
 			UserDataManager.I.SetClearStage (StageLevelManager.I.GetStageLevel () - 1);
-			UIManager.I.stageClearDialog.Show ();
+			GameUIManager.I.stageClearDialog.Show ();
 			SoundManager.I.StopBGM ();
 			SoundManager.I.SoundSE (SE.CLEAR);
 		}

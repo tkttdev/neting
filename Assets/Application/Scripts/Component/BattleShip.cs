@@ -60,7 +60,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 
 		bulletStock = maxBulletStock;
 		intervalCount = 0;
-		UIManager.I.UpdateCharacterInfo (life, bulletStock);
+		GameUIManager.I.UpdateCharacterInfo (life, bulletStock);
     }
 
 	void Update() {
@@ -88,7 +88,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 			}
 		}
 
-		UIManager.I.UpdateCharacterInfo(life, bulletStock);
+		GameUIManager.I.UpdateCharacterInfo(life, bulletStock);
 	}
 
 	public void Shoot(int _entryX) {
@@ -98,7 +98,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		if (activeGatling == false) {
 			bulletStock--;
 		}
-		UIManager.I.UpdateCharacterInfo (life, bulletStock);
+		GameUIManager.I.UpdateCharacterInfo (life, bulletStock);
 		Bullet bullet = ObjectPool.I.Instantiate (bulletPrefab, new Vector3 ((float)_entryX, -5f, 0.0f)).GetComponent<Bullet> ();
 		if (bulletSpawnCorner [_entryX + 2].CheckCurve (MoveDir.UP, 1, bullet.moveMode)) {
 			bullet.isCurve = true;
@@ -116,7 +116,7 @@ public class BattleShip : SingletonBehaviour<BattleShip> {
 		#endif
 		StartCoroutine(DamageRendering());
 		life -= _damage;
-		UIManager.I.UpdateCharacterInfo (life, bulletStock);
+		GameUIManager.I.UpdateCharacterInfo (life, bulletStock);
 		if (life <= 0) {
 			GameManager.I.SetStatuEnd ();
 		}

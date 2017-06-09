@@ -23,6 +23,7 @@ public class Warp : Corner {
 		return base.ChangePurposeCurve (_moveMode, _moveDesMode, ref _moveDir, ref _lineId, ref _lineLength, ref _lengthOfBezerSection);
 	}
 
+	#if UNITY_EDITOR
 	protected override void OnDrawGizmos () {
 		base.OnDrawGizmos ();
 		if (warpPurpose == null) {
@@ -31,4 +32,5 @@ public class Warp : Corner {
 			Gizmos.DrawLine (transform.position + new Vector3 (-0.3f, 0.3f, 0), transform.position + new Vector3 (0.3f, -0.3f, 0));
 		}
 	}
+	#endif
 }

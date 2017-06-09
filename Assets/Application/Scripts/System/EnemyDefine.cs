@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 public class EnemyDefine : ScriptableObject {
@@ -9,12 +11,14 @@ public class EnemyDefine : ScriptableObject {
 	public int varietyNum = 0;
 	#endregion
 
+	#if UNITY_EDITOR
 	[MenuItem("CreateScriptable/EnemyDefine")]
 	static void Create(){
 		var instance = CreateInstance<EnemyDefine> ();
 		AssetDatabase.CreateAsset(instance, "Assets/EnemyDefineData.asset");
 		AssetDatabase.Refresh();
 	}
+	#endif
 }
 
 [System.Serializable]
