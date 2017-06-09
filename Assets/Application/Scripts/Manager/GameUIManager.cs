@@ -8,6 +8,7 @@ public class GameUIManager : SingletonBehaviour<GameUIManager> {
 	public DialogBase gameOverDialog;
 	public DialogBase pauseDialog;
 	public DialogBase stageClearDialog;
+	public WavePanel wavePanel;
 	
 	[SerializeField] private Text bulletNum;
 	[SerializeField] private GameObject batteryGage;
@@ -32,7 +33,7 @@ public class GameUIManager : SingletonBehaviour<GameUIManager> {
 		}
     }
 
-	void Update(){
+	private void Update(){
 		if (GameManager.I.CheckGameStatus (GameStatus.PLAY)) {
 			batteryGage.GetComponent<Image>().fillAmount = BattleShip.I.bulletRate * 0.75f;
 		}

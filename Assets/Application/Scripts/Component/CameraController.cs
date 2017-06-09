@@ -15,6 +15,8 @@ public class CameraController : MonoBehaviour {
 	private float[] thresholdY = new float[2];
 	private Vector3 moveDis;
 	private Vector3 moveVector;
+	private Vector3 touch0Pos;
+	private Vector3 touch1Pos;
 	private float speed = 0;
 	private float screenSpeed = 0f;
 	private float inertiaTime = 0.0f;
@@ -23,6 +25,9 @@ public class CameraController : MonoBehaviour {
 	private float size = 0f;
 	private Vector3 pinchCenterPos;
 	private Camera mainCamera;
+	#if UNITY_EDITOR
+	private Vector3 beforePos;
+	#endif
 	#endregion
 
 	void Start(){
@@ -35,33 +40,39 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void LateUpdate () {
+		#if UNITY_EDITOR
+		if(Input.GetMouseButtonDown(0)){
+			beforePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+		}else if(Input.GetMouseButton(0)){
+			Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+			Vector3 diffVec = mousePos - beforePos;
+			mainCamera.transform.position -= diffVec;
+			beforePos = mousePos;
+		}
+		#elif UNITY_IOS || UNITY_ANDROID
 		if (Input.touchCount > 1) {
 			Touch touch0 = Input.touches [0];
 			Touch touch1 = Input.touches [1];
 			if (touch0.phase == TouchPhase.Began || touch1.phase == TouchPhase.Began) {
-				Vector3 touch0Pos = new Vector3 (touch0.position.x / Screen.width, touch0.position.y / Screen.height, 0);
-				Vector3 touch1Pos = new Vector3 (touch1.position.x / Screen.width, touch1.position.y / Screen.height, 0);
-				beforePinchDis = (touch0Pos - touch1Pos).magnitude;
-				pinchCenterPos = (mainCamera.ScreenToWorldPoint (touch0.position) + mainCamera.ScreenToWorldPoint (touch1.position)) / 2;
-				pinchCenterPos = new Vector3 (pinchCenterPos.x, pinchCenterPos.y, -10);
+				InitPinch (touch0, touch1);
 			} else if(touch0.phase == TouchPhase.Moved){
-				Vector3 touch0Pos = new Vector3 (touch0.position.x / Screen.width, touch0.position.y / Screen.height, 0);
-				Vector3 touch1Pos = new Vector3 (touch1.position.x / Screen.width, touch1.position.y / Screen.height, 0);
+				touch0Pos = NormalizeTouchPos (touch0);
+				touch1Pos = NormalizeTouchPos (touch1);
 				pinchDis = (touch0Pos - touch1Pos).magnitude;
+
 				float diff = pinchDis - beforePinchDis;
 				float beforeSize = size;
-				size += diff * 5f;
+				size -= diff * 5f;
 				size = Mathf.Clamp (size, minSize, maxSize);
 				float sizeDiff = size - beforeSize;
 				mainCamera.orthographicSize = size;
-				if (diff < 0) {
+				if (diff > 0) {
 					Vector3 moveVec = sizeDiff * 2 * (pinchCenterPos - Camera.main.transform.position).normalized;
 					if ((pinchCenterPos - Camera.main.transform.position).magnitude < moveVec.magnitude) {
 						mainCamera.transform.position = pinchCenterPos;
 					} else {
 						mainCamera.transform.position -= moveVec;
 					}
-
 				}
 				beforePinchDis = pinchDis;
 			}
@@ -89,7 +100,20 @@ public class CameraController : MonoBehaviour {
 			mainCamera.transform.position += moveDis;
 			inertiaTime += Time.deltaTime;
 		}
+		#endif
 		CheckLimit ();
+	}
+
+	private Vector3 NormalizeTouchPos(Touch _touch){
+		return new Vector3 (_touch.position.x / Screen.width, _touch.position.y / Screen.height, 0);
+	}
+
+	private void InitPinch(Touch _touch0, Touch _touch1){
+		touch0Pos = NormalizeTouchPos (_touch0);
+		touch1Pos = NormalizeTouchPos (_touch1);
+		beforePinchDis = (touch0Pos - touch1Pos).magnitude;
+		pinchCenterPos = (mainCamera.ScreenToWorldPoint (_touch0.position) + mainCamera.ScreenToWorldPoint (_touch1.position)) / 2;
+		pinchCenterPos = new Vector3 (pinchCenterPos.x, pinchCenterPos.y, -10);
 	}
 
 	private void DecayMoveDis(){
@@ -133,6 +157,7 @@ public class CameraController : MonoBehaviour {
 		Gizmos.DrawLine (new Vector3 (limitCenterPoint.x - limitWidth / 2f, limitCenterPoint.y - limitHeight / 2f, 0), new Vector3 (limitCenterPoint.x - limitWidth / 2f, limitCenterPoint.y + limitHeight / 2f, 0));
 		Gizmos.DrawLine (new Vector3 (limitCenterPoint.x + limitWidth / 2f, limitCenterPoint.y - limitHeight / 2f, 0), new Vector3 (limitCenterPoint.x + limitWidth / 2f, limitCenterPoint.y + limitHeight / 2f, 0));
 		Gizmos.DrawCube (new Vector3 (limitCenterPoint.x, limitCenterPoint.y, 0), new Vector3 (0.2f, 0.2f, 0.1f));
+		//Gizmos.DrawCube (pinchCenterPos, new Vector3 (1f, 1f, 1f));
 	}
 	#endif
 }

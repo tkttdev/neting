@@ -4,13 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class WavePanel : MonoBehaviour {
-
-	private int waveNum, maxWave;
+	
 	[SerializeField] private Text waveText;
 
-	public void Show(int _waveNum, int _maxWave){
-		waveNum = _waveNum;
-		maxWave = _maxWave;
+	public void Show(){
 		StartCoroutine (ShowAnimation ());
 	}
 
@@ -25,7 +22,10 @@ public class WavePanel : MonoBehaviour {
 		yield return new WaitForSeconds (0.8f);
 		iTween.ScaleTo (gameObject, iTween.Hash ("y", 1, "time", 1));
 		yield return new WaitForSeconds (0.8f);
-		waveText.text = string.Format ("Stage {0}\nWave {1}/{2}\nSTART!", StageLevelManager.I.GetStageLevel (), waveNum, maxWave);
+		waveText.text = string.Format ("Stage {0}\nStart", StageLevelManager.I.GetStageLevel ());
+		yield return new WaitForSeconds (0.8f);
+		GameManager.I.SetStatuPlay ();
+		Hide ();
 		yield break;
 	}
 }
