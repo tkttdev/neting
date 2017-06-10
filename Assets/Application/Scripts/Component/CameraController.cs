@@ -41,6 +41,7 @@ public class CameraController : MonoBehaviour {
 
 	void LateUpdate () {
 		#if UNITY_EDITOR
+		//TODO : ガクつくのをなくす
 		if(Input.GetMouseButtonDown(0)){
 			beforePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 		}else if(Input.GetMouseButton(0)){
